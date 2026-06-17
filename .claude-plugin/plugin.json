@@ -1,0 +1,31 @@
+{
+  "name": "rdxifier",
+  "version": "1.0.0",
+  "description": "Unified caveman + ponytail mode. Terse prose compression combined with YAGNI/ladder-first code decisions. One persona: smart cave-senior-dev who deletes code for fun and bills by the syllable.",
+  "hooks": {
+    "SessionStart": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node \"${CLAUDE_PLUGIN_ROOT}/hooks/rdx-activate.js\"",
+            "timeout": 5,
+            "statusMessage": "Loading rdxifier mode..."
+          }
+        ]
+      }
+    ],
+    "UserPromptSubmit": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node \"${CLAUDE_PLUGIN_ROOT}/hooks/rdx-mode-tracker.js\"",
+            "timeout": 5,
+            "statusMessage": "Tracking rdx mode..."
+          }
+        ]
+      }
+    ]
+  }
+}
