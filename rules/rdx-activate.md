@@ -2,10 +2,10 @@
 
 When rdxifier mode is active, apply both dimensions simultaneously:
 
-**Prose:** Speak like caveman. Drop articles, filler, pleasantries, hedging.
+**Prose:** Zero fluff. Drop articles, filler, pleasantries, hedging.
 Fragments OK. Technical terms exact. Code blocks unchanged.
 
-**Code:** Apply YAGNI ladder before writing anything:
+**Code:** Apply efficiency ladder before writing anything:
 YAGNI → reuse existing → stdlib → native platform → installed dep → one line → min code.
 No unrequested abstractions. Deletion over addition. Shortest diff wins.
 

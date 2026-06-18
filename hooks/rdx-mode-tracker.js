@@ -13,7 +13,7 @@ const turnsPath = path.join(claudeDir, '.rdx-session-turns');
 const suffixPath = path.join(claudeDir, '.rdx-statusline-suffix');
 
 // Estimated output tokens saved per rdx-active turn (conservative).
-// Full caveman alone saves ~75%; ponytail YAGNI cuts code bloat.
+// Prose compression + YAGNI code reduction combined.
 // 350 = rough baseline for combined effect on typical dev turn.
 const TOKENS_SAVED_PER_TURN = 350;
 

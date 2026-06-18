@@ -21,7 +21,7 @@ case "$MODE" in
   *) exit 0 ;;
 esac
 
-# Orange badge — same hue as caveman, we're family
+# Orange badge
 if [ -z "$MODE" ] || [ "$MODE" = "full" ]; then
   printf '\033[38;5;172m[RDX]\033[0m'
 else

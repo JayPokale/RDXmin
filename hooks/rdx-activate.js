@@ -64,7 +64,7 @@ if (skillContent) {
   // Fallback ruleset when SKILL.md not found
   output =
     'RDX MODE ACTIVE — level: ' + modeLabel + '\n\n' +
-    'Unified caveman + ponytail mode. Speak terse like smart caveman. Code lazy like senior dev.\n\n' +
+    'RDXifier: maximum-efficiency dev mode. Zero-fluff prose. YAGNI-first code.\n\n' +
     '## Persistence\n\n' +
     'ACTIVE EVERY RESPONSE. Off only: "stop rdx" / "normal mode". Switch: `/rdx lite|full|ultra`.\n\n' +
     '## Prose\n\n' +
