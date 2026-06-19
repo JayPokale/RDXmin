@@ -98,11 +98,13 @@ process.stdin.on('end', () => {
       }
     }
 
-    // Natural language deactivation
-    if (/\b(stop|disable|deactivate|turn off)\b.*\brdx\b/i.test(promptLower) ||
-        /\brdx\b.*\b(stop|disable|deactivate|off)\b/i.test(promptLower) ||
-        /\bnormal mode\b/i.test(promptLower) ||
-        /\bstop rdx\b/i.test(promptLower)) {
+    // Natural language deactivation.
+    // Only fire when the off-verb actually targets rdx — NOT when rdx merely
+    // appears in a sentence that also mentions turning something else off.
+    // ("use rdx to turn off the logger" must NOT deactivate.)
+    if (/\b(turn off|disable|deactivate|stop|kill|exit)\s+rdx\b/i.test(promptLower) ||
+        /\brdx\s+(mode\s+)?(off|stop|disable|deactivate)\b/i.test(promptLower) ||
+        /\bnormal mode\b/i.test(promptLower)) {
       try { fs.unlinkSync(flagPath); } catch (e) {}
     }
 
