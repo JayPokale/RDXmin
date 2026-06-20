@@ -1,0 +1,54 @@
+# Live model comparison for rdxifier.
+# Requires an API key (e.g. ANTHROPIC_API_KEY) and promptfoo:
+#   npx promptfoo@latest eval -c benchmarks/promptfooconfig.yaml
+#
+# Three arms over the same prompts. Each arm differs only in its system prompt.
+# Output length + an LLM-judged correctness score are reported per arm.
+
+description: rdxifier vs baseline — output length and correctness
+
+prompts:
+  - "{{task}}"
+
+providers:
+  - id: anthropic:messages:claude-sonnet-4-6
+    label: baseline
+    config:
+      temperature: 1
+      system: "You are a helpful coding assistant."
+  - id: anthropic:messages:claude-sonnet-4-6
+    label: rdxifier
+    config:
+      temperature: 1
+      systemPromptFile: ../skills/rdxifier/SKILL.md
+
+tests:
+  - vars:
+      task: "Add debounce to a search input that currently fires an API call on every keystroke."
+    assert:
+      - type: llm-rubric
+        value: "The answer provides working debounce logic on the input event."
+      - type: javascript
+        value: "output.length < 1500"  # rdxifier arm should pass; baseline usually won't
+
+  - vars:
+      task: "Add a cache layer for our user profile API responses."
+    assert:
+      - type: llm-rubric
+        value: "The answer caches profile responses correctly and does not over-engineer."
+
+  - vars:
+      task: "Our auth middleware rejects valid tokens at the exact expiry boundary. Find and fix it."
+    assert:
+      - type: llm-rubric
+        value: "The answer identifies the boundary comparison (> vs >=) as the root cause."
+
+  - vars:
+      task: "I need to share user preferences across my React app. What's the simplest approach?"
+    assert:
+      - type: llm-rubric
+        value: "The answer recommends Context for low-frequency shared state without pulling in Redux/Zustand prematurely."
+
+defaultTest:
+  options:
+    provider: anthropic:messages:claude-sonnet-4-6

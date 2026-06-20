@@ -2,7 +2,7 @@
 
 **Task:** "Add debounce to a search input. It currently fires an API call on every keystroke."
 
-Claude Sonnet 4.6, no-plugin arm vs rdxifier (full) arm, temperature 1.
+Illustrative comparison (representative model output, not a captured benchmark run). For reproducible numbers, run the harness in `../benchmarks/`.
 
 ## Without RDXifier — 116 lines, 890 words
 

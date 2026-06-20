@@ -2,7 +2,7 @@
 
 **Task:** "Add a cache layer for our user profile API responses."
 
-Claude Sonnet 4.6, no-plugin arm vs rdxifier (full) arm, temperature 1.
+Illustrative comparison (representative model output, not a captured benchmark run). For reproducible numbers, run the harness in `../benchmarks/`.
 
 ## Without RDXifier — 45 lines, 340 words
 
