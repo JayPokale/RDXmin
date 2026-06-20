@@ -5,10 +5,12 @@
   "hooks": {
     "SessionStart": [
       {
+        "matcher": "startup|resume|clear|compact",
         "hooks": [
           {
             "type": "command",
-            "command": "node \"${CLAUDE_PLUGIN_ROOT}/hooks/rdx-activate.js\"",
+            "command": "node \"${CLAUDE_PLUGIN_ROOT}/hooks/rdx-activate.js\"; exit 0",
+            "commandWindows": "if (Get-Command node -ErrorAction SilentlyContinue) { node \"$env:CLAUDE_PLUGIN_ROOT\\hooks\\rdx-activate.js\" }",
             "timeout": 5,
             "statusMessage": "Loading rdxifier mode..."
           }
@@ -20,7 +22,8 @@
         "hooks": [
           {
             "type": "command",
-            "command": "node \"${CLAUDE_PLUGIN_ROOT}/hooks/rdx-mode-tracker.js\"",
+            "command": "node \"${CLAUDE_PLUGIN_ROOT}/hooks/rdx-mode-tracker.js\"; exit 0",
+            "commandWindows": "if (Get-Command node -ErrorAction SilentlyContinue) { node \"$env:CLAUDE_PLUGIN_ROOT\\hooks\\rdx-mode-tracker.js\" }",
             "timeout": 5,
             "statusMessage": "Tracking rdx mode..."
           }
