@@ -1,0 +1,4 @@
+# rdx-help — quick reference card
+[command]
+name = "rdx-help"
+description = "Show RDXifier quick reference: modes, levels, commands."
