@@ -1,0 +1,24 @@
+name: test
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node: [18, 20, 22]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node }}
+      - name: Run tests
+        run: node --test tests/*.js benchmarks/*.test.js
+      - name: Verify rule copies are in sync
+        run: node scripts/build-rules.js --check
+      - name: Verify statusline script is valid bash
+        run: bash -n hooks/rdx-statusline.sh

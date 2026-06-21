@@ -1,0 +1,34 @@
+{
+  "name": "rdxifier",
+  "version": "1.0.0",
+  "description": "Maximum-efficiency dev mode. Zero-fluff prose combined with YAGNI/ladder-first code decisions. One persona: the senior dev who deletes code for fun and bills by the syllable.",
+  "hooks": {
+    "SessionStart": [
+      {
+        "matcher": "startup|resume|clear|compact",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node \"${CLAUDE_PLUGIN_ROOT}/hooks/rdx-activate.js\"; exit 0",
+            "commandWindows": "if (Get-Command node -ErrorAction SilentlyContinue) { node \"$env:CLAUDE_PLUGIN_ROOT\\hooks\\rdx-activate.js\" }",
+            "timeout": 5,
+            "statusMessage": "Loading rdxifier mode..."
+          }
+        ]
+      }
+    ],
+    "UserPromptSubmit": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node \"${CLAUDE_PLUGIN_ROOT}/hooks/rdx-mode-tracker.js\"; exit 0",
+            "commandWindows": "if (Get-Command node -ErrorAction SilentlyContinue) { node \"$env:CLAUDE_PLUGIN_ROOT\\hooks\\rdx-mode-tracker.js\" }",
+            "timeout": 5,
+            "statusMessage": "Tracking rdx mode..."
+          }
+        ]
+      }
+    ]
+  }
+}
