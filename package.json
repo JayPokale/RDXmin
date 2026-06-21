@@ -20,7 +20,10 @@
     "node": ">=18"
   },
   "scripts": {
-    "test": "node --test tests/*.test.js"
+    "test": "node --test tests/*.js benchmarks/*.test.js",
+    "build:rules": "node scripts/build-rules.js",
+    "check:rules": "node scripts/build-rules.js --check",
+    "bench": "node benchmarks/compare.js"
   },
   "files": [
     "hooks/",

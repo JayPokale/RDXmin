@@ -147,19 +147,47 @@ export RDX_DEFAULT_MODE=ultra
 
 ---
 
+## Benchmarks
+
+Two layers. Deterministic (no API key) and live (promptfoo).
+
+```bash
+node benchmarks/compare.js     # measured reduction over examples/
+npm test                       # 20 tests: flag safety, tracker, benchmark sanity
+```
+
+Measured result: **74% fewer output tokens** across the four examples. See
+[`benchmarks/`](./benchmarks/) and [`benchmarks/results/`](./benchmarks/results/).
+
+## Multi-agent
+
+Primarily a Claude Code plugin, but the instruction set ships to every agent
+with a rules/context file — Cursor, Windsurf, Cline, Kiro, Codex, Gemini,
+Copilot. Copies are generated from one source (`scripts/build-rules.js`) and
+verified in CI. See [`docs/agent-portability.md`](./docs/agent-portability.md).
+
 ## Files
 
 ```
 rdxifier/
-├── .claude-plugin/plugin.json     ← hook wiring
-├── skills/rdxifier/SKILL.md       ← persona + rules (source of truth)
+├── .claude-plugin/                ← plugin.json + marketplace.json
+├── skills/
+│   ├── rdxifier/SKILL.md          ← persona + rules (source of truth)
+│   ├── rdx-help/SKILL.md          ← /rdx-help quick reference
+│   └── rdx-review/SKILL.md        ← /rdx-review bloat finder
 ├── hooks/
 │   ├── rdx-activate.js            ← SessionStart: write flag, emit rules
 │   ├── rdx-mode-tracker.js        ← UserPromptSubmit: commands, NL, reinforcement
-│   ├── rdx-statusline.sh          ← statusline badge with savings suffix
+│   ├── rdx-statusline.sh / .ps1   ← statusline badge (bash + PowerShell)
 │   ├── rdx-config.js              ← safeWriteFlag, readFlag, getDefaultMode
 │   └── package.json               ← {"type": "commonjs"}
-├── commands/rdxifier.toml         ← /rdx command definition
-├── rules/rdx-activate.md          ← always-on rules reference
-└── README.md
+├── commands/                      ← /rdx, /rdx-help, /rdx-review
+├── benchmarks/                    ← compare.js, promptfoo config, results/
+├── tests/                         ← config, tracker integration
+├── scripts/build-rules.js         ← generates per-agent rule copies
+├── docs/                          ← install-windows, agent-portability
+├── examples/                      ← before/after comparisons
+├── .cursor / .windsurf / .clinerules / .kiro / .github  ← per-agent rules
+├── AGENTS.md / GEMINI.md          ← agent-agnostic instruction sets
+└── rules/rdx-activate.md          ← always-on rules reference
 ```
