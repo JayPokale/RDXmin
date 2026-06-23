@@ -3,6 +3,17 @@
 All notable changes to RDXifier are documented here.
 Format loosely follows [Keep a Changelog](https://keepachangelog.com/).
 
+## [Unreleased]
+
+### Added
+- **`npx rdxifier` installer** — auto-detects 8 agents (Claude Code, Gemini, Codex,
+  Cursor, Windsurf, Cline, Kiro, Copilot) and installs for each. Flags: `--list`,
+  `--only`, `--dry-run`, `--force`, `--uninstall`, `--config-dir`, `--help`.
+- Claude Code path: plugin install with automatic fallback to standalone hooks +
+  JSONC-safe `settings.json` merge + statusline. Idempotent; clean uninstall.
+- `curl | bash` and `irm | iex` shims delegating to the Node installer.
+- 20 new tests (settings merge, installer integration). Suite now 36 tests.
+
 ## [1.0.0] — 2026-06-29
 
 ### Added

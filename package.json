@@ -16,6 +16,9 @@
   "bugs": {
     "url": "https://github.com/jaypokale/rdxifier/issues"
   },
+  "bin": {
+    "rdxifier": "./bin/install.js"
+  },
   "engines": {
     "node": ">=18"
   },
@@ -26,10 +29,17 @@
     "bench": "node benchmarks/compare.js"
   },
   "files": [
+    "bin/",
     "hooks/",
     "skills/",
     "commands/",
     "rules/",
+    "AGENTS.md",
+    ".cursor/",
+    ".windsurf/",
+    ".clinerules/",
+    ".kiro/",
+    ".github/copilot-instructions.md",
     ".claude-plugin/",
     "README.md",
     "LICENSE"

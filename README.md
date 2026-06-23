@@ -21,21 +21,40 @@ Stdlib first. Native platform over dependencies. One line over fifty. Deletion o
 
 ## Install
 
+One line — auto-detects your agents (Claude Code, Cursor, Windsurf, Cline, Kiro, Codex, Gemini, Copilot) and installs for each:
+
+```bash
+npx rdxifier
+```
+
+```bash
+# or via curl
+curl -fsSL https://raw.githubusercontent.com/jaypokale/rdxifier/main/install.sh | bash
+```
+
+```powershell
+# Windows
+irm https://raw.githubusercontent.com/jaypokale/rdxifier/main/install.ps1 | iex
+```
+
+Preview first with `npx rdxifier --dry-run`, scope with `--only claude`, see
+everything with `npx rdxifier --help`. Remove with `npx rdxifier --uninstall`.
+
+<details>
+<summary>Manual install (Claude Code plugin)</summary>
+
 Add to `~/.claude/settings.json`:
 
 ```json
 {
-  "plugins": [
-    "/path/to/rdxifier"
-  ],
+  "plugins": ["/path/to/rdxifier"],
   "statusLine": {
     "type": "command",
     "command": "bash \"/path/to/rdxifier/hooks/rdx-statusline.sh\""
   }
 }
 ```
-
-Hooks activate on session start. No manual step needed.
+</details>
 
 ---
 

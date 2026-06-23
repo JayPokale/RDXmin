@@ -20,5 +20,7 @@ jobs:
         run: node --test tests/*.js benchmarks/*.test.js
       - name: Verify rule copies are in sync
         run: node scripts/build-rules.js --check
-      - name: Verify statusline script is valid bash
-        run: bash -n hooks/rdx-statusline.sh
+      - name: Lint shell scripts
+        run: bash -n hooks/rdx-statusline.sh && bash -n install.sh
+      - name: Installer smoke test
+        run: node bin/install.js --list && node bin/install.js --help
