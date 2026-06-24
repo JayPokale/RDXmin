@@ -20,6 +20,8 @@ jobs:
         run: node --test tests/*.js benchmarks/*.test.js
       - name: Verify rule copies are in sync
         run: node scripts/build-rules.js --check
+      - name: Verify benchmark chart is in sync
+        run: node scripts/build-chart.js --check
       - name: Lint shell scripts
         run: bash -n hooks/rdx-statusline.sh && bash -n install.sh
       - name: Installer smoke test

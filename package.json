@@ -26,6 +26,8 @@
     "test": "node --test tests/*.js benchmarks/*.test.js",
     "build:rules": "node scripts/build-rules.js",
     "check:rules": "node scripts/build-rules.js --check",
+    "build:chart": "node scripts/build-chart.js",
+    "check:chart": "node scripts/build-chart.js --check",
     "bench": "node benchmarks/compare.js"
   },
   "files": [
@@ -43,5 +45,9 @@
     ".claude-plugin/",
     "README.md",
     "LICENSE"
-  ]
+  ],
+  "publishConfig": {
+    "access": "public",
+    "provenance": true
+  }
 }

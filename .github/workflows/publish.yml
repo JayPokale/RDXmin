@@ -1,0 +1,62 @@
+name: publish
+
+# Publishes to npm on a v* tag using npm Trusted Publishing (OIDC) — no
+# NPM_TOKEN secret to leak. Also cuts a GitHub Release with the changelog.
+#
+# Release flow:
+#   1. bump "version" in package.json
+#   2. git tag vX.Y.Z && git push --tags
+#   3. this workflow publishes + releases
+
+on:
+  push:
+    tags: ['v*']
+  workflow_dispatch:
+
+permissions:
+  id-token: write   # OIDC for npm trusted publishing
+  contents: write   # create the GitHub Release
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with: { node-version: '22' }
+      - run: node --test tests/*.js benchmarks/*.test.js
+      - run: node scripts/build-rules.js --check
+      - run: node scripts/build-chart.js --check
+
+  publish:
+    needs: test
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          registry-url: 'https://registry.npmjs.org'
+      # Trusted publishing (OIDC) needs npm >= 11.5.1; Node 22 ships npm 10.
+      - run: npm install -g npm@latest
+      - name: Verify tag matches package.json version
+        run: |
+          TAG="${GITHUB_REF_NAME#v}"
+          PKG="$(node -p "require('./package.json').version")"
+          if [ "$TAG" != "$PKG" ]; then
+            echo "tag v$TAG != package.json $PKG"; exit 1
+          fi
+      # No token: id-token:write + publishConfig.access=public lets npm
+      # authenticate via OIDC and attach provenance automatically.
+      - run: npm publish
+
+  release:
+    needs: publish
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          generate_release_notes: true
+          body_path: ${{ github.workspace }}/CHANGELOG.md
