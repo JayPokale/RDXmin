@@ -315,9 +315,3 @@ and chart, run the tests. CI enforces all three.
 ## License
 
 [MIT](LICENSE). The shortest license that works.
-
-## Star History
-
-<a href="https://www.star-history.com/#jaypokale/rdxifier&Date">
-  <img alt="Star History Chart" src="https://api.star-history.com/svg?repos=jaypokale/rdxifier&type=Date" width="600">
-</a>
