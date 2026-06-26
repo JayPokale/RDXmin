@@ -50,10 +50,10 @@ function buildSvg(sum) {
   let y = top;
   for (const g of groups) {
     body += `<text x="${left}" y="${y - 8}" font-size="14" font-weight="600" fill="#c9d1d9">${g.title}</text>`;
-    const base = sum[g.seg] ? sum.vanilla[g.seg][METRIC] : 0;
+    const base = sum.vanilla[g.seg][METRIC];
     ARMS.forEach((a) => {
       const v = pct(base, sum[a.key][g.seg][METRIC]);
-      const w = Math.max(2, Math.round(v * scale / 100 * 100) / 100);
+      const w = Math.max(2, Math.round(v * scale * 100) / 100);
       const bold = a.key === 'rdxifier' ? ' font-weight="700"' : '';
       body += `<text x="${left - 10}" y="${y + 16}" font-size="12" fill="#8b949e" text-anchor="end"${bold}>${a.label}</text>` +
               `<rect x="${left}" y="${y + 2}" width="${w}" height="${barH}" rx="3" fill="${a.color}"/>` +
