@@ -17,7 +17,13 @@ Format loosely follows [Keep a Changelog](https://keepachangelog.com/).
   `settings.json` merge. Idempotent; clean round-trip uninstall.
 - `curl | bash` and `irm | iex` shims delegating to the Node installer.
 - Multi-agent distribution: Cursor, Windsurf, Cline, Kiro, Codex, Gemini, Copilot rule copies, generated from one source via `scripts/build-rules.js`.
-- Deterministic benchmark harness (`benchmarks/compare.js`) + generated comparison chart (`scripts/build-chart.js`) + live promptfoo config.
+- **Live 4-arm benchmark** (`benchmarks/run-live.sh` + `aggregate.js`): vanilla vs
+  caveman vs ponytail vs rdxifier over 24 real model runs, isolated so the arm is the
+  only variable. Raw outputs committed under `benchmarks/results/raw/`. README chart and
+  numbers are generated from this real data (replacing an earlier chart modeled from
+  hand-authored examples). Finding: rdxifier is leanest on coding tasks; on pure prose a
+  dedicated prose compressor wins — stated plainly, not cherry-picked.
+- Deterministic example check (`benchmarks/compare.js`) + chart generator (`scripts/build-chart.js`) + promptfoo config.
 - npm trusted publishing (OIDC, provenance) + GitHub Release workflow on `v*` tags.
 - Test suite: 36 tests across flag safety, tracker, settings merge, installer integration. CI on Node 18/20/22.
 

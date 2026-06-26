@@ -1,22 +1,37 @@
 # Benchmarks
 
-Two layers, because "benchmark" means two different things:
+## 1. Live 4-arm head-to-head (the real one)
 
-## 1. Deterministic measurement (no API key)
-
-`compare.js` parses the committed `examples/*.md` and measures the reduction
-between the no-plugin output and the rdxifier output. Same inputs → identical
-numbers every run. This is what you cite when you want a number that can't drift.
+`run-live.sh` drives the authenticated `claude` CLI across four arms — vanilla
+(no tool), caveman, ponytail, rdxifier — over 6 tasks (3 coding, 3 non-coding).
+Each arm differs **only** in the system prompt injected; plugins, tone hooks, and
+personal config are neutralized via an isolated `HOME` + config dir holding only
+credentials. Raw model outputs are committed under `results/raw/` for audit.
 
 ```bash
-node benchmarks/compare.js          # human-readable table
-node benchmarks/compare.js --json   # machine-readable
+bash benchmarks/run-live.sh                       # 24 runs → results/raw/*.json (resumable)
+node benchmarks/aggregate.js                       # comparison tables
+node benchmarks/aggregate.js --json > results/summary.json   # freeze for the chart
+node scripts/build-chart.js                        # regenerate assets/benchmark.svg
 ```
 
-Current result: **74% fewer output tokens** across the four examples. See
-[`results/2026-06-29-rdxifier-vs-baseline.md`](./results/2026-06-29-rdxifier-vs-baseline.md).
+Headline (visible answer tokens as % of vanilla): **coding** — rdxifier 14%,
+ponytail 29%, caveman 46%. **non-coding** — caveman 79%, rdxifier 96%, ponytail
+121%. Full writeup: [`results/2026-06-29-live-4arm.md`](./results/2026-06-29-live-4arm.md).
 
-## 2. Live model comparison (requires API key)
+rdxifier is leanest on code; on pure prose a dedicated prose compressor wins. The
+chart and README state this plainly — no cherry-picking.
+
+## 2. Deterministic example check (no API key)
+
+`compare.js` measures the reduction in the committed `examples/*.md` (illustrative
+teaching cases, not a model capture). Stable because the inputs are fixed.
+
+```bash
+node benchmarks/compare.js
+```
+
+## 3. promptfoo config (alternative live runner, requires API key)
 
 `promptfooconfig.yaml` runs the same prompts through a real model across three
 arms — baseline (no plugin), rdxifier, and (optionally) the parent-style

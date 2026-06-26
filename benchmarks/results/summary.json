@@ -1,0 +1,278 @@
+{
+  "cells": [
+    {
+      "task": "auth-bug",
+      "arm": "caveman",
+      "kind": "coding",
+      "out": 1076,
+      "ans": 44,
+      "lines": 1
+    },
+    {
+      "task": "auth-bug",
+      "arm": "ponytail",
+      "kind": "coding",
+      "out": 1020,
+      "ans": 96,
+      "lines": 7
+    },
+    {
+      "task": "auth-bug",
+      "arm": "rdxifier",
+      "kind": "coding",
+      "out": 1507,
+      "ans": 117,
+      "lines": 6
+    },
+    {
+      "task": "auth-bug",
+      "arm": "vanilla",
+      "kind": "coding",
+      "out": 1350,
+      "ans": 90,
+      "lines": 6
+    },
+    {
+      "task": "cache",
+      "arm": "caveman",
+      "kind": "coding",
+      "out": 415,
+      "ans": 98,
+      "lines": 7
+    },
+    {
+      "task": "cache",
+      "arm": "ponytail",
+      "kind": "coding",
+      "out": 768,
+      "ans": 125,
+      "lines": 7
+    },
+    {
+      "task": "cache",
+      "arm": "rdxifier",
+      "kind": "coding",
+      "out": 709,
+      "ans": 77,
+      "lines": 6
+    },
+    {
+      "task": "cache",
+      "arm": "vanilla",
+      "kind": "coding",
+      "out": 4910,
+      "ans": 780,
+      "lines": 150
+    },
+    {
+      "task": "debounce",
+      "arm": "caveman",
+      "kind": "coding",
+      "out": 1327,
+      "ans": 617,
+      "lines": 110
+    },
+    {
+      "task": "debounce",
+      "arm": "ponytail",
+      "kind": "coding",
+      "out": 804,
+      "ans": 251,
+      "lines": 42
+    },
+    {
+      "task": "debounce",
+      "arm": "rdxifier",
+      "kind": "coding",
+      "out": 475,
+      "ans": 43,
+      "lines": 3
+    },
+    {
+      "task": "debounce",
+      "arm": "vanilla",
+      "kind": "coding",
+      "out": 1506,
+      "ans": 786,
+      "lines": 142
+    },
+    {
+      "task": "pooling",
+      "arm": "caveman",
+      "kind": "noncoding",
+      "out": 502,
+      "ans": 340,
+      "lines": 22
+    },
+    {
+      "task": "pooling",
+      "arm": "ponytail",
+      "kind": "noncoding",
+      "out": 646,
+      "ans": 501,
+      "lines": 37
+    },
+    {
+      "task": "pooling",
+      "arm": "rdxifier",
+      "kind": "noncoding",
+      "out": 577,
+      "ans": 448,
+      "lines": 27
+    },
+    {
+      "task": "pooling",
+      "arm": "vanilla",
+      "kind": "noncoding",
+      "out": 542,
+      "ans": 483,
+      "lines": 27
+    },
+    {
+      "task": "regex-concept",
+      "arm": "caveman",
+      "kind": "noncoding",
+      "out": 341,
+      "ans": 144,
+      "lines": 15
+    },
+    {
+      "task": "regex-concept",
+      "arm": "ponytail",
+      "kind": "noncoding",
+      "out": 296,
+      "ans": 157,
+      "lines": 10
+    },
+    {
+      "task": "regex-concept",
+      "arm": "rdxifier",
+      "kind": "noncoding",
+      "out": 289,
+      "ans": 114,
+      "lines": 9
+    },
+    {
+      "task": "regex-concept",
+      "arm": "vanilla",
+      "kind": "noncoding",
+      "out": 263,
+      "ans": 143,
+      "lines": 12
+    },
+    {
+      "task": "rest-graphql",
+      "arm": "caveman",
+      "kind": "noncoding",
+      "out": 467,
+      "ans": 214,
+      "lines": 5
+    },
+    {
+      "task": "rest-graphql",
+      "arm": "ponytail",
+      "kind": "noncoding",
+      "out": 583,
+      "ans": 404,
+      "lines": 28
+    },
+    {
+      "task": "rest-graphql",
+      "arm": "rdxifier",
+      "kind": "noncoding",
+      "out": 571,
+      "ans": 279,
+      "lines": 19
+    },
+    {
+      "task": "rest-graphql",
+      "arm": "vanilla",
+      "kind": "noncoding",
+      "out": 522,
+      "ans": 253,
+      "lines": 7
+    }
+  ],
+  "sum": {
+    "vanilla": {
+      "coding": {
+        "out": 7766,
+        "ans": 1656,
+        "lines": 298,
+        "n": 3
+      },
+      "noncoding": {
+        "out": 1327,
+        "ans": 879,
+        "lines": 46,
+        "n": 3
+      },
+      "all": {
+        "out": 9093,
+        "ans": 2535,
+        "lines": 344,
+        "n": 6
+      }
+    },
+    "caveman": {
+      "coding": {
+        "out": 2818,
+        "ans": 759,
+        "lines": 118,
+        "n": 3
+      },
+      "noncoding": {
+        "out": 1310,
+        "ans": 698,
+        "lines": 42,
+        "n": 3
+      },
+      "all": {
+        "out": 4128,
+        "ans": 1457,
+        "lines": 160,
+        "n": 6
+      }
+    },
+    "ponytail": {
+      "coding": {
+        "out": 2592,
+        "ans": 472,
+        "lines": 56,
+        "n": 3
+      },
+      "noncoding": {
+        "out": 1525,
+        "ans": 1062,
+        "lines": 75,
+        "n": 3
+      },
+      "all": {
+        "out": 4117,
+        "ans": 1534,
+        "lines": 131,
+        "n": 6
+      }
+    },
+    "rdxifier": {
+      "coding": {
+        "out": 2691,
+        "ans": 237,
+        "lines": 15,
+        "n": 3
+      },
+      "noncoding": {
+        "out": 1437,
+        "ans": 841,
+        "lines": 55,
+        "n": 3
+      },
+      "all": {
+        "out": 4128,
+        "ans": 1078,
+        "lines": 70,
+        "n": 6
+      }
+    }
+  }
+}

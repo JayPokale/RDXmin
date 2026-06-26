@@ -9,7 +9,7 @@
 </p>
 
 <p align="center">
-  <img src="https://img.shields.io/npm/v/rdxifier?style=flat-square&color=d78a3c&label=npm" alt="npm">
+  <img src="https://img.shields.io/badge/status-pre--release-d78a3c?style=flat-square" alt="Pre-release">
   <img src="https://img.shields.io/badge/works%20with-8%20agents-d78a3c?style=flat-square" alt="Works with 8 agents">
   <img src="https://img.shields.io/badge/tests-36%20passing-2da44e?style=flat-square" alt="36 tests">
   <img src="https://img.shields.io/badge/deps-0-2da44e?style=flat-square" alt="Zero deps">
@@ -17,17 +17,15 @@
 </p>
 
 <p align="center">
-  <strong>~74% fewer output tokens on coding tasks &middot; both prose AND code &middot; 8 agents &middot; one command</strong>
+  <strong>Leanest code answers of the bunch &middot; ~85% smaller on coding tasks &middot; both prose AND code &middot; 8 agents &middot; one command</strong>
 </p>
 
 ---
 
-Most "be concise" tools compress one thing. Prose-compressors (caveman-style) shrink
-the chatter but leave a 116-line implementation. Code-minimizers (ponytail-style) cut
-the implementation but keep the "Sure! I'd be happy to help…" preamble.
-
-**RDXifier compresses both axes at once** — zero-fluff prose *and* a YAGNI-first code
-ladder, always active together. On coding tasks that's where the tokens actually are.
+Most "be concise" tools compress one axis. Prose-compressors (caveman-style) shrink the
+chatter but leave the over-built code. Code-minimizers (ponytail-style) cut the code but
+can ramble in prose. **RDXifier does both** — zero-fluff prose *and* a YAGNI-first code
+ladder, always on together.
 
 ## What it does
 
@@ -39,31 +37,43 @@ Stdlib first. Native platform over dependencies. One line over fifty. Deletion o
 
 ## Numbers
 
-Measured over the four coding tasks in [`examples/`](examples/) — debounce, an API
-cache, an auth-middleware bug, and React state. Reproduce with `node benchmarks/compare.js`.
+A real head-to-head: **24 live model runs** — 4 arms (no tool, [caveman](https://github.com/JuliusBrussee/caveman),
+[ponytail](https://github.com/DietrichGebert/ponytail), RDXifier) × 6 tasks (3 coding, 3
+non-coding), Haiku 4.5, each arm differing only in its injected system prompt. Plugins,
+tone hooks, and personal config were neutralized so the arm is the only variable.
+Reproduce: `bash benchmarks/run-live.sh` then `node benchmarks/aggregate.js`.
 
 <p align="center">
-  <img src="assets/benchmark.svg" width="820" alt="Output tokens as percent of the no-tool baseline. RDXifier 26%, code-only 35%, prose-only 91%, baseline 100%.">
+  <img src="assets/benchmark.svg" width="820" alt="Visible answer size as percent of vanilla baseline. Coding: RDXifier 14%, ponytail 29%, caveman 46%. Non-coding: caveman 79%, RDXifier 96%, ponytail 121%.">
 </p>
 
-| vs no-tool baseline | output tokens | what it cuts |
-|---|--:|---|
-| no tool | 100% | — |
-| prose-only *(caveman-style)* | 91% | chatter, but keeps the over-built code |
-| code-only *(ponytail-style)* | 35% | the code, but keeps the prose preamble |
-| **RDXifier** | **26%** | **both — prose *and* code** |
+**Visible answer size, as % of the no-tool baseline (lower = leaner):**
 
-On coding tasks the bloat is mostly **code**, so prose-only compression barely moves
-the needle (91%). Cutting code is most of the win — and cutting prose on top is the
-last 9 points only RDXifier captures. Honest caveats:
+| | vanilla | caveman | ponytail | **RDXifier** |
+|---|--:|--:|--:|--:|
+| **coding** (tokens) | 100% | 46% | 29% | **14%** |
+| **coding** (lines) | 100% | 40% | 19% | **5%** |
+| **non-coding** (tokens) | 100% | **79%** | 121% | 96% |
+| **all 6 tasks** (tokens) | 100% | 57% | 61% | **43%** |
 
-- The single-axis arms are **modeled generously**: each gets full credit for the
-  reduction RDXifier achieves on *its own* axis, so RDXifier's lead is a conservative
-  floor, not a cherry-pick. Method in [`scripts/build-chart.js`](scripts/build-chart.js).
-- This is the **coding-task** domain. A pure prose-compressor shines on non-code chat —
-  that's its home turf, not measured here.
-- Token counts are estimates (`chars/4`), not a live tokenizer. The *measurement* is
-  reproducible; the example outputs are representative, not a pinned model capture.
+The honest read:
+
+- **On coding, RDXifier wins clearly** — 14% of the baseline's answer tokens, 5% of its
+  lines, leanest of all four. The hero case: a "add a cache" prompt where vanilla
+  over-built a **150-line** cache class and RDXifier delivered **6 lines**.
+- **On non-coding prose, RDXifier does *not* win** — caveman, a dedicated prose
+  compressor, is leanest there (79%); RDXifier is roughly neutral (96%); ponytail is
+  actually *worse* than no tool (121%). If your work is mostly prose, a prose specialist
+  is the better pick — and this README says so.
+- **Billed tokens (incl. model reasoning) tie at ~45% overall** across all three skills:
+  they make the model think more but emit far less visible text. Full table:
+  [`benchmarks/results/2026-06-29-live-4arm.md`](benchmarks/results/2026-06-29-live-4arm.md).
+- Small sample (n=6, one model). Directional, not a leaderboard. Raw outputs are committed
+  under [`benchmarks/results/raw/`](benchmarks/results/raw/) — audit them yourself.
+
+> ⚠️ Earlier versions of this README showed a "74% / both-axes-win" chart **modeled from
+> hand-authored examples**. That was replaced with the live measurement above. The code
+> generating it (`scripts/build-chart.js`) reads frozen real results and CI fails if it drifts.
 
 ---
 
@@ -239,16 +249,16 @@ export RDX_DEFAULT_MODE=ultra
 
 ## Benchmarks
 
-Two layers. Deterministic (no API key) and live (promptfoo).
-
 ```bash
-node benchmarks/compare.js     # measured reduction over examples/
-node scripts/build-chart.js    # regenerate the chart above from the data
+bash benchmarks/run-live.sh    # 24 live model runs (4 arms x 6 tasks) — the real head-to-head
+node benchmarks/aggregate.js   # turn raw runs into the comparison tables
+node scripts/build-chart.js    # regenerate the chart above from frozen results
 npm test                       # 36 tests: flag safety, tracker, settings merge, installer
 ```
 
-Measured result: **74% fewer output tokens** across the four examples. See
-[`benchmarks/`](./benchmarks/) and [`benchmarks/results/`](./benchmarks/results/).
+`run-live.sh` drives the authenticated `claude` CLI, isolating each arm so the only
+variable is the injected system prompt. Raw outputs land in
+[`benchmarks/results/raw/`](./benchmarks/results/raw/) and are committed for audit.
 
 ## Multi-agent
 
@@ -286,9 +296,9 @@ rdxifier/
 ## FAQ
 
 **Why not just use a prose-compressor or a code-minimizer?**
-Because they each leave half the tokens on the table. On a coding task the bloat is
-mostly code, but the preamble adds up too. RDXifier cuts both — that's the 9-point gap
-between "code-only" and RDXifier in the chart above.
+On coding tasks, cutting both axes wins — RDXifier delivers the leanest answers measured
+(14% of baseline tokens vs caveman's 46% and ponytail's 29%). On pure prose, a dedicated
+prose compressor is the better tool; the [Numbers](#numbers) section says so outright.
 
 **Will it golf my code into something clever and unreadable?**
 No. The rule is *necessary*, not *fewest characters*. Boring over clever — clever is
