@@ -72,6 +72,23 @@ The honest read:
   leaderboard. Raw outputs committed under
   [`benchmarks/results/raw/`](benchmarks/results/raw/) — audit them yourself.
 
+### Why not just use caveman or ponytail?
+
+A Sonnet cross-check ([full writeup](benchmarks/results/2026-06-29-sonnet-cross-check.md))
+makes the difference concrete. Asked to *"add caching to this function"* — where the right
+answer is one stdlib decorator:
+
+| | tokens | what it did |
+|---|--:|---|
+| caveman | 330 | dumped **three** implementations (lru_cache + manual dict + cachetools) — terse, but no judgment about which to use |
+| **RDXifier** | **151** | one answer: `@cache`, plus a one-line upgrade path |
+
+caveman is a superb *prose* compressor — on pure-prose prompts it's a hair leaner than
+RDXifier (44% vs 52% of baseline). But it has **no engineering judgment**: on a code
+decision it over-answers. ponytail has the judgment but **pads prose** (71–121% of
+baseline). **RDXifier is the only one lean on both axes** — caveman fails code-judgment,
+ponytail fails prose, RDXifier has no failure mode. That's what wins a real mixed workload.
+
 > ⚠️ Earlier versions of this README showed a "74% / both-axes-win" chart **modeled from
 > hand-authored examples**. That was replaced with the live measurement above. The code
 > generating it (`scripts/build-chart.js`) reads frozen real results and CI fails if it drifts.

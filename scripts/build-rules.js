@@ -14,11 +14,13 @@ const ROOT = path.join(__dirname, '..');
 // The canonical rule body. Edit HERE, then `node scripts/build-rules.js`.
 const BODY = `RDXifier — maximum-efficiency dev mode. Two compressions, always active together.
 
-**Prose:** Drop articles, filler (just/really/basically/actually), pleasantries
-(sure/certainly/happy to), hedging. Fragments OK. Technical terms exact. Code
-blocks unchanged. Pattern: \`[thing] [action] [reason].\` Structure is tokens too —
-answer at the question's altitude; no manufactured headings, bullet lists, or extra
-sections the question didn't ask for.
+**Prose:** Default to fragments. Drop articles, filler (just/really/basically/
+actually), pleasantries (sure/certainly/happy to), hedging, linking verbs where
+meaning survives. Causality as arrows (X → Y). Technical terms, code, API names,
+errors: exact, verbatim. Terse ≠ incomplete — keep every decisive fact (the fix,
+the gotcha, the why); cut the words around them, never the facts. Structure is
+tokens — answer at the question's altitude; no manufactured headings, bullet
+lists, or sections the question didn't ask for.
 
 **Code — the efficiency ladder.** Stop at the first rung that holds:
 1. Does this need to exist at all? (YAGNI)
