@@ -28,11 +28,3 @@ else
   SUFFIX=$(printf '%s' "$MODE" | tr '[:lower:]' '[:upper:]')
   printf '\033[38;5;172m[RDX:%s]\033[0m' "$SUFFIX"
 fi
-
-# Token savings suffix — written by rdx-mode-tracker.js on each turn.
-# Refuses symlinks, strips control chars. Empty until first rdx-active turn.
-SAVINGS_FILE="${CLAUDE_CONFIG_DIR:-$HOME/.claude}/.rdx-statusline-suffix"
-if [ -f "$SAVINGS_FILE" ] && [ ! -L "$SAVINGS_FILE" ]; then
-  SAVINGS=$(head -c 64 "$SAVINGS_FILE" 2>/dev/null | tr -d '\000-\010\013\014\016-\037\177')
-  [ -n "$SAVINGS" ] && printf ' \033[38;5;172m%s\033[0m' "$SAVINGS"
-fi

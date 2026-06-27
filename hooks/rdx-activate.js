@@ -12,23 +12,18 @@ const { getDefaultMode, getClaudeDir, safeWriteFlag } = require('./rdx-config');
 
 const claudeDir = getClaudeDir();
 const flagPath = path.join(claudeDir, '.rdx-active');
-const turnsPath = path.join(claudeDir, '.rdx-session-turns');
 const settingsPath = path.join(claudeDir, 'settings.json');
 
 const mode = getDefaultMode();
 
 if (mode === 'off') {
   try { fs.unlinkSync(flagPath); } catch (e) {}
-  try { fs.unlinkSync(turnsPath); } catch (e) {}
   process.stdout.write('OK');
   process.exit(0);
 }
 
 // 1. Write flag
 safeWriteFlag(flagPath, mode);
-
-// Reset session turn counter (new session = fresh savings count)
-try { fs.writeFileSync(turnsPath, '0', { mode: 0o600 }); } catch (e) {}
 
 // 2. Read SKILL.md — single source of truth for behavior
 const modeLabel = mode;

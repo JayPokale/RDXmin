@@ -9,3 +9,6 @@ benchmarks/results/*.json
 __pycache__/
 *.pyc
 .venv/
+
+# local Claude Code editor state — not part of the package
+.claude/

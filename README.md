@@ -173,14 +173,16 @@ fewer words to say the same true thing.
 
 ## Statusline
 
-Badge shows active level and estimated session token savings:
+Badge shows the active level:
 
 ```
-[RDX] 💥 3.5k
-[RDX:ULTRA] 💥 7.0k
+[RDX]
+[RDX:ULTRA]
 ```
 
-Orange. Updates every turn. Resets each session.
+Orange. Reads the mode flag; renders nothing when rdx is off. (No "tokens saved"
+counter — a live session has no counterfactual baseline to measure savings against,
+so any such number would be invented. The real numbers live in [Numbers](#numbers).)
 
 ---
 

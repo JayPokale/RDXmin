@@ -29,12 +29,3 @@ if ([string]::IsNullOrEmpty($mode) -or $mode -eq 'full') {
 } else {
   Write-Host -NoNewline ("{0}[RDX:{1}]{2}" -f $orange, $mode.ToUpper(), $reset)
 }
-
-# Token savings suffix — written by rdx-mode-tracker.js each turn.
-$savingsFile = Join-Path $configDir '.rdx-statusline-suffix'
-if ((Test-Path -LiteralPath $savingsFile -PathType Leaf)) {
-  $savings = (Get-Content -LiteralPath $savingsFile -Raw).Trim()
-  if (-not [string]::IsNullOrEmpty($savings)) {
-    Write-Host -NoNewline (" {0}{1}{2}" -f $orange, $savings, $reset)
-  }
-}

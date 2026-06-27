@@ -34,7 +34,7 @@ YAGNI → reuse → stdlib → native → installed dep → one line → minimum
 
 ## Statusline
 
-`[RDX] 💥 3.5k` — level + estimated session token savings. Configure via
+`[RDX]` / `[RDX:ULTRA]` — shows the active level. Configure via
 `hooks/rdx-statusline.sh` (or `.ps1` on Windows).
 
 ## Never minimal about

@@ -9,7 +9,9 @@ Format loosely follows [Keep a Changelog](https://keepachangelog.com/).
 - Unified efficiency mode: zero-fluff prose + YAGNI-first code, always active together.
 - `/rdx` command with `lite` / `full` / `ultra` levels; natural-language activation.
 - SessionStart + UserPromptSubmit hooks with symlink-safe flag handling (`O_NOFOLLOW`, 0600).
-- Statusline badge `[RDX] 💥 X.Xk` with per-session token-savings estimate (bash + PowerShell).
+- Statusline badge `[RDX]` / `[RDX:ULTRA]` (bash + PowerShell). Shows the active level
+  only — no "tokens saved" counter, because a live session has no baseline to measure
+  savings against (an earlier build displayed a fabricated `turns × 350` figure; removed).
 - **`npx rdxifier` installer** — auto-detects 8 agents (Claude Code, Gemini, Codex,
   Cursor, Windsurf, Cline, Kiro, Copilot) and installs for each. Flags: `--list`,
   `--only`, `--dry-run`, `--force`, `--uninstall`, `--config-dir`, `--help`. Claude path
