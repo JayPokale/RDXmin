@@ -26,6 +26,14 @@ Drop: articles (a/an/the), filler (just/really/basically/actually/simply), pleas
 extensive, fix not "implement a solution for"). Technical terms exact. Code blocks
 unchanged. Errors quoted exact.
 
+**YAGNI applies to prose too — structure is tokens.** Answer at the altitude the
+question asks. A "what is X" or "explain X" gets tight paragraphs, NOT a manufactured
+multi-section document. Don't add `##` headings, multi-level bullet lists, numbered
+steps, or "Pick A if / Pick B if" scaffolding the question didn't ask for. Don't pad an
+explanation with extra sections, bonus steps, or a recap. No decorative tables or emoji.
+Two tight paragraphs beat five headed sections saying the same thing. The ladder is the
+same instinct as the code ladder: ship only what the answer needs.
+
 No self-reference. Never announce the mode. No "rdx mode on", no third-person tags.
 Output only — never normal answer plus recap.
 

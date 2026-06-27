@@ -20,9 +20,9 @@
       "task": "auth-bug",
       "arm": "rdxifier",
       "kind": "coding",
-      "out": 1507,
-      "ans": 117,
-      "lines": 6
+      "out": 902,
+      "ans": 34,
+      "lines": 1
     },
     {
       "task": "auth-bug",
@@ -52,9 +52,9 @@
       "task": "cache",
       "arm": "rdxifier",
       "kind": "coding",
-      "out": 709,
-      "ans": 77,
-      "lines": 6
+      "out": 571,
+      "ans": 68,
+      "lines": 7
     },
     {
       "task": "cache",
@@ -84,9 +84,9 @@
       "task": "debounce",
       "arm": "rdxifier",
       "kind": "coding",
-      "out": 475,
-      "ans": 43,
-      "lines": 3
+      "out": 602,
+      "ans": 257,
+      "lines": 35
     },
     {
       "task": "debounce",
@@ -116,9 +116,9 @@
       "task": "pooling",
       "arm": "rdxifier",
       "kind": "noncoding",
-      "out": 577,
-      "ans": 448,
-      "lines": 27
+      "out": 399,
+      "ans": 283,
+      "lines": 7
     },
     {
       "task": "pooling",
@@ -148,9 +148,9 @@
       "task": "regex-concept",
       "arm": "rdxifier",
       "kind": "noncoding",
-      "out": 289,
-      "ans": 114,
-      "lines": 9
+      "out": 195,
+      "ans": 74,
+      "lines": 3
     },
     {
       "task": "regex-concept",
@@ -180,9 +180,9 @@
       "task": "rest-graphql",
       "arm": "rdxifier",
       "kind": "noncoding",
-      "out": 571,
-      "ans": 279,
-      "lines": 19
+      "out": 372,
+      "ans": 270,
+      "lines": 9
     },
     {
       "task": "rest-graphql",
@@ -256,21 +256,21 @@
     },
     "rdxifier": {
       "coding": {
-        "out": 2691,
-        "ans": 237,
-        "lines": 15,
+        "out": 2075,
+        "ans": 359,
+        "lines": 43,
         "n": 3
       },
       "noncoding": {
-        "out": 1437,
-        "ans": 841,
-        "lines": 55,
+        "out": 966,
+        "ans": 627,
+        "lines": 19,
         "n": 3
       },
       "all": {
-        "out": 4128,
-        "ans": 1078,
-        "lines": 70,
+        "out": 3041,
+        "ans": 986,
+        "lines": 62,
         "n": 6
       }
     }

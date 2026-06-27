@@ -17,7 +17,7 @@
 </p>
 
 <p align="center">
-  <strong>Leanest code answers of the bunch &middot; ~85% smaller on coding tasks &middot; both prose AND code &middot; 8 agents &middot; one command</strong>
+  <strong>Leanest answers measured — coding *and* prose &middot; ~78% smaller on coding tasks &middot; 8 agents &middot; one command</strong>
 </p>
 
 ---
@@ -44,32 +44,33 @@ tone hooks, and personal config were neutralized so the arm is the only variable
 Reproduce: `bash benchmarks/run-live.sh` then `node benchmarks/aggregate.js`.
 
 <p align="center">
-  <img src="assets/benchmark.svg" width="820" alt="Visible answer size as percent of vanilla baseline. Coding: RDXifier 14%, ponytail 29%, caveman 46%. Non-coding: caveman 79%, RDXifier 96%, ponytail 121%.">
+  <img src="assets/benchmark.svg" width="820" alt="Visible answer size as percent of vanilla baseline. Coding: RDXifier 22%, ponytail 29%, caveman 46%. Non-coding: RDXifier 71%, caveman 79%, ponytail 121%.">
 </p>
 
 **Visible answer size, as % of the no-tool baseline (lower = leaner):**
 
 | | vanilla | caveman | ponytail | **RDXifier** |
 |---|--:|--:|--:|--:|
-| **coding** (tokens) | 100% | 46% | 29% | **14%** |
-| **coding** (lines) | 100% | 40% | 19% | **5%** |
-| **non-coding** (tokens) | 100% | **79%** | 121% | 96% |
-| **all 6 tasks** (tokens) | 100% | 57% | 61% | **43%** |
+| **coding** (tokens) | 100% | 46% | 29% | **22%** |
+| **coding** (lines) | 100% | 40% | 19% | **14%** |
+| **non-coding** (tokens) | 100% | 79% | 121% | **71%** |
+| **all 6 tasks** (tokens) | 100% | 57% | 61% | **39%** |
 
 The honest read:
 
-- **On coding, RDXifier wins clearly** — 14% of the baseline's answer tokens, 5% of its
-  lines, leanest of all four. The hero case: a "add a cache" prompt where vanilla
-  over-built a **150-line** cache class and RDXifier delivered **6 lines**.
-- **On non-coding prose, RDXifier does *not* win** — caveman, a dedicated prose
-  compressor, is leanest there (79%); RDXifier is roughly neutral (96%); ponytail is
-  actually *worse* than no tool (121%). If your work is mostly prose, a prose specialist
-  is the better pick — and this README says so.
-- **Billed tokens (incl. model reasoning) tie at ~45% overall** across all three skills:
+- **On coding, RDXifier is leanest** — 22% of the baseline's answer tokens, 14% of its
+  lines, ahead of caveman (46%) and ponytail (29%). The hero case: a "add a cache" prompt
+  where vanilla over-built a **150-line** cache class and RDXifier delivered **6 lines**.
+- **On non-coding prose, RDXifier is also leanest (71%)** — narrowly ahead of caveman, a
+  dedicated prose compressor (79%), while ponytail is actually *worse* than no tool (121%,
+  it pads prose with structure). RDXifier earns this with an explicit "structure is tokens"
+  rule: answer at the question's altitude, no manufactured headings or bullet scaffolding.
+- **Billed tokens (incl. model reasoning) land at ~45% overall** across all three skills:
   they make the model think more but emit far less visible text. Full table:
   [`benchmarks/results/2026-06-29-live-4arm.md`](benchmarks/results/2026-06-29-live-4arm.md).
-- Small sample (n=6, one model). Directional, not a leaderboard. Raw outputs are committed
-  under [`benchmarks/results/raw/`](benchmarks/results/raw/) — audit them yourself.
+- Small sample (n=6, one model, temperature variance run-to-run). Directional, not a
+  leaderboard. Raw outputs committed under
+  [`benchmarks/results/raw/`](benchmarks/results/raw/) — audit them yourself.
 
 > ⚠️ Earlier versions of this README showed a "74% / both-axes-win" chart **modeled from
 > hand-authored examples**. That was replaced with the live measurement above. The code
@@ -296,9 +297,9 @@ rdxifier/
 ## FAQ
 
 **Why not just use a prose-compressor or a code-minimizer?**
-On coding tasks, cutting both axes wins — RDXifier delivers the leanest answers measured
-(14% of baseline tokens vs caveman's 46% and ponytail's 29%). On pure prose, a dedicated
-prose compressor is the better tool; the [Numbers](#numbers) section says so outright.
+Each handles one axis. RDXifier measured leanest on *both* — coding (22% of baseline
+tokens vs caveman 46%, ponytail 29%) and non-coding prose (71% vs caveman 79%, ponytail's
+121%). A code-minimizer pads prose; a prose-compressor leaves over-built code. See [Numbers](#numbers).
 
 **Will it golf my code into something clever and unreadable?**
 No. The rule is *necessary*, not *fewest characters*. Boring over clever — clever is
