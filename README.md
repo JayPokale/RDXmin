@@ -17,15 +17,21 @@
 </p>
 
 <p align="center">
-  <strong>Leanest answers measured — coding *and* prose &middot; ~78% smaller on coding tasks &middot; 8 agents &middot; one command</strong>
+  <strong>The only efficiency skill that never backfires &middot; both prose AND code &middot; 8 agents &middot; one command</strong>
 </p>
 
 ---
 
-Most "be concise" tools compress one axis. Prose-compressors (caveman-style) shrink the
-chatter but leave the over-built code. Code-minimizers (ponytail-style) cut the code but
-can ramble in prose. **RDXifier does both** — zero-fluff prose *and* a YAGNI-first code
-ladder, always on together.
+Most "be concise" tools compress one axis and gamble on the other. Prose-compressors
+(caveman-style) shrink the chatter but have no code judgment — and occasionally over-answer.
+Code-minimizers (ponytail-style) cut code but **pad prose, sometimes making a response
+*longer* than no tool at all** (measured: up to 2.3×).
+
+**RDXifier does both axes, and across 14 measured tasks it never once made an answer worse
+than the no-tool baseline** — worst case 83%, while caveman hit 130% and ponytail 227%. It's
+not the single tersest on every task; it's the one with **no failure mode**. The dependable
+generalist you'd otherwise need two conflicting plugins to approximate.
+[The numbers ↓](#numbers) · [why not just use caveman/ponytail](#why-not-just-use-caveman-or-ponytail)
 
 ## What it does
 
@@ -74,20 +80,33 @@ The honest read:
 
 ### Why not just use caveman or ponytail?
 
-A Sonnet cross-check ([full writeup](benchmarks/results/2026-06-29-sonnet-cross-check.md))
-makes the difference concrete. Asked to *"add caching to this function"* — where the right
-answer is one stdlib decorator:
+Because each has a failure mode, and RDXifier doesn't. Across **14 tasks** (code, prose,
+and vague "judgment" requests; Haiku + Sonnet), measured as % of the no-tool baseline:
 
-| | tokens | what it did |
-|---|--:|---|
-| caveman | 330 | dumped **three** implementations (lru_cache + manual dict + cachetools) — terse, but no judgment about which to use |
-| **RDXifier** | **151** | one answer: `@cache`, plus a one-line upgrade path |
+| | worst case | times it made the answer **worse** than no tool | code judgment |
+|---|--:|--:|:--:|
+| caveman | 130% | 1 / 14 | ❌ no ladder |
+| ponytail | **227%** | **4 / 14** | ✅ |
+| **RDXifier** | **83%** | **0 / 14** | ✅ |
 
-caveman is a superb *prose* compressor — on pure-prose prompts it's a hair leaner than
-RDXifier (44% vs 52% of baseline). But it has **no engineering judgment**: on a code
-decision it over-answers. ponytail has the judgment but **pads prose** (71–121% of
-baseline). **RDXifier is the only one lean on both axes** — caveman fails code-judgment,
-ponytail fails prose, RDXifier has no failure mode. That's what wins a real mixed workload.
+caveman is a superb *prose* compressor (a hair leaner than RDXifier on pure prose) but has
+**no engineering judgment** — asked to *"add caching,"* it dumped three implementations (330
+tokens) where RDXifier gave one `@cache` + an upgrade line (151). ponytail has the judgment
+but **pads prose so hard it backfires** — on a "retry logic" prompt it ran **227%** of the
+no-tool baseline.
+
+**RDXifier never backfired once** (worst case 83% = still a saving). It's rarely the single
+tersest answer and never the loser — the dependable generalist. To get its both-axes coverage
+from the specialists you'd install *both*, which conflict and double the per-session overhead;
+stacked on one task they did *worse* (605t) than RDXifier alone (595t). Full data:
+[reliability writeup](benchmarks/results/2026-06-29-reliability.md) ·
+[Sonnet cross-check](benchmarks/results/2026-06-29-sonnet-cross-check.md).
+
+### `/rdx-audit` — a thing neither specialist has
+
+One pass over a diff, file, or repo that flags **both** over-engineered code *and* bloated
+prose/docs/comments, ranked biggest-cut-first. ponytail-audit is code-only; caveman has no
+audit at all. `/rdx-audit` is the union — what a PR reviewer actually wants in one report.
 
 > ⚠️ Earlier versions of this README showed a "74% / both-axes-win" chart **modeled from
 > hand-authored examples**. That was replaced with the live measurement above. The code

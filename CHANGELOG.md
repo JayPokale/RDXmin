@@ -7,6 +7,13 @@ Format loosely follows [Keep a Changelog](https://keepachangelog.com/).
 
 ### Added
 - Unified efficiency mode: zero-fluff prose + YAGNI-first code, always active together.
+- **`/rdx-audit`** — one-shot audit of a diff/file/repo across both axes: over-engineered
+  code *and* bloated prose/docs/comments, ranked biggest-cut-first. Neither a code-only
+  auditor nor a prose compressor does both; this is the union.
+- **Reliability finding** (14 tasks, 2 models): RDXifier never exceeded the no-tool token
+  baseline (worst case 83%), while caveman hit 130% once and ponytail 227% on 4 tasks. The
+  honest value prop is "no failure mode," not "tersest on every task." See
+  `benchmarks/results/2026-06-29-reliability.md`.
 - `/rdx` command with `lite` / `full` / `ultra` levels; natural-language activation.
 - SessionStart + UserPromptSubmit hooks with symlink-safe flag handling (`O_NOFOLLOW`, 0600).
 - Statusline badge `[RDX]` / `[RDX:ULTRA]` (bash + PowerShell). Shows the active level

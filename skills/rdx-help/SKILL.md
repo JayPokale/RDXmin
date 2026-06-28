@@ -18,6 +18,8 @@ description: >
 | `/rdx lite` | Tighter prose, flags the minimal alternative |
 | `/rdx full` | Full compression + YAGNI ladder |
 | `/rdx ultra` | Extremist: abbreviate prose, delete before add |
+| `/rdx-audit [path]` | Audit a diff/file/repo for both code bloat AND prose verbosity |
+| `/rdx-review` | Review the current diff for over-engineering |
 | `stop rdx` / `normal mode` | Deactivate |
 
 Natural language works: "activate rdx", "rdx mode", "rdxify this".
