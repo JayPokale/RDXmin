@@ -5,7 +5,7 @@
 <h1 align="center">RDXifier</h1>
 
 <p align="center">
-  <em>Maximum signal. Minimum noise. Write less. Ship less. Mean more.</em>
+  <em>Your AI talks less, builds less, and somehow says more. Like a senior dev who bills by the syllable.</em>
 </p>
 
 <p align="center">
@@ -13,70 +13,87 @@
   <img src="https://img.shields.io/badge/works%20with-8%20agents-d78a3c?style=flat-square" alt="Works with 8 agents">
   <img src="https://img.shields.io/badge/tests-36%20passing-2da44e?style=flat-square" alt="36 tests">
   <img src="https://img.shields.io/badge/deps-0-2da44e?style=flat-square" alt="Zero deps">
+  <img src="https://img.shields.io/badge/backfires-0%2F14-2da44e?style=flat-square" alt="0 backfires">
   <img src="https://img.shields.io/badge/license-MIT-d78a3c?style=flat-square" alt="MIT">
 </p>
 
 <p align="center">
-  <strong>The only efficiency skill that never backfires &middot; both prose AND code &middot; 8 agents &middot; one command</strong>
+  <strong>The only AI efficiency tool that never makes things worse &middot; prose AND code &middot; one command</strong>
 </p>
 
 ---
 
-Most "be concise" tools compress one axis and gamble on the other. Prose-compressors
-(caveman-style) shrink the chatter but have no code judgment — and occasionally over-answer.
-Code-minimizers (ponytail-style) cut code but **pad prose, sometimes making a response
-*longer* than no tool at all** (measured: up to 2.3×).
+You asked your AI agent for a debounce function. It installed a library, wrote a wrapper
+component, added a stylesheet, and opened a philosophical discussion about timezones. Then it
+billed you 116 lines and a small fortune in tokens for `setTimeout`.
 
-**RDXifier does both axes, and across 14 measured tasks it never once made an answer worse
-than the no-tool baseline** — worst case 83%, while caveman hit 130% and ponytail 227%. It's
-not the single tersest on every task; it's the one with **no failure mode**. The dependable
-generalist you'd otherwise need two conflicting plugins to approximate.
-[The numbers ↓](#numbers) · [why not just use caveman/ponytail](#why-not-just-use-caveman-or-ponytail)
+RDXifier is the tool that makes it stop.
+
+There are two excellent specialists already: **[caveman](https://github.com/JuliusBrussee/caveman)**
+compresses prose like it's being charged per vowel, and **[ponytail](https://github.com/DietrichGebert/ponytail)**
+deletes code like it has a personal vendetta against line 117. Both are great. Both also have a
+catch: caveman has zero engineering judgment (ask it to "add caching" and it hands you three
+implementations and a shrug), and ponytail pads prose so enthusiastically it can make an answer
+**2.3× longer than using no tool at all**. Yes, a "write less" tool. Writing more. We have the
+receipts ([↓](#why-not-just-use-caveman-or-ponytail)).
+
+RDXifier does both axes at once and — across **14 measured tasks on two models** — is the only
+one of the three that **never once backfired**. It's not always the single tersest answer. It's
+the one that never betrays you. The Toyota Corolla of efficiency skills: not the flashiest, just
+the one that always starts.
 
 ## What it does
 
 **Zero-fluff prose** — drops articles, filler, pleasantries, hedging. Fragments OK.
 Technical terms stay exact. Code blocks unchanged. Pattern: `[thing] [action] [reason].`
 
-**Efficiency-first code** — applies the YAGNI ladder before writing anything.
-Stdlib first. Native platform over dependencies. One line over fifty. Deletion over addition.
+**Efficiency-first code** — runs the YAGNI ladder before writing anything: does this need to
+exist? → stdlib? → one line? → *fine,* the minimum that works. Stdlib over deps, native over
+JS, deletion over addition, and a `// rdx:` comment whenever it takes a deliberate shortcut so
+"later" doesn't quietly become "never."
 
 ## Numbers
 
-A real head-to-head: **24 live model runs** — 4 arms (no tool, [caveman](https://github.com/JuliusBrussee/caveman),
-[ponytail](https://github.com/DietrichGebert/ponytail), RDXifier) × 6 tasks (3 coding, 3
-non-coding), Haiku 4.5, each arm differing only in its injected system prompt. Plugins,
-tone hooks, and personal config were neutralized so the arm is the only variable.
-Reproduce: `bash benchmarks/run-live.sh` then `node benchmarks/aggregate.js`.
+No hand-wavy "up to 90%!" marketing math here. This is **40+ live model runs** across
+14 tasks — 4 arms (no tool, [caveman](https://github.com/JuliusBrussee/caveman),
+[ponytail](https://github.com/DietrichGebert/ponytail), RDXifier) on Haiku **and** Sonnet,
+each arm differing *only* in the injected system prompt. Every raw answer is committed so
+you can call us liars with evidence. Here's the chart that matters — each tool's **worst
+case** across all 14 tasks:
 
 <p align="center">
-  <img src="assets/benchmark.svg" width="820" alt="Visible answer size as percent of vanilla baseline. Coding: RDXifier 22%, ponytail 29%, caveman 46%. Non-coding: RDXifier 71%, caveman 79%, ponytail 121%.">
+  <img src="assets/benchmark.svg" width="820" alt="Worst-case output size across 14 tasks as percent of the no-tool baseline. ponytail 227% (backfired on 4 tasks), caveman 130% (1 task), RDXifier 83% (never backfires).">
 </p>
 
-**Visible answer size, as % of the no-tool baseline (lower = leaner):**
+Read that again: ponytail, a tool whose entire job is *writing less code*, has a worst case
+of **227%** — more than double what you'd get by using nothing. caveman creeps over the line
+once. RDXifier's worst day is still a 17% discount. It is, statistically, incapable of wasting
+your tokens. (We tried. It wouldn't.)
+
+<details>
+<summary><strong>"But who wins on a good day?"</strong> — the per-segment breakdown (Haiku, 6 tasks)</summary>
+
+Visible answer size as % of the no-tool baseline, lower = leaner:
 
 | | vanilla | caveman | ponytail | **RDXifier** |
 |---|--:|--:|--:|--:|
 | **coding** (tokens) | 100% | 46% | 29% | **22%** |
 | **coding** (lines) | 100% | 40% | 19% | **14%** |
 | **non-coding** (tokens) | 100% | 79% | 121% | **71%** |
-| **all 6 tasks** (tokens) | 100% | 57% | 61% | **39%** |
+| **all 6 tasks** | 100% | 57% | 61% | **39%** |
 
-The honest read:
+On coding, RDXifier is leanest (a "add a cache" prompt where vanilla wrote a **150-line**
+class became **6 lines**). On pure prose, caveman is a hair leaner on a *good* day (44% vs
+52% on tiny prompts) — it's a dedicated prose compressor, and credit where due. RDXifier's
+whole pitch is that it doesn't *have* a bad day. Full tables:
+[live 4-arm](benchmarks/results/2026-06-29-live-4arm.md) ·
+[reliability](benchmarks/results/2026-06-29-reliability.md). Reproduce:
+`bash benchmarks/run-live.sh`.
 
-- **On coding, RDXifier is leanest** — 22% of the baseline's answer tokens, 14% of its
-  lines, ahead of caveman (46%) and ponytail (29%). The hero case: a "add a cache" prompt
-  where vanilla over-built a **150-line** cache class and RDXifier delivered **6 lines**.
-- **On non-coding prose, RDXifier is also leanest (71%)** — narrowly ahead of caveman, a
-  dedicated prose compressor (79%), while ponytail is actually *worse* than no tool (121%,
-  it pads prose with structure). RDXifier earns this with an explicit "structure is tokens"
-  rule: answer at the question's altitude, no manufactured headings or bullet scaffolding.
-- **Billed tokens (incl. model reasoning) land at ~45% overall** across all three skills:
-  they make the model think more but emit far less visible text. Full table:
-  [`benchmarks/results/2026-06-29-live-4arm.md`](benchmarks/results/2026-06-29-live-4arm.md).
-- Small sample (n=6, one model, temperature variance run-to-run). Directional, not a
-  leaderboard. Raw outputs committed under
-  [`benchmarks/results/raw/`](benchmarks/results/raw/) — audit them yourself.
+</details>
+
+Small sample, two models, temperature wobble. Directional, not gospel — but it's *measured*,
+which already puts it ahead of most READMEs.
 
 ### Why not just use caveman or ponytail?
 
@@ -116,7 +133,9 @@ audit at all. `/rdx-audit` is the union — what a PR reviewer actually wants in
 
 ## Install
 
-One line — auto-detects your agents (Claude Code, Cursor, Windsurf, Cline, Kiro, Codex, Gemini, Copilot) and installs for each:
+It's one command, it touches nothing it shouldn't, and `--uninstall` puts everything back
+if we're not friends anymore. Auto-detects your agents (Claude Code, Cursor, Windsurf, Cline,
+Kiro, Codex, Gemini, Copilot) and wires each one:
 
 ```bash
 npx rdxifier
@@ -334,26 +353,38 @@ rdxifier/
 
 ## FAQ
 
-**Why not just use a prose-compressor or a code-minimizer?**
-Each handles one axis. RDXifier measured leanest on *both* — coding (22% of baseline
-tokens vs caveman 46%, ponytail 29%) and non-coding prose (71% vs caveman 79%, ponytail's
-121%). A code-minimizer pads prose; a prose-compressor leaves over-built code. See [Numbers](#numbers).
+**Why not just use caveman or ponytail?**
+Use them! They're great, we cite them by name, and we tested *against* them honestly. But
+caveman has no engineering judgment and ponytail can backfire (227%, measured). Installing
+*both* to cover both axes gets you two plugins that fight over your prose style and double
+the overhead. RDXifier is the one that does both and never face-plants. See [Numbers](#numbers).
 
-**Will it golf my code into something clever and unreadable?**
-No. The rule is *necessary*, not *fewest characters*. Boring over clever — clever is
-what someone decodes at 3am. Deletion beats addition; obfuscation isn't deletion.
+**Will it golf my code into clever one-liners I'll hate at 3am?**
+No. The rule is *necessary*, not *fewest characters*. Boring over clever — because clever is
+what some poor soul (you, in six months) has to decode during an incident. Deletion beats
+addition; obfuscation isn't deletion.
 
-**Does it ever cut safety?**
-Never. Input validation at trust boundaries, error handling that prevents data loss,
-security, and accessibility are explicitly off-limits. Lazy about solutions, not reading.
+**Does it ever cut corners on safety?**
+Never. Input validation, error handling that prevents data loss, security, and accessibility
+are explicitly off the table. It's lazy about *solutions*, not about *reading the problem* —
+which, frankly, is more discipline than some humans bring to a PR.
+
+**It made my answer terse and dropped something I needed!**
+File an issue — that's a bug, not the design. The whole point is *terse ≠ incomplete*: keep
+the fix, cut the fluff. If it dropped the fix, it failed its own rules and we want to know.
 
 **Does it work outside Claude Code?**
-Yes — the instruction set ships to Cursor, Windsurf, Cline, Kiro, Codex, Gemini, and
-Copilot. The live mode-switching UI (`/rdx`, statusline badge) is Claude-Code-specific;
-elsewhere the always-on ruleset still applies. See [agent portability](docs/agent-portability.md).
+Yes — ships to Cursor, Windsurf, Cline, Kiro, Codex, Gemini, and Copilot. The live
+mode-switching UI (`/rdx`, statusline badge) is Claude-Code-specific; everywhere else the
+always-on ruleset still applies. See [agent portability](docs/agent-portability.md).
 
 **Why "RDXifier"?**
-It's a demolition charge for your token bill. Things get smaller. Loudly.
+RDX is a demolition charge. Your token bill is the building. Use your imagination. (Legally,
+the only thing it detonates is verbosity.)
+
+**0 GitHub stars. Should I be worried?**
+Everyone starts at zero. You could be the protagonist of this repo's origin story. Or just
+run `npx rdxifier --dry-run`, see what it'd do, and decide. No commitment, no stars required.
 
 ## Contributing
 
