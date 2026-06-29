@@ -88,8 +88,7 @@ class became **7 lines**). On pure prose, caveman is a hair leaner on a *good* d
 52% on tiny prompts) — it's a dedicated prose compressor, and credit where due. RDXifier's
 whole pitch is that it doesn't *have* a bad day. Full tables:
 [live 4-arm](benchmarks/results/2026-06-29-live-4arm.md) ·
-[reliability](benchmarks/results/2026-06-29-reliability.md). Reproduce:
-`bash benchmarks/run-live.sh`.
+[reliability](benchmarks/results/2026-06-29-reliability.md).
 
 </details>
 
@@ -311,16 +310,16 @@ export RDX_DEFAULT_MODE=ultra
 
 ## Benchmarks
 
-```bash
-bash benchmarks/run-live.sh    # 24 live model runs (4 arms x 6 tasks) — the real head-to-head
-node benchmarks/aggregate.js   # turn raw runs into the comparison tables
-node scripts/build-chart.js    # regenerate the chart above from frozen results
-npm test                       # 34 tests: flag safety, tracker, settings merge, installer
-```
+Every number in this README comes from real model runs across four arms (no tool,
+caveman, ponytail, RDXifier), isolated so the only variable is the injected system
+prompt. The raw model outputs and the aggregated tables are committed for audit:
 
-`run-live.sh` drives the authenticated `claude` CLI, isolating each arm so the only
-variable is the injected system prompt. Raw outputs land in
-[`benchmarks/results/raw/`](./benchmarks/results/raw/) and are committed for audit.
+- [`benchmarks/results/raw/`](./benchmarks/results/raw/) · [`raw-sonnet/`](./benchmarks/results/raw-sonnet/) — every individual answer, as JSON
+- [`reliability`](./benchmarks/results/2026-06-29-reliability.md) · [`live 4-arm`](./benchmarks/results/2026-06-29-live-4arm.md) · [`Sonnet cross-check`](./benchmarks/results/2026-06-29-sonnet-cross-check.md) — the writeups
+
+```bash
+npm test    # 34 tests: flag safety, tracker, settings merge, installer
+```
 
 ## Multi-agent
 
@@ -345,7 +344,7 @@ rdxifier/
 │   ├── rdx-config.js              ← safeWriteFlag, readFlag, getDefaultMode
 │   └── package.json               ← {"type": "commonjs"}
 ├── commands/                      ← /rdx, /rdx-help, /rdx-review, /rdx-audit
-├── benchmarks/                    ← run-live.sh, aggregate.js, results/ + raw cells
+├── benchmarks/                    ← committed results/ + raw model-output cells
 ├── tests/                         ← config, settings, tracker, installer
 ├── scripts/                       ← build-rules.js, build-chart.js
 ├── docs/                          ← install-windows, agent-portability, releasing
