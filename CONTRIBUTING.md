@@ -34,7 +34,7 @@ Add a test for any hook logic change. The test file is `tests/test_hooks.js`.
 
 - [ ] `skills/rdxifier/SKILL.md` is the source of truth — no hardcoded rule duplication in hooks
 - [ ] Hook changes don't break the flag file security model
-- [ ] New behavior has an example in `examples/`
+- [ ] New behavior is covered by a benchmark task in `benchmarks/run-live.sh` (if measurable)
 - [ ] Tests pass
 
 ## Reporting bugs

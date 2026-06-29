@@ -2,7 +2,7 @@
   <img src="assets/logo.svg" width="120" alt="RDXifier">
 </p>
 
-<h1 align="center">RDXifier</h1>
+<h1 align="center">🧨 RDXifier</h1>
 
 <p align="center">
   <em>Your AI talks less, builds less, and somehow says more. Like a senior dev who bills by the syllable.</em>
@@ -11,7 +11,7 @@
 <p align="center">
   <img src="https://img.shields.io/badge/status-pre--release-d78a3c?style=flat-square" alt="Pre-release">
   <img src="https://img.shields.io/badge/works%20with-8%20agents-d78a3c?style=flat-square" alt="Works with 8 agents">
-  <img src="https://img.shields.io/badge/tests-36%20passing-2da44e?style=flat-square" alt="36 tests">
+  <img src="https://img.shields.io/badge/tests-34%20passing-2da44e?style=flat-square" alt="34 tests">
   <img src="https://img.shields.io/badge/deps-0-2da44e?style=flat-square" alt="Zero deps">
   <img src="https://img.shields.io/badge/backfires-0%2F14-2da44e?style=flat-square" alt="0 backfires">
   <img src="https://img.shields.io/badge/license-MIT-d78a3c?style=flat-square" alt="MIT">
@@ -23,19 +23,20 @@
 
 ---
 
-You asked your AI agent for a debounce function. It installed a library, wrote a wrapper
-component, added a stylesheet, and opened a philosophical discussion about timezones. Then it
-billed you 116 lines and a small fortune in tokens for `setTimeout`.
+🧨 You asked your AI agent to "add a cache." In our actual benchmark, a bare agent answered
+with a **150-line** cache class — config object, TTL logic, stats counters, the works.
+RDXifier's answer to the same prompt: **7 lines.** Same model, same question, measured, receipts
+committed in [`benchmarks/`](benchmarks/results/).
 
-RDXifier is the tool that makes it stop.
+RDXifier is the tool that makes that stop.
 
 There are two excellent specialists already: **[caveman](https://github.com/JuliusBrussee/caveman)**
 compresses prose like it's being charged per vowel, and **[ponytail](https://github.com/DietrichGebert/ponytail)**
 deletes code like it has a personal vendetta against line 117. Both are great. Both also have a
-catch: caveman has zero engineering judgment (ask it to "add caching" and it hands you three
-implementations and a shrug), and ponytail pads prose so enthusiastically it can make an answer
-**2.3× longer than using no tool at all**. Yes, a "write less" tool. Writing more. We have the
-receipts ([↓](#why-not-just-use-caveman-or-ponytail)).
+catch we measured: caveman has zero engineering judgment (ask it to "add caching" and it hands
+you *three* implementations and a shrug — 330 tokens to RDXifier's 151), and ponytail pads prose
+so enthusiastically that on one prompt it ran **227% of the no-tool baseline**. Yes — a "write
+less" tool, writing more. 🔥 Receipts: [↓](#why-not-just-use-caveman-or-ponytail).
 
 RDXifier does both axes at once and — across **14 measured tasks on two models** — is the only
 one of the three that **never once backfired**. It's not always the single tersest answer. It's
@@ -52,9 +53,9 @@ exist? → stdlib? → one line? → *fine,* the minimum that works. Stdlib over
 JS, deletion over addition, and a `// rdx:` comment whenever it takes a deliberate shortcut so
 "later" doesn't quietly become "never."
 
-## Numbers
+## 🧨 Numbers
 
-No hand-wavy "up to 90%!" marketing math here. This is **40+ live model runs** across
+No hand-wavy "up to 90%!" marketing math here. This is **59 live model runs** across
 14 tasks — 4 arms (no tool, [caveman](https://github.com/JuliusBrussee/caveman),
 [ponytail](https://github.com/DietrichGebert/ponytail), RDXifier) on Haiku **and** Sonnet,
 each arm differing *only* in the injected system prompt. Every raw answer is committed so
@@ -82,8 +83,8 @@ Visible answer size as % of the no-tool baseline, lower = leaner:
 | **non-coding** (tokens) | 100% | 79% | 121% | **71%** |
 | **all 6 tasks** | 100% | 57% | 61% | **39%** |
 
-On coding, RDXifier is leanest (a "add a cache" prompt where vanilla wrote a **150-line**
-class became **6 lines**). On pure prose, caveman is a hair leaner on a *good* day (44% vs
+On coding, RDXifier is leanest (the "add a cache" prompt where vanilla wrote a **150-line**
+class became **7 lines**). On pure prose, caveman is a hair leaner on a *good* day (44% vs
 52% on tiny prompts) — it's a dedicated prose compressor, and credit where due. RDXifier's
 whole pitch is that it doesn't *have* a bad day. Full tables:
 [live 4-arm](benchmarks/results/2026-06-29-live-4arm.md) ·
@@ -241,7 +242,10 @@ so any such number would be invented. The real numbers live in [Numbers](#number
 
 ---
 
-## Examples
+## 🔥 What the output sounds like
+
+Illustrative of the *style* at each level (not benchmark numbers — those are
+[above](#numbers), with receipts):
 
 **"Why React component re-render?"** (full)
 > New object ref each render. Inline object prop = new ref = re-render. `useMemo`.
@@ -311,7 +315,7 @@ export RDX_DEFAULT_MODE=ultra
 bash benchmarks/run-live.sh    # 24 live model runs (4 arms x 6 tasks) — the real head-to-head
 node benchmarks/aggregate.js   # turn raw runs into the comparison tables
 node scripts/build-chart.js    # regenerate the chart above from frozen results
-npm test                       # 36 tests: flag safety, tracker, settings merge, installer
+npm test                       # 34 tests: flag safety, tracker, settings merge, installer
 ```
 
 `run-live.sh` drives the authenticated `claude` CLI, isolating each arm so the only
@@ -340,12 +344,11 @@ rdxifier/
 │   ├── rdx-statusline.sh / .ps1   ← statusline badge (bash + PowerShell)
 │   ├── rdx-config.js              ← safeWriteFlag, readFlag, getDefaultMode
 │   └── package.json               ← {"type": "commonjs"}
-├── commands/                      ← /rdx, /rdx-help, /rdx-review
-├── benchmarks/                    ← compare.js, promptfoo config, results/
-├── tests/                         ← config, tracker integration
-├── scripts/build-rules.js         ← generates per-agent rule copies
-├── docs/                          ← install-windows, agent-portability
-├── examples/                      ← before/after comparisons
+├── commands/                      ← /rdx, /rdx-help, /rdx-review, /rdx-audit
+├── benchmarks/                    ← run-live.sh, aggregate.js, results/ + raw cells
+├── tests/                         ← config, settings, tracker, installer
+├── scripts/                       ← build-rules.js, build-chart.js
+├── docs/                          ← install-windows, agent-portability, releasing
 ├── .cursor / .windsurf / .clinerules / .kiro / .github  ← per-agent rules
 ├── AGENTS.md / GEMINI.md          ← agent-agnostic instruction sets
 └── rules/rdx-activate.md          ← always-on rules reference

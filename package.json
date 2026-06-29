@@ -23,12 +23,12 @@
     "node": ">=18"
   },
   "scripts": {
-    "test": "node --test tests/*.js benchmarks/*.test.js",
+    "test": "node --test tests/*.js",
     "build:rules": "node scripts/build-rules.js",
     "check:rules": "node scripts/build-rules.js --check",
     "build:chart": "node scripts/build-chart.js",
     "check:chart": "node scripts/build-chart.js --check",
-    "bench": "node benchmarks/compare.js"
+    "bench": "bash benchmarks/run-live.sh"
   },
   "files": [
     "bin/",

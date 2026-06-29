@@ -32,7 +32,7 @@ Format loosely follows [Keep a Changelog](https://keepachangelog.com/).
   numbers are generated from this real data (replacing an earlier chart modeled from
   hand-authored examples). Finding: rdxifier is leanest on coding tasks; on pure prose a
   dedicated prose compressor wins — stated plainly, not cherry-picked.
-- Deterministic example check (`benchmarks/compare.js`) + chart generator (`scripts/build-chart.js`) + promptfoo config.
+- Chart generator (`scripts/build-chart.js`, reliability worst-case from real cells) + promptfoo config.
 - npm trusted publishing (OIDC, provenance) + GitHub Release workflow on `v*` tags.
 - Test suite: 36 tests across flag safety, tracker, settings merge, installer integration. CI on Node 18/20/22.
 

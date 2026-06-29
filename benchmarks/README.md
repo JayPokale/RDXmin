@@ -22,16 +22,7 @@ ponytail 29%, caveman 46%. **non-coding** — caveman 79%, rdxifier 96%, ponytai
 rdxifier is leanest on code; on pure prose a dedicated prose compressor wins. The
 chart and README state this plainly — no cherry-picking.
 
-## 2. Deterministic example check (no API key)
-
-`compare.js` measures the reduction in the committed `examples/*.md` (illustrative
-teaching cases, not a model capture). Stable because the inputs are fixed.
-
-```bash
-node benchmarks/compare.js
-```
-
-## 3. promptfoo config (alternative live runner, requires API key)
+## 2. promptfoo config (alternative live runner, requires API key)
 
 `promptfooconfig.yaml` runs the same prompts through a real model across three
 arms — baseline (no plugin), rdxifier, and (optionally) the parent-style

@@ -17,7 +17,7 @@ jobs:
         with:
           node-version: ${{ matrix.node }}
       - name: Run tests
-        run: node --test tests/*.js benchmarks/*.test.js
+        run: node --test tests/*.js
       - name: Verify rule copies are in sync
         run: node scripts/build-rules.js --check
       - name: Verify benchmark chart is in sync

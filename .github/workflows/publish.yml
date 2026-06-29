@@ -24,7 +24,7 @@ jobs:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
         with: { node-version: '22' }
-      - run: node --test tests/*.js benchmarks/*.test.js
+      - run: node --test tests/*.js
       - run: node scripts/build-rules.js --check
       - run: node scripts/build-chart.js --check
 
