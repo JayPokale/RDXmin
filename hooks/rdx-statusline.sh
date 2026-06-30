@@ -1,5 +1,5 @@
 #!/bin/bash
-# rdxifier — statusline badge for Claude Code
+# rdxmin — statusline badge for Claude Code
 #
 # Usage in ~/.claude/settings.json:
 #   "statusLine": { "type": "command", "command": "bash /path/to/rdx-statusline.sh" }

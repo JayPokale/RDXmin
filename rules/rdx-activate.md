@@ -1,6 +1,6 @@
-# RDXifier — Always-On Rules
+# RDXmin — Always-On Rules
 
-When rdxifier mode is active, apply both dimensions simultaneously:
+When rdxmin mode is active, apply both dimensions simultaneously:
 
 **Prose:** Zero fluff. Drop articles, filler, pleasantries, hedging.
 Fragments OK. Technical terms exact. Code blocks unchanged.

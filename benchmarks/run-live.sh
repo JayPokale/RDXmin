@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Live 4-arm benchmark: vanilla vs caveman vs ponytail vs rdxifier.
+# Live 4-arm benchmark: vanilla vs caveman vs ponytail vs rdxmin.
 #
 # Drives the authenticated `claude` CLI headlessly. Each arm differs ONLY in the
 # system prompt appended (the respective SKILL.md body); vanilla appends nothing.
@@ -25,13 +25,13 @@ trap 'rm -rf "$ISO"' EXIT
 # Arm system prompts (frontmatter stripped). vanilla = none.
 CAVEMAN_SKILL="/home/jay/Desktop/caveman/skills/caveman/SKILL.md"
 PONYTAIL_SKILL="/home/jay/Desktop/ponytail/skills/ponytail/SKILL.md"
-RDX_SKILL="$HERE/../skills/rdxifier/SKILL.md"
+RDX_SKILL="$HERE/../skills/rdxmin/SKILL.md"
 
 strip_fm() { awk 'BEGIN{n=0} /^---[[:space:]]*$/{n++; next} n>=2{print} n<2 && !/^---/ && n==1{print}' "$1" 2>/dev/null || cat "$1"; }
 for f in "$CAVEMAN_SKILL" "$PONYTAIL_SKILL" "$RDX_SKILL"; do [ -f "$f" ] || { echo "missing skill: $f"; exit 1; }; done
 strip_fm "$CAVEMAN_SKILL" > "$ISO/caveman.txt"
 strip_fm "$PONYTAIL_SKILL" > "$ISO/ponytail.txt"
-strip_fm "$RDX_SKILL" > "$ISO/rdxifier.txt"
+strip_fm "$RDX_SKILL" > "$ISO/rdxmin.txt"
 
 # Tasks: id<TAB>kind<TAB>prompt
 TASKS=$(cat <<'EOF'
@@ -61,7 +61,7 @@ echo "model: $MODEL"
 while IFS=$'\t' read -r id kind prompt; do
   [ -z "$id" ] && continue
   echo "task: $id ($kind)"
-  for arm in vanilla caveman ponytail rdxifier; do
+  for arm in vanilla caveman ponytail rdxmin; do
     run_cell "$arm" "$id" "$prompt"
   done
 done <<< "$TASKS"

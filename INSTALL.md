@@ -3,10 +3,10 @@
 ## One-line installer (recommended)
 
 ```bash
-npx rdxifier
+npx rdxmin
 ```
 
-Detects every supported agent on your machine and installs RDXifier for each:
+Detects every supported agent on your machine and installs RDXmin for each:
 
 | Agent | What gets installed | Scope |
 |-------|--------------------|-------|
@@ -18,20 +18,20 @@ Detects every supported agent on your machine and installs RDXifier for each:
 Flags:
 
 ```bash
-npx rdxifier --list          # show detected agents, install nothing
-npx rdxifier --only claude   # one agent
-npx rdxifier --dry-run       # preview, change nothing
-npx rdxifier --force         # reinstall / overwrite
-npx rdxifier --uninstall     # remove everything it added
+npx rdxmin --list          # show detected agents, install nothing
+npx rdxmin --only claude   # one agent
+npx rdxmin --dry-run       # preview, change nothing
+npx rdxmin --force         # reinstall / overwrite
+npx rdxmin --uninstall     # remove everything it added
 ```
 
 curl / PowerShell one-liners:
 
 ```bash
-curl -fsSL https://raw.githubusercontent.com/jaypokale/rdxifier/main/install.sh | bash
+curl -fsSL https://raw.githubusercontent.com/jaypokale/rdxmin/main/install.sh | bash
 ```
 ```powershell
-irm https://raw.githubusercontent.com/jaypokale/rdxifier/main/install.ps1 | iex
+irm https://raw.githubusercontent.com/jaypokale/rdxmin/main/install.ps1 | iex
 ```
 
 ## Manual Claude Code plugin
@@ -41,12 +41,12 @@ Add to `~/.claude/settings.json`:
 ```json
 {
   "plugins": [
-    "/path/to/rdxifier"
+    "/path/to/rdxmin"
   ]
 }
 ```
 
-Restart Claude Code. RDXifier activates automatically on every session.
+Restart Claude Code. RDXmin activates automatically on every session.
 
 ## Statusline badge
 
@@ -56,7 +56,7 @@ To show `[RDX] 💥 3.5k` in your Claude Code statusline, also add:
 {
   "statusLine": {
     "type": "command",
-    "command": "bash \"/path/to/rdxifier/hooks/rdx-statusline.sh\""
+    "command": "bash \"/path/to/rdxmin/hooks/rdx-statusline.sh\""
   }
 }
 ```
@@ -91,7 +91,7 @@ Override default level via environment variable:
 export RDX_DEFAULT_MODE=ultra   # lite | full | ultra
 ```
 
-Or via config file at `~/.config/rdxifier/config.json`:
+Or via config file at `~/.config/rdxmin/config.json`:
 
 ```json
 { "defaultMode": "lite" }

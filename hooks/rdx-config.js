@@ -1,9 +1,9 @@
 #!/usr/bin/env node
-// rdxifier — shared configuration resolver
+// rdxmin — shared configuration resolver
 //
 // Resolution order for default mode:
 //   1. RDX_DEFAULT_MODE environment variable
-//   2. User config: $XDG_CONFIG_HOME/rdxifier/config.json, ~/.config/rdxifier/config.json
+//   2. User config: $XDG_CONFIG_HOME/rdxmin/config.json, ~/.config/rdxmin/config.json
 //   3. 'full'
 
 const fs = require('fs');
@@ -18,15 +18,15 @@ function getClaudeDir() {
 
 function getConfigDir() {
   if (process.env.XDG_CONFIG_HOME) {
-    return path.join(process.env.XDG_CONFIG_HOME, 'rdxifier');
+    return path.join(process.env.XDG_CONFIG_HOME, 'rdxmin');
   }
   if (process.platform === 'win32') {
     return path.join(
       process.env.APPDATA || path.join(os.homedir(), 'AppData', 'Roaming'),
-      'rdxifier'
+      'rdxmin'
     );
   }
-  return path.join(os.homedir(), '.config', 'rdxifier');
+  return path.join(os.homedir(), '.config', 'rdxmin');
 }
 
 function readModeFromConfigFile(configPath) {

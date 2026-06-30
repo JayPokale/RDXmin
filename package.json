@@ -1,5 +1,5 @@
 {
-  "name": "rdxifier",
+  "name": "rdxmin",
   "version": "1.0.0",
   "description": "Maximum-efficiency dev mode for Claude Code. Zero-fluff prose + YAGNI-first code decisions. One plugin that does both.",
   "keywords": ["claude-code", "claude-code-plugin", "productivity", "yagni", "minimal"],
@@ -8,16 +8,16 @@
     "name": "Jay Pokale",
     "url": "https://github.com/jaypokale"
   },
-  "homepage": "https://github.com/jaypokale/rdxifier",
+  "homepage": "https://github.com/jaypokale/rdxmin",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/jaypokale/rdxifier.git"
+    "url": "git+https://github.com/jaypokale/rdxmin.git"
   },
   "bugs": {
-    "url": "https://github.com/jaypokale/rdxifier/issues"
+    "url": "https://github.com/jaypokale/rdxmin/issues"
   },
   "bin": {
-    "rdxifier": "./bin/install.js"
+    "rdxmin": "./bin/install.js"
   },
   "engines": {
     "node": ">=18"

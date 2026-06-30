@@ -52,7 +52,7 @@ test('project rule install writes into CWD, is idempotent, --force overwrites', 
 
   // First install
   let r = runCLI(['--only', 'cursor'], { cwd: proj });
-  const ruleFile = path.join(proj, '.cursor', 'rules', 'rdxifier.mdc');
+  const ruleFile = path.join(proj, '.cursor', 'rules', 'rdxmin.mdc');
   assert.ok(fs.existsSync(ruleFile), 'rule file created in project');
   assert.match(r.out, /installed:/);
 

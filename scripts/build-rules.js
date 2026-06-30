@@ -12,7 +12,7 @@ const path = require('path');
 const ROOT = path.join(__dirname, '..');
 
 // The canonical rule body. Edit HERE, then `node scripts/build-rules.js`.
-const BODY = `RDXifier — maximum-efficiency dev mode. Two compressions, always active together.
+const BODY = `RDXmin — maximum-efficiency dev mode. Two compressions, always active together.
 
 **Prose:** Default to fragments. Drop articles, filler (just/really/basically/
 actually), pleasantries (sure/certainly/happy to), hedging, linking verbs where
@@ -41,18 +41,18 @@ Levels: lite / full (default) / ultra. Deactivate: "stop rdx" / "normal mode".`;
 
 // target file → frontmatter (or '' for none)
 const TARGETS = {
-  '.cursor/rules/rdxifier.mdc':
-    '---\ndescription: RDXifier — zero-fluff prose + YAGNI-first code\nalwaysApply: true\n---\n\n',
-  '.windsurf/rules/rdxifier.md':
+  '.cursor/rules/rdxmin.mdc':
+    '---\ndescription: RDXmin — zero-fluff prose + YAGNI-first code\nalwaysApply: true\n---\n\n',
+  '.windsurf/rules/rdxmin.md':
     '---\ntrigger: always_on\n---\n\n',
-  '.clinerules/rdxifier.md': '',
-  '.kiro/steering/rdxifier.md':
+  '.clinerules/rdxmin.md': '',
+  '.kiro/steering/rdxmin.md':
     '---\ninclusion: always\n---\n\n',
   '.github/copilot-instructions.md': '',
 };
 
 function render(frontmatter) {
-  return frontmatter + '# RDXifier\n\n' + BODY + '\n';
+  return frontmatter + '# RDXmin\n\n' + BODY + '\n';
 }
 
 function main() {

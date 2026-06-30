@@ -1,8 +1,8 @@
 <p align="center">
-  <img src="assets/logo.svg" width="120" alt="RDXifier">
+  <img src="assets/logo.svg" width="120" alt="RDXmin">
 </p>
 
-<h1 align="center">🧨 RDXifier</h1>
+<h1 align="center">🧨 RDXmin</h1>
 
 <p align="center">
   <em>Your AI talks less, builds less, and somehow says more. Like a senior dev who bills by the syllable.</em>
@@ -25,20 +25,20 @@
 
 🧨 You asked your AI agent to "add a cache." In our actual benchmark, a bare agent answered
 with a **150-line** cache class — config object, TTL logic, stats counters, the works.
-RDXifier's answer to the same prompt: **7 lines.** Same model, same question, measured, receipts
+RDXmin's answer to the same prompt: **7 lines.** Same model, same question, measured, receipts
 committed in [`benchmarks/`](benchmarks/results/).
 
-RDXifier is the tool that makes that stop.
+RDXmin is the tool that makes that stop.
 
 There are two excellent specialists already: **[caveman](https://github.com/JuliusBrussee/caveman)**
 compresses prose like it's being charged per vowel, and **[ponytail](https://github.com/DietrichGebert/ponytail)**
 deletes code like it has a personal vendetta against line 117. Both are great. Both also have a
 catch we measured: caveman has zero engineering judgment (ask it to "add caching" and it hands
-you *three* implementations and a shrug — 330 tokens to RDXifier's 151), and ponytail pads prose
+you *three* implementations and a shrug — 330 tokens to RDXmin's 151), and ponytail pads prose
 so enthusiastically that on one prompt it ran **227% of the no-tool baseline**. Yes — a "write
 less" tool, writing more. 🔥 Receipts: [↓](#why-not-just-use-caveman-or-ponytail).
 
-RDXifier does both axes at once and — across **14 measured tasks on two models** — is the only
+RDXmin does both axes at once and — across **14 measured tasks on two models** — is the only
 one of the three that **never once backfired**. It's not always the single tersest answer. It's
 the one that never betrays you. The Toyota Corolla of efficiency skills: not the flashiest, just
 the one that always starts.
@@ -57,18 +57,18 @@ JS, deletion over addition, and a `// rdx:` comment whenever it takes a delibera
 
 No hand-wavy "up to 90%!" marketing math here. This is **59 live model runs** across
 14 tasks — 4 arms (no tool, [caveman](https://github.com/JuliusBrussee/caveman),
-[ponytail](https://github.com/DietrichGebert/ponytail), RDXifier) on Haiku **and** Sonnet,
+[ponytail](https://github.com/DietrichGebert/ponytail), RDXmin) on Haiku **and** Sonnet,
 each arm differing *only* in the injected system prompt. Every raw answer is committed so
 you can call us liars with evidence. Here's the chart that matters — each tool's **worst
 case** across all 14 tasks:
 
 <p align="center">
-  <img src="assets/benchmark.svg" width="820" alt="Worst-case output size across 14 tasks as percent of the no-tool baseline. ponytail 227% (backfired on 4 tasks), caveman 130% (1 task), RDXifier 83% (never backfires).">
+  <img src="assets/benchmark.svg" width="820" alt="Worst-case output size across 14 tasks as percent of the no-tool baseline. ponytail 227% (backfired on 4 tasks), caveman 130% (1 task), RDXmin 83% (never backfires).">
 </p>
 
 Read that again: ponytail, a tool whose entire job is *writing less code*, has a worst case
 of **227%** — more than double what you'd get by using nothing. caveman creeps over the line
-once. RDXifier's worst day is still a 17% discount. It is, statistically, incapable of wasting
+once. RDXmin's worst day is still a 17% discount. It is, statistically, incapable of wasting
 your tokens. (We tried. It wouldn't.)
 
 <details>
@@ -76,16 +76,16 @@ your tokens. (We tried. It wouldn't.)
 
 Visible answer size as % of the no-tool baseline, lower = leaner:
 
-| | vanilla | caveman | ponytail | **RDXifier** |
+| | vanilla | caveman | ponytail | **RDXmin** |
 |---|--:|--:|--:|--:|
 | **coding** (tokens) | 100% | 46% | 29% | **22%** |
 | **coding** (lines) | 100% | 40% | 19% | **14%** |
 | **non-coding** (tokens) | 100% | 79% | 121% | **71%** |
 | **all 6 tasks** | 100% | 57% | 61% | **39%** |
 
-On coding, RDXifier is leanest (the "add a cache" prompt where vanilla wrote a **150-line**
+On coding, RDXmin is leanest (the "add a cache" prompt where vanilla wrote a **150-line**
 class became **7 lines**). On pure prose, caveman is a hair leaner on a *good* day (44% vs
-52% on tiny prompts) — it's a dedicated prose compressor, and credit where due. RDXifier's
+52% on tiny prompts) — it's a dedicated prose compressor, and credit where due. RDXmin's
 whole pitch is that it doesn't *have* a bad day. Full tables:
 [live 4-arm](benchmarks/results/2026-06-29-live-4arm.md) ·
 [reliability](benchmarks/results/2026-06-29-reliability.md).
@@ -97,25 +97,25 @@ which already puts it ahead of most READMEs.
 
 ### Why not just use caveman or ponytail?
 
-Because each has a failure mode, and RDXifier doesn't. Across **14 tasks** (code, prose,
+Because each has a failure mode, and RDXmin doesn't. Across **14 tasks** (code, prose,
 and vague "judgment" requests; Haiku + Sonnet), measured as % of the no-tool baseline:
 
 | | worst case | times it made the answer **worse** than no tool | code judgment |
 |---|--:|--:|:--:|
 | caveman | 130% | 1 / 14 | ❌ no ladder |
 | ponytail | **227%** | **4 / 14** | ✅ |
-| **RDXifier** | **83%** | **0 / 14** | ✅ |
+| **RDXmin** | **83%** | **0 / 14** | ✅ |
 
-caveman is a superb *prose* compressor (a hair leaner than RDXifier on pure prose) but has
+caveman is a superb *prose* compressor (a hair leaner than RDXmin on pure prose) but has
 **no engineering judgment** — asked to *"add caching,"* it dumped three implementations (330
-tokens) where RDXifier gave one `@cache` + an upgrade line (151). ponytail has the judgment
+tokens) where RDXmin gave one `@cache` + an upgrade line (151). ponytail has the judgment
 but **pads prose so hard it backfires** — on a "retry logic" prompt it ran **227%** of the
 no-tool baseline.
 
-**RDXifier never backfired once** (worst case 83% = still a saving). It's rarely the single
+**RDXmin never backfired once** (worst case 83% = still a saving). It's rarely the single
 tersest answer and never the loser — the dependable generalist. To get its both-axes coverage
 from the specialists you'd install *both*, which conflict and double the per-session overhead;
-stacked on one task they did *worse* (605t) than RDXifier alone (595t). Full data:
+stacked on one task they did *worse* (605t) than RDXmin alone (595t). Full data:
 [reliability writeup](benchmarks/results/2026-06-29-reliability.md) ·
 [Sonnet cross-check](benchmarks/results/2026-06-29-sonnet-cross-check.md).
 
@@ -138,21 +138,21 @@ if we're not friends anymore. Auto-detects your agents (Claude Code, Cursor, Win
 Kiro, Codex, Gemini, Copilot) and wires each one:
 
 ```bash
-npx rdxifier
+npx rdxmin
 ```
 
 ```bash
 # or via curl
-curl -fsSL https://raw.githubusercontent.com/jaypokale/rdxifier/main/install.sh | bash
+curl -fsSL https://raw.githubusercontent.com/jaypokale/rdxmin/main/install.sh | bash
 ```
 
 ```powershell
 # Windows
-irm https://raw.githubusercontent.com/jaypokale/rdxifier/main/install.ps1 | iex
+irm https://raw.githubusercontent.com/jaypokale/rdxmin/main/install.ps1 | iex
 ```
 
-Preview first with `npx rdxifier --dry-run`, scope with `--only claude`, see
-everything with `npx rdxifier --help`. Remove with `npx rdxifier --uninstall`.
+Preview first with `npx rdxmin --dry-run`, scope with `--only claude`, see
+everything with `npx rdxmin --help`. Remove with `npx rdxmin --uninstall`.
 
 <details>
 <summary>Manual install (Claude Code plugin)</summary>
@@ -161,10 +161,10 @@ Add to `~/.claude/settings.json`:
 
 ```json
 {
-  "plugins": ["/path/to/rdxifier"],
+  "plugins": ["/path/to/rdxmin"],
   "statusLine": {
     "type": "command",
-    "command": "bash \"/path/to/rdxifier/hooks/rdx-statusline.sh\""
+    "command": "bash \"/path/to/rdxmin/hooks/rdx-statusline.sh\""
   }
 }
 ```
@@ -302,7 +302,7 @@ Override default mode:
 export RDX_DEFAULT_MODE=ultra
 
 # config file
-~/.config/rdxifier/config.json
+~/.config/rdxmin/config.json
 { "defaultMode": "lite" }
 ```
 
@@ -311,7 +311,7 @@ export RDX_DEFAULT_MODE=ultra
 ## Benchmarks
 
 Every number in this README comes from real model runs across four arms (no tool,
-caveman, ponytail, RDXifier), isolated so the only variable is the injected system
+caveman, ponytail, RDXmin), isolated so the only variable is the injected system
 prompt. The raw model outputs and the aggregated tables are committed for audit:
 
 - [`benchmarks/results/raw/`](./benchmarks/results/raw/) · [`raw-sonnet/`](./benchmarks/results/raw-sonnet/) — every individual answer, as JSON
@@ -331,10 +331,10 @@ verified in CI. See [`docs/agent-portability.md`](./docs/agent-portability.md).
 ## Files
 
 ```
-rdxifier/
+rdxmin/
 ├── .claude-plugin/                ← plugin.json + marketplace.json
 ├── skills/
-│   ├── rdxifier/SKILL.md          ← persona + rules (source of truth)
+│   ├── rdxmin/SKILL.md          ← persona + rules (source of truth)
 │   ├── rdx-help/SKILL.md          ← /rdx-help quick reference
 │   └── rdx-review/SKILL.md        ← /rdx-review bloat finder
 ├── hooks/
@@ -359,7 +359,7 @@ rdxifier/
 Use them! They're great, we cite them by name, and we tested *against* them honestly. But
 caveman has no engineering judgment and ponytail can backfire (227%, measured). Installing
 *both* to cover both axes gets you two plugins that fight over your prose style and double
-the overhead. RDXifier is the one that does both and never face-plants. See [Numbers](#numbers).
+the overhead. RDXmin is the one that does both and never face-plants. See [Numbers](#numbers).
 
 **Will it golf my code into clever one-liners I'll hate at 3am?**
 No. The rule is *necessary*, not *fewest characters*. Boring over clever — because clever is
@@ -380,18 +380,18 @@ Yes — ships to Cursor, Windsurf, Cline, Kiro, Codex, Gemini, and Copilot. The 
 mode-switching UI (`/rdx`, statusline badge) is Claude-Code-specific; everywhere else the
 always-on ruleset still applies. See [agent portability](docs/agent-portability.md).
 
-**Why "RDXifier"?**
+**Why "RDXmin"?**
 RDX is a demolition charge. Your token bill is the building. Use your imagination. (Legally,
 the only thing it detonates is verbosity.)
 
 **0 GitHub stars. Should I be worried?**
 Everyone starts at zero. You could be the protagonist of this repo's origin story. Or just
-run `npx rdxifier --dry-run`, see what it'd do, and decide. No commitment, no stars required.
+run `npx rdxmin --dry-run`, see what it'd do, and decide. No commitment, no stars required.
 
 ## Contributing
 
 See [CONTRIBUTING.md](CONTRIBUTING.md). Edit the source of truth
-([`skills/rdxifier/SKILL.md`](skills/rdxifier/SKILL.md)), regenerate the rule copies
+([`skills/rdxmin/SKILL.md`](skills/rdxmin/SKILL.md)), regenerate the rule copies
 and chart, run the tests. CI enforces all three.
 
 ## License

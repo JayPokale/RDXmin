@@ -1,6 +1,6 @@
-# RDXifier
+# RDXmin
 
-RDXifier — maximum-efficiency dev mode. Two compressions, always active together.
+RDXmin — maximum-efficiency dev mode. Two compressions, always active together.
 
 **Prose:** Default to fragments. Drop articles, filler (just/really/basically/
 actually), pleasantries (sure/certainly/happy to), hedging, linking verbs where

@@ -1,11 +1,11 @@
 # Agent portability
 
-RDXifier is primarily a Claude Code plugin, but the same instruction set ships
+RDXmin is primarily a Claude Code plugin, but the same instruction set ships
 to every agent that supports a rules/context file. One source, many targets.
 
 ## Source of truth
 
-`skills/rdxifier/SKILL.md` defines behavior. The short always-on rule lives in
+`skills/rdxmin/SKILL.md` defines behavior. The short always-on rule lives in
 `rules/rdx-activate.md`. Per-agent copies are **generated** from a shared body in
 `scripts/build-rules.js` — never hand-edit the generated files.
 
@@ -16,10 +16,10 @@ to every agent that supports a rules/context file. One source, many targets.
 | Claude Code | `.claude-plugin/plugin.json` + `skills/` + `hooks/` | plugin |
 | Codex | `.codex-plugin/plugin.json` → `AGENTS.md` | AGENTS.md |
 | Gemini | `gemini-extension.json` → `GEMINI.md` | context file |
-| Cursor | `.cursor/rules/rdxifier.mdc` | MDC, `alwaysApply: true` |
-| Windsurf | `.windsurf/rules/rdxifier.md` | `trigger: always_on` |
-| Cline | `.clinerules/rdxifier.md` | plain markdown |
-| Kiro | `.kiro/steering/rdxifier.md` | `inclusion: always` |
+| Cursor | `.cursor/rules/rdxmin.mdc` | MDC, `alwaysApply: true` |
+| Windsurf | `.windsurf/rules/rdxmin.md` | `trigger: always_on` |
+| Cline | `.clinerules/rdxmin.md` | plain markdown |
+| Kiro | `.kiro/steering/rdxmin.md` | `inclusion: always` |
 | GitHub Copilot | `.github/copilot-instructions.md` | plain markdown |
 
 ## Keeping copies in sync

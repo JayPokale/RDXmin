@@ -1,12 +1,12 @@
 ---
 name: rdx-help
 description: >
-  Quick-reference card for RDXifier modes, levels, and commands. One-shot
+  Quick-reference card for RDXmin modes, levels, and commands. One-shot
   display, not a persistent mode. Use when the user says "rdx help", "how do I
   use rdx", "what rdx commands", or invokes /rdx-help.
 ---
 
-# RDXifier — quick reference
+# RDXmin — quick reference
 
 **What it is:** maximum-efficiency dev mode. Zero-fluff prose + YAGNI-first code, always on together.
 

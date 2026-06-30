@@ -1,6 +1,6 @@
 ---
 name: Bug report
-about: RDXifier did something wrong
+about: RDXmin did something wrong
 title: ''
 labels: bug
 assignees: ''
@@ -9,7 +9,7 @@ assignees: ''
 **What you typed**
 The prompt or `/rdx` command.
 
-**What RDXifier did**
+**What RDXmin did**
 Actual behavior. Paste the response or statusline badge if relevant.
 
 **What you expected**

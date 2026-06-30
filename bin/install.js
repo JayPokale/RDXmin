@@ -1,7 +1,7 @@
 #!/usr/bin/env node
-// rdxifier — cross-platform installer.
+// rdxmin — cross-platform installer.
 //
-// Detects the AI coding agents on this machine and installs RDXifier for each:
+// Detects the AI coding agents on this machine and installs RDXmin for each:
 //   - Claude Code  → plugin (marketplace add + install), fallback to standalone
 //                    hooks + settings.json merge + statusline badge
 //   - Gemini CLI   → gemini extensions install
@@ -9,12 +9,12 @@
 //   - Cursor/Windsurf/Cline/Kiro/Copilot → project rule file dropped into CWD
 //
 // Usage:
-//   npx rdxifier                 auto-detect + install
-//   npx rdxifier --list          show detected agents, install nothing
-//   npx rdxifier --only claude   install for one agent
-//   npx rdxifier --dry-run       print actions, change nothing
-//   npx rdxifier --uninstall     remove what we installed
-//   npx rdxifier --help
+//   npx rdxmin                 auto-detect + install
+//   npx rdxmin --list          show detected agents, install nothing
+//   npx rdxmin --only claude   install for one agent
+//   npx rdxmin --dry-run       print actions, change nothing
+//   npx rdxmin --uninstall     remove what we installed
+//   npx rdxmin --help
 //
 // Pure stdlib, zero runtime deps.
 
@@ -27,7 +27,7 @@ const cp = require('child_process');
 
 const SETTINGS = require('./lib/settings');
 
-const REPO = 'jaypokale/rdxifier';
+const REPO = 'jaypokale/rdxmin';
 const IS_WIN = process.platform === 'win32';
 
 // Repo root = parent of bin/. Installed package or local clone both work.
@@ -42,13 +42,13 @@ const PROVIDERS = [
   { id: 'gemini',   label: 'Gemini CLI',    scope: 'global',  detect: 'cmd:gemini' },
   { id: 'codex',    label: 'Codex CLI',     scope: 'global',  detect: 'cmd:codex||dir:~/.codex' },
   { id: 'cursor',   label: 'Cursor',        scope: 'project', detect: 'cmd:cursor||dir:~/.cursor',
-    rule: '.cursor/rules/rdxifier.mdc' },
+    rule: '.cursor/rules/rdxmin.mdc' },
   { id: 'windsurf', label: 'Windsurf',      scope: 'project', detect: 'cmd:windsurf||dir:~/.windsurf||dir:~/.codeium/windsurf',
-    rule: '.windsurf/rules/rdxifier.md' },
+    rule: '.windsurf/rules/rdxmin.md' },
   { id: 'cline',    label: 'Cline',         scope: 'project', detect: 'vscode-ext:cline',
-    rule: '.clinerules/rdxifier.md' },
+    rule: '.clinerules/rdxmin.md' },
   { id: 'kiro',     label: 'Kiro',          scope: 'project', detect: 'cmd:kiro||dir:~/.kiro',
-    rule: '.kiro/steering/rdxifier.md' },
+    rule: '.kiro/steering/rdxmin.md' },
   { id: 'copilot',  label: 'GitHub Copilot',scope: 'project', detect: 'vscode-ext:github.copilot||vscode-ext:github.copilot-chat',
     rule: '.github/copilot-instructions.md' },
 ];
@@ -79,12 +79,12 @@ function parseArgs(argv) {
         opts.configDir = expandHome(v);
         break;
       }
-      default: die(`error: unknown flag: ${a}\nrun 'npx rdxifier --help' for usage`);
+      default: die(`error: unknown flag: ${a}\nrun 'npx rdxmin --help' for usage`);
     }
   }
   if (opts.only.length) {
     const known = new Set(PROVIDERS.map(p => p.id));
-    for (const id of opts.only) if (!known.has(id)) die(`error: unknown agent: ${id}\n  see 'npx rdxifier --list'`);
+    for (const id of opts.only) if (!known.has(id)) die(`error: unknown agent: ${id}\n  see 'npx rdxmin --list'`);
   }
   return opts;
 }
@@ -173,15 +173,15 @@ function installClaude(ctx) {
     let already = false;
     if (!opts.force) {
       const r = capture('claude', ['plugin', 'list']);
-      if (r.status === 0 && /rdxifier/i.test(r.stdout || '')) already = true;
+      if (r.status === 0 && /rdxmin/i.test(r.stdout || '')) already = true;
     }
     if (already) {
-      note('  rdxifier plugin already installed (use --force to reinstall)');
+      note('  rdxmin plugin already installed (use --force to reinstall)');
       results.skipped.push(['claude', 'plugin already installed']);
       pluginOK = true;
     } else {
       const r1 = run('claude', ['plugin', 'marketplace', 'add', REPO], opts.dryRun);
-      const r2 = run('claude', ['plugin', 'install', 'rdxifier@rdxifier'], opts.dryRun);
+      const r2 = run('claude', ['plugin', 'install', 'rdxmin@rdxmin'], opts.dryRun);
       if ((r1.status || 0) === 0 && (r2.status || 0) === 0) { results.installed.push('claude'); pluginOK = true; }
       else warn('  claude plugin install failed — falling back to standalone hooks');
     }
@@ -200,13 +200,13 @@ function installClaude(ctx) {
   process.stdout.write('\n');
 }
 
-// Standalone wiring — copy hooks into <configDir>/rdxifier-hooks/ and merge
+// Standalone wiring — copy hooks into <configDir>/rdxmin-hooks/ and merge
 // settings.json. Used when the plugin path is unavailable.
 function installClaudeHooks(ctx) {
   const { opts, warn, note } = ctx;
   const cfg = claudeDir(opts);
   const hooksSrc = path.join(REPO_ROOT, 'hooks');
-  const hooksDst = path.join(cfg, 'rdxifier-hooks');
+  const hooksDst = path.join(cfg, 'rdxmin-hooks');
   const settingsPath = path.join(cfg, 'settings.json');
   const HOOK_FILES = ['package.json', 'rdx-config.js', 'rdx-activate.js',
                       'rdx-mode-tracker.js', 'rdx-statusline.sh', 'rdx-statusline.ps1'];
@@ -235,7 +235,7 @@ function installClaudeHooks(ctx) {
   const tracker = path.join(hooksDst, 'rdx-mode-tracker.js');
 
   SETTINGS.addCommandHook(settings, 'SessionStart',
-    { command: `"${node}" "${activate}"`, marker: 'rdx-activate', timeout: 5, statusMessage: 'Loading rdxifier mode...' });
+    { command: `"${node}" "${activate}"`, marker: 'rdx-activate', timeout: 5, statusMessage: 'Loading rdxmin mode...' });
   SETTINGS.addCommandHook(settings, 'UserPromptSubmit',
     { command: `"${node}" "${tracker}"`, marker: 'rdx-mode-tracker', timeout: 5, statusMessage: 'Tracking rdx mode...' });
 
@@ -265,8 +265,8 @@ function installGemini(ctx) {
   say('→ Gemini CLI detected');
   if (!opts.force) {
     const r = capture('gemini', ['extensions', 'list']);
-    if (r.status === 0 && /rdxifier/i.test(r.stdout || '')) {
-      note('  rdxifier extension already installed (use --force)');
+    if (r.status === 0 && /rdxmin/i.test(r.stdout || '')) {
+      note('  rdxmin extension already installed (use --force)');
       results.skipped.push(['gemini', 'already installed']); process.stdout.write('\n'); return;
     }
   }
@@ -277,8 +277,8 @@ function installGemini(ctx) {
 }
 
 // ── Codex (fenced ruleset in ~/.codex/AGENTS.md) ────────────────────────────
-const FENCE_BEGIN = '<!-- rdxifier-begin -->';
-const FENCE_END = '<!-- rdxifier-end -->';
+const FENCE_BEGIN = '<!-- rdxmin-begin -->';
+const FENCE_END = '<!-- rdxmin-end -->';
 
 function installCodex(ctx) {
   const { say, note, opts, results } = ctx;
@@ -288,7 +288,7 @@ function installCodex(ctx) {
   const body = fs.readFileSync(path.join(REPO_ROOT, 'AGENTS.md'), 'utf8').trimEnd() + '\n';
   const block = `${FENCE_BEGIN}\n${body}${FENCE_END}\n`;
 
-  if (opts.dryRun) { note(`  would write rdxifier ruleset → ${target}`); results.installed.push('codex'); process.stdout.write('\n'); return; }
+  if (opts.dryRun) { note(`  would write rdxmin ruleset → ${target}`); results.installed.push('codex'); process.stdout.write('\n'); return; }
 
   try {
     fs.mkdirSync(path.dirname(target), { recursive: true });
@@ -299,7 +299,7 @@ function installCodex(ctx) {
         const rewritten = existing.replace(new RegExp(`${FENCE_BEGIN}[\\s\\S]*?${FENCE_END}\\n?`), block);
         fs.writeFileSync(target, rewritten, { mode: 0o644 });
         process.stdout.write(`  refreshed ruleset in ${target}\n`);
-      } else { note(`  ${target} already contains rdxifier ruleset (--force to refresh)`); }
+      } else { note(`  ${target} already contains rdxmin ruleset (--force to refresh)`); }
       results.skipped.push(['codex', 'already present']);
     } else {
       const sep = existing && !existing.endsWith('\n\n') ? (existing.endsWith('\n') ? '\n' : '\n\n') : '';
@@ -339,14 +339,14 @@ function installProjectRule(ctx, prov) {
 // ── uninstall ───────────────────────────────────────────────────────────────
 function uninstall(ctx) {
   const { say, note, opts, c } = ctx;
-  say(c.orange('RDXifier uninstall'));
+  say(c.orange('RDXmin uninstall'));
   let touched = 0;
 
   // Claude plugin
   if (hasCmd('claude') && !opts.dryRun) {
     const r = capture('claude', ['plugin', 'list']);
-    if (r.status === 0 && /rdxifier/i.test(r.stdout || '')) {
-      run('claude', ['plugin', 'uninstall', 'rdxifier@rdxifier'], opts.dryRun); touched++;
+    if (r.status === 0 && /rdxmin/i.test(r.stdout || '')) {
+      run('claude', ['plugin', 'uninstall', 'rdxmin@rdxmin'], opts.dryRun); touched++;
     }
   }
 
@@ -365,7 +365,7 @@ function uninstall(ctx) {
       touched++;
     }
   }
-  const hooksDst = path.join(cfg, 'rdxifier-hooks');
+  const hooksDst = path.join(cfg, 'rdxmin-hooks');
   if (fs.existsSync(hooksDst)) { if (!opts.dryRun) fs.rmSync(hooksDst, { recursive: true, force: true }); note(`  removed ${hooksDst}`); touched++; }
 
   // Flag files
@@ -381,7 +381,7 @@ function uninstall(ctx) {
     if (txt.includes(FENCE_BEGIN)) {
       const stripped = txt.replace(new RegExp(`\\n?${FENCE_BEGIN}[\\s\\S]*?${FENCE_END}\\n?`), '\n').replace(/\n{3,}/g, '\n\n');
       if (!opts.dryRun) fs.writeFileSync(codexMd, stripped, { mode: 0o644 });
-      note(`  removed rdxifier block from ${codexMd}`); touched++;
+      note(`  removed rdxmin block from ${codexMd}`); touched++;
     }
   }
 
@@ -393,17 +393,17 @@ function uninstall(ctx) {
 
 // ── help / banner ───────────────────────────────────────────────────────────
 function printHelp(c) {
-  process.stdout.write(`${c.orange('rdxifier')} — maximum-efficiency dev mode installer
+  process.stdout.write(`${c.orange('rdxmin')} — maximum-efficiency dev mode installer
 
 Usage:
-  npx rdxifier [flags]
+  npx rdxmin [flags]
 
 Flags:
   --list           Detect agents and print them; install nothing
   --only <id>      Install only for one agent (repeatable)
   --dry-run        Print actions, change nothing
   --force          Reinstall / overwrite even if already present
-  --uninstall, -u  Remove what rdxifier installed
+  --uninstall, -u  Remove what rdxmin installed
   --config-dir <p> Override Claude config dir (default: $CLAUDE_CONFIG_DIR or ~/.claude)
   --no-color       Disable ANSI color
   --help, -h       This help
@@ -411,21 +411,21 @@ Flags:
 Agents: ${PROVIDERS.map(p => p.id).join(', ')}
 
 Examples:
-  npx rdxifier                  # auto-detect + install
-  npx rdxifier --only claude    # just Claude Code
-  npx rdxifier --dry-run        # preview
+  npx rdxmin                  # auto-detect + install
+  npx rdxmin --only claude    # just Claude Code
+  npx rdxmin --dry-run        # preview
 `);
 }
 
 function printList(c) {
-  process.stdout.write(c.orange('rdxifier') + ' — detected agents:\n\n');
+  process.stdout.write(c.orange('rdxmin') + ' — detected agents:\n\n');
   for (const p of PROVIDERS) {
     const found = detectMatch(p.detect);
     const mark = found ? c.green('✓') : c.dim('·');
     const scope = p.scope === 'project' ? c.dim(' (project-scoped)') : '';
     process.stdout.write(`  ${mark} ${p.label}${scope}\n`);
   }
-  process.stdout.write('\nRun ' + c.orange('npx rdxifier') + ' to install for the detected (✓) agents.\n');
+  process.stdout.write('\nRun ' + c.orange('npx rdxmin') + ' to install for the detected (✓) agents.\n');
 }
 
 // ── main ────────────────────────────────────────────────────────────────────
@@ -444,14 +444,14 @@ function main() {
 
   if (opts.uninstall) return uninstall(ctx);
 
-  say(c.orange('╭─ RDXifier installer ─╮'));
+  say(c.orange('╭─ RDXmin installer ─╮'));
   say(c.dim(opts.dryRun ? '  (dry run — nothing will change)' : '  maximum signal, minimum noise'));
   say('');
 
   const targets = PROVIDERS.filter(p => opts.only.length ? opts.only.includes(p.id) : detectMatch(p.detect));
   if (targets.length === 0) {
     warn('No supported agents detected.');
-    note('Run `npx rdxifier --list` to see what we look for, or `--only <id>` to force one.');
+    note('Run `npx rdxmin --list` to see what we look for, or `--only <id>` to force one.');
     return;
   }
 

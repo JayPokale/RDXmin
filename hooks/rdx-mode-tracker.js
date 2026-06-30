@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-// rdxifier — UserPromptSubmit hook
+// rdxmin — UserPromptSubmit hook
 // Handles /rdx commands, natural language activation/deactivation, and
 // per-turn reinforcement.
 
@@ -29,14 +29,14 @@ process.stdin.on('end', () => {
     }
 
     // /rdx slash commands
-    if (/^\/rdx(\b|:rdxifier\b)/.test(promptLower)) {
+    if (/^\/rdx(\b|:rdxmin\b)/.test(promptLower)) {
       const parts = promptLower.split(/\s+/);
       const cmd = parts[0];
       const arg = parts[1] || '';
 
       let mode = null;
 
-      if (cmd === '/rdx' || cmd === '/rdx:rdxifier') {
+      if (cmd === '/rdx' || cmd === '/rdx:rdxmin') {
         if (!arg) {
           mode = getDefaultMode();
         } else if (arg === 'off' || arg === 'stop' || arg === 'disable') {

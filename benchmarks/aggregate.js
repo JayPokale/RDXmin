@@ -14,7 +14,7 @@ const fs = require('fs');
 const path = require('path');
 
 const RAW = path.join(__dirname, 'results', 'raw');
-const ARMS = ['vanilla', 'caveman', 'ponytail', 'rdxifier'];
+const ARMS = ['vanilla', 'caveman', 'ponytail', 'rdxmin'];
 const KIND = {
   debounce: 'coding', cache: 'coding', 'auth-bug': 'coding',
   pooling: 'noncoding', 'rest-graphql': 'noncoding', 'regex-concept': 'noncoding',
@@ -77,7 +77,7 @@ function main() {
   const tasks = Object.keys(byTask).sort((a, b) => (KIND[a] || '').localeCompare(KIND[b] || '') || a.localeCompare(b));
 
   console.log('## Per-task billed output tokens (usage.output_tokens — includes model reasoning)\n');
-  console.log('| task | kind | vanilla | caveman | ponytail | rdxifier |');
+  console.log('| task | kind | vanilla | caveman | ponytail | rdxmin |');
   console.log('|------|------|--------:|--------:|---------:|---------:|');
   for (const t of tasks) {
     const row = ARMS.map(a => byTask[t][a] ? String(byTask[t][a].out) : '—');
@@ -85,7 +85,7 @@ function main() {
   }
 
   console.log('\n## Per-task visible answer size (lines of the delivered answer)\n');
-  console.log('| task | kind | vanilla | caveman | ponytail | rdxifier |');
+  console.log('| task | kind | vanilla | caveman | ponytail | rdxmin |');
   console.log('|------|------|--------:|--------:|---------:|---------:|');
   for (const t of tasks) {
     const row = ARMS.map(a => byTask[t][a] ? String(byTask[t][a].lines) : '—');
@@ -94,7 +94,7 @@ function main() {
 
   for (const [metric, label] of [['out', 'billed output tokens'], ['ans', 'visible answer tokens'], ['lines', 'answer lines']]) {
     console.log(`\n## ${label} as % of vanilla baseline (lower = leaner)\n`);
-    console.log('| segment | vanilla | caveman | ponytail | rdxifier |');
+    console.log('| segment | vanilla | caveman | ponytail | rdxmin |');
     console.log('|---------|--------:|--------:|---------:|---------:|');
     for (const seg of ['coding', 'noncoding', 'all']) {
       const base = sum.vanilla[seg][metric];
@@ -104,7 +104,7 @@ function main() {
   }
 
   console.log('\n## Raw totals (billed tokens / answer lines, n cells)\n');
-  console.log('| segment | vanilla | caveman | ponytail | rdxifier |');
+  console.log('| segment | vanilla | caveman | ponytail | rdxmin |');
   console.log('|---------|--------:|--------:|---------:|---------:|');
   for (const seg of ['coding', 'noncoding', 'all']) {
     const row = ARMS.map(a => `${sum[a][seg].out}t/${sum[a][seg].lines}L (n=${sum[a][seg].n})`);

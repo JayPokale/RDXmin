@@ -24,7 +24,7 @@ const SVG_OUT = path.join(ROOT, 'assets', 'benchmark.svg');
 const ARMS = [
   { key: 'caveman',  label: 'caveman',  color: '#d9822b' },
   { key: 'ponytail', label: 'ponytail', color: '#cf3b3b' },
-  { key: 'rdxifier', label: 'RDXifier', color: '#2da44e' },
+  { key: 'rdxmin', label: 'RDXmin', color: '#2da44e' },
 ];
 
 function tok(file) {
@@ -84,7 +84,7 @@ function buildSvg(stat, taskCount) {
     const s = stat[a.key];
     const y = top + i * rowH;
     const w = Math.max(2, s.worst * px);
-    const bold = a.key === 'rdxifier' ? ' font-weight="700"' : '';
+    const bold = a.key === 'rdxmin' ? ' font-weight="700"' : '';
     const badge = s.over === 0 ? 'never backfires' : `backfired ${s.over}/${taskCount} tasks`;
     body += `<text x="${left - 12}" y="${y + 21}" font-size="14" fill="#c9d1d9" text-anchor="end"${bold}>${a.label}</text>` +
             `<rect x="${left}" y="${y + 4}" width="${w}" height="30" rx="4" fill="${a.color}"/>` +
@@ -92,7 +92,7 @@ function buildSvg(stat, taskCount) {
             `<text x="${left + w + 9}" y="${y + 32}" font-size="10.5" fill="#8b949e">${badge}</text>`;
   });
 
-  return `<svg xmlns="http://www.w3.org/2000/svg" width="${W}" height="${H}" viewBox="0 0 ${W} ${H}" role="img" aria-label="Worst-case output size across ${taskCount} tasks as percent of the no-tool baseline. ponytail 227% (backfired 4 tasks), caveman 130% (1), RDXifier 83% (never backfires).">
+  return `<svg xmlns="http://www.w3.org/2000/svg" width="${W}" height="${H}" viewBox="0 0 ${W} ${H}" role="img" aria-label="Worst-case output size across ${taskCount} tasks as percent of the no-tool baseline. ponytail 227% (backfired 4 tasks), caveman 130% (1), RDXmin 83% (never backfires).">
 <rect width="${W}" height="${H}" rx="10" fill="#0d1117"/>
 <text x="${W / 2}" y="34" font-size="17" font-weight="700" fill="#c9d1d9" text-anchor="middle">Worst case across ${taskCount} tasks — lower is better, past 100% is a betrayal</text>
 <text x="${W / 2}" y="54" font-size="11.5" fill="#8b949e" text-anchor="middle">output size vs using no tool at all (Haiku + Sonnet; code, prose &amp; judgment prompts)</text>

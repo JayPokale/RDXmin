@@ -18,7 +18,7 @@
     },
     {
       "task": "auth-bug",
-      "arm": "rdxifier",
+      "arm": "rdxmin",
       "kind": "coding",
       "out": 902,
       "ans": 34,
@@ -50,7 +50,7 @@
     },
     {
       "task": "cache",
-      "arm": "rdxifier",
+      "arm": "rdxmin",
       "kind": "coding",
       "out": 571,
       "ans": 68,
@@ -82,7 +82,7 @@
     },
     {
       "task": "debounce",
-      "arm": "rdxifier",
+      "arm": "rdxmin",
       "kind": "coding",
       "out": 602,
       "ans": 257,
@@ -114,7 +114,7 @@
     },
     {
       "task": "pooling",
-      "arm": "rdxifier",
+      "arm": "rdxmin",
       "kind": "noncoding",
       "out": 399,
       "ans": 283,
@@ -146,7 +146,7 @@
     },
     {
       "task": "regex-concept",
-      "arm": "rdxifier",
+      "arm": "rdxmin",
       "kind": "noncoding",
       "out": 195,
       "ans": 74,
@@ -178,7 +178,7 @@
     },
     {
       "task": "rest-graphql",
-      "arm": "rdxifier",
+      "arm": "rdxmin",
       "kind": "noncoding",
       "out": 372,
       "ans": 270,
@@ -254,7 +254,7 @@
         "n": 6
       }
     },
-    "rdxifier": {
+    "rdxmin": {
       "coding": {
         "out": 2075,
         "ans": 359,

@@ -1,11 +1,11 @@
-# Live model comparison for rdxifier.
+# Live model comparison for rdxmin.
 # Requires an API key (e.g. ANTHROPIC_API_KEY) and promptfoo:
 #   npx promptfoo@latest eval -c benchmarks/promptfooconfig.yaml
 #
 # Three arms over the same prompts. Each arm differs only in its system prompt.
 # Output length + an LLM-judged correctness score are reported per arm.
 
-description: rdxifier vs baseline — output length and correctness
+description: rdxmin vs baseline — output length and correctness
 
 prompts:
   - "{{task}}"
@@ -17,10 +17,10 @@ providers:
       temperature: 1
       system: "You are a helpful coding assistant."
   - id: anthropic:messages:claude-sonnet-4-6
-    label: rdxifier
+    label: rdxmin
     config:
       temperature: 1
-      systemPromptFile: ../skills/rdxifier/SKILL.md
+      systemPromptFile: ../skills/rdxmin/SKILL.md
 
 tests:
   - vars:
@@ -29,7 +29,7 @@ tests:
       - type: llm-rubric
         value: "The answer provides working debounce logic on the input event."
       - type: javascript
-        value: "output.length < 1500"  # rdxifier arm should pass; baseline usually won't
+        value: "output.length < 1500"  # rdxmin arm should pass; baseline usually won't
 
   - vars:
       task: "Add a cache layer for our user profile API responses."

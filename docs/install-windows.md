@@ -1,6 +1,6 @@
 # Installing on Windows
 
-RDXifier works on Windows via Claude Code's `commandWindows` hook variant and a
+RDXmin works on Windows via Claude Code's `commandWindows` hook variant and a
 PowerShell statusline script. No WSL required.
 
 ## Plugin
@@ -9,7 +9,7 @@ Add to `%USERPROFILE%\.claude\settings.json`:
 
 ```json
 {
-  "plugins": ["C:\\path\\to\\rdxifier"]
+  "plugins": ["C:\\path\\to\\rdxmin"]
 }
 ```
 
@@ -22,7 +22,7 @@ Code runs the PowerShell-safe form automatically. Node.js must be on `PATH`.
 {
   "statusLine": {
     "type": "command",
-    "command": "powershell -ExecutionPolicy Bypass -File \"C:\\path\\to\\rdxifier\\hooks\\rdx-statusline.ps1\""
+    "command": "powershell -ExecutionPolicy Bypass -File \"C:\\path\\to\\rdxmin\\hooks\\rdx-statusline.ps1\""
   }
 }
 ```

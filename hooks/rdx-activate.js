@@ -1,9 +1,9 @@
 #!/usr/bin/env node
-// rdxifier — SessionStart hook
+// rdxmin — SessionStart hook
 //
 // 1. Writes flag at $CLAUDE_CONFIG_DIR/.rdx-active
 // 2. Resets session turn counter
-// 3. Emits rdxifier ruleset (filtered to active level) as system context
+// 3. Emits rdxmin ruleset (filtered to active level) as system context
 // 4. Nudges user to configure statusline if missing
 
 const fs = require('fs');
@@ -30,7 +30,7 @@ const modeLabel = mode;
 let skillContent = '';
 try {
   skillContent = fs.readFileSync(
-    path.join(__dirname, '..', 'skills', 'rdxifier', 'SKILL.md'), 'utf8'
+    path.join(__dirname, '..', 'skills', 'rdxmin', 'SKILL.md'), 'utf8'
   );
 } catch (e) {}
 
@@ -59,7 +59,7 @@ if (skillContent) {
   // Fallback ruleset when SKILL.md not found
   output =
     'RDX MODE ACTIVE — level: ' + modeLabel + '\n\n' +
-    'RDXifier: maximum-efficiency dev mode. Zero-fluff prose. YAGNI-first code.\n\n' +
+    'RDXmin: maximum-efficiency dev mode. Zero-fluff prose. YAGNI-first code.\n\n' +
     '## Persistence\n\n' +
     'ACTIVE EVERY RESPONSE. Off only: "stop rdx" / "normal mode". Switch: `/rdx lite|full|ultra`.\n\n' +
     '## Prose\n\n' +
@@ -84,7 +84,7 @@ try {
     const statusLineSnippet =
       '"statusLine": { "type": "command", "command": ' + JSON.stringify(command) + ' }';
     output += '\n\n' +
-      'STATUSLINE SETUP NEEDED: The rdxifier plugin includes a statusline badge showing active mode ' +
+      'STATUSLINE SETUP NEEDED: The rdxmin plugin includes a statusline badge showing active mode ' +
       '(e.g. [RDX], [RDX:ULTRA]) with token savings. It is not configured yet. ' +
       'To enable, add this to ' + settingsPath + ': ' +
       statusLineSnippet + ' ' +

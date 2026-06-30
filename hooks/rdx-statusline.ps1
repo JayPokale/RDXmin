@@ -1,4 +1,4 @@
-# rdxifier — statusline badge for Claude Code (Windows / PowerShell)
+# rdxmin — statusline badge for Claude Code (Windows / PowerShell)
 # Mirrors rdx-statusline.sh. Reads the mode flag and savings suffix, renders an orange badge.
 
 $ErrorActionPreference = 'SilentlyContinue'
