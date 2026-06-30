@@ -98,17 +98,7 @@ Small sample, two models, temperature wobble. Directional, not gospel — but it
 | `stop rdx` | Deactivate |
 | `normal mode` | Deactivate |
 
-Natural language works too: "activate rdx", "rdx mode", "rdxify this".
-
----
-
-## Levels
-
-**lite** — No filler/hedging, keeps articles and full sentences. Flags the more minimal code approach in one line. You decide.
-
-**full** (default) — Drop articles, fragments OK. Ladder enforced: YAGNI → reuse → stdlib → native → installed dep → one line → min code.
-
-**ultra** — Abbreviate prose words (DB/auth/config/req/res/fn). Strip conjunctions, use arrows for causality (X → Y). YAGNI extremist: deletion before addition, challenge the requirement in the same breath. Code symbols, function names, API names: never abbreviated.
+Natural language works too: "activate rdx", "rdx mode", "rdxify this". Across every level, code symbols, function/API names, and error strings stay verbatim — only the prose around them compresses.
 
 ---
 
