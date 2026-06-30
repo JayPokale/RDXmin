@@ -51,15 +51,19 @@ Preview first with `npx rdxmin --dry-run`, scope with `--only claude`, see every
 
 **Requirements:** Node ≥18 (installer / `npx`) · Claude Code for the live `/rdx` switching + statusline badge — the always-on ruleset still ships to every other agent · bash for the statusline (macOS/Linux; a PowerShell version ships for Windows).
 
-<details>
-<summary>Manual install (Claude Code plugin)</summary>
+### Claude Code plugin (marketplace)
+
+Prefer Claude's own plugin manager? Skip the installer and add the marketplace directly:
 
 ```bash
 claude plugin marketplace add JayPokale/RDXmin   # register the marketplace
 claude plugin install rdxmin@rdxmin              # enable the plugin
 ```
 
-Statusline badge — add to `~/.claude/settings.json`:
+<details>
+<summary>Statusline badge (manual setup)</summary>
+
+Add to `~/.claude/settings.json`:
 
 ```json
 {
