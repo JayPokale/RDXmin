@@ -28,10 +28,10 @@ npx rdxmin --uninstall     # remove everything it added
 curl / PowerShell one-liners:
 
 ```bash
-curl -fsSL https://raw.githubusercontent.com/jaypokale/rdxmin/main/install.sh | bash
+curl -fsSL https://raw.githubusercontent.com/JayPokale/RDXmin/main/install.sh | bash
 ```
 ```powershell
-irm https://raw.githubusercontent.com/jaypokale/rdxmin/main/install.ps1 | iex
+irm https://raw.githubusercontent.com/JayPokale/RDXmin/main/install.ps1 | iex
 ```
 
 ## Manual Claude Code plugin

@@ -39,12 +39,12 @@ npx rdxmin
 
 ```bash
 # or via curl
-curl -fsSL https://raw.githubusercontent.com/jaypokale/rdxmin/main/install.sh | bash
+curl -fsSL https://raw.githubusercontent.com/JayPokale/RDXmin/main/install.sh | bash
 ```
 
 ```powershell
 # Windows
-irm https://raw.githubusercontent.com/jaypokale/rdxmin/main/install.ps1 | iex
+irm https://raw.githubusercontent.com/JayPokale/RDXmin/main/install.ps1 | iex
 ```
 
 Preview first with `npx rdxmin --dry-run`, scope with `--only claude`, see everything with `npx rdxmin --help`. Remove with `npx rdxmin --uninstall`.

@@ -1,12 +1,12 @@
 # rdxmin — PowerShell shim. Delegates to the Node installer via npx.
 #
-#   irm https://raw.githubusercontent.com/jaypokale/rdxmin/main/install.ps1 | iex
+#   irm https://raw.githubusercontent.com/JayPokale/RDXmin/main/install.ps1 | iex
 #
 # Or, from a local clone:  ./install.ps1 [flags]
 # Flags forward to bin/install.js (see: npx rdxmin --help).
 
 $ErrorActionPreference = 'Stop'
-$Repo = 'jaypokale/rdxmin'
+$Repo = 'JayPokale/RDXmin'
 
 if (-not (Get-Command node -ErrorAction SilentlyContinue)) {
   Write-Error 'rdxmin: Node.js >=18 is required. Install from https://nodejs.org and re-run.'

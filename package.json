@@ -6,15 +6,15 @@
   "license": "MIT",
   "author": {
     "name": "Jay Pokale",
-    "url": "https://github.com/jaypokale"
+    "url": "https://github.com/JayPokale"
   },
-  "homepage": "https://github.com/jaypokale/rdxmin",
+  "homepage": "https://github.com/JayPokale/RDXmin",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/jaypokale/rdxmin.git"
+    "url": "git+https://github.com/JayPokale/RDXmin.git"
   },
   "bugs": {
-    "url": "https://github.com/jaypokale/rdxmin/issues"
+    "url": "https://github.com/JayPokale/RDXmin/issues"
   },
   "bin": {
     "rdxmin": "./bin/install.js"

@@ -1,13 +1,13 @@
 #!/usr/bin/env bash
 # rdxmin — curl|bash shim. Delegates to the Node installer via npx.
 #
-#   curl -fsSL https://raw.githubusercontent.com/jaypokale/rdxmin/main/install.sh | bash
+#   curl -fsSL https://raw.githubusercontent.com/JayPokale/RDXmin/main/install.sh | bash
 #
 # Or, from a local clone:  ./install.sh [flags]
 # All flags are forwarded to bin/install.js (see: npx rdxmin --help).
 set -euo pipefail
 
-REPO="jaypokale/rdxmin"
+REPO="JayPokale/RDXmin"
 
 if ! command -v node >/dev/null 2>&1; then
   echo "rdxmin: Node.js ≥18 is required. Install from https://nodejs.org and re-run." >&2

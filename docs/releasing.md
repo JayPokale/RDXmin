@@ -10,7 +10,7 @@ which tests, publishes with provenance, and cuts a GitHub Release.
    logged-in machine, or reserve it).
 2. On npmjs.com → the package → Settings → **Trusted Publishers**, add this repo
    and the `publish.yml` workflow. This is what lets CI publish without a token.
-3. Ensure the GitHub repo exists at `jaypokale/rdxmin` and `main` is pushed
+3. Ensure the GitHub repo exists at `JayPokale/RDXmin` and `main` is pushed
    (the `npx`/`curl` one-liners resolve against it).
 
 ## Cutting a release

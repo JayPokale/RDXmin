@@ -27,7 +27,7 @@ const cp = require('child_process');
 
 const SETTINGS = require('./lib/settings');
 
-const REPO = 'jaypokale/rdxmin';
+const REPO = 'JayPokale/RDXmin';
 const IS_WIN = process.platform === 'win32';
 
 // Repo root = parent of bin/. Installed package or local clone both work.
