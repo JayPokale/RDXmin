@@ -3,7 +3,7 @@
 All notable changes to RDXmin are documented here.
 Format loosely follows [Keep a Changelog](https://keepachangelog.com/).
 
-## [1.0.0] — 2026-06-29
+## [0.1.0] — 2026-06-29
 
 ### Added
 - Unified efficiency mode: zero-fluff prose + YAGNI-first code, always active together.
@@ -16,9 +16,10 @@ Format loosely follows [Keep a Changelog](https://keepachangelog.com/).
   `benchmarks/results/2026-06-29-reliability.md`.
 - `/rdx` command with `lite` / `full` / `ultra` levels; natural-language activation.
 - SessionStart + UserPromptSubmit hooks with symlink-safe flag handling (`O_NOFOLLOW`, 0600).
-- Statusline badge `[RDX]` / `[RDX:ULTRA]` (bash + PowerShell). Shows the active level
-  only — no "tokens saved" counter, because a live session has no baseline to measure
-  savings against (an earlier build displayed a fabricated `turns × 350` figure; removed).
+- Statusline badge `[RDX]` / `[RDX:ULTRA]` (bash + PowerShell). Shows plan rate-limit
+  usage + reset countdown, or session cost (`$`) on API keys — read from Claude's
+  statusline JSON, no extra API calls. No fabricated "tokens saved" counter (an earlier
+  build's `turns × 350` estimate was removed; a live session has no baseline to measure against).
 - **`npx rdxmin` installer** — auto-detects 8 agents (Claude Code, Gemini, Codex,
   Cursor, Windsurf, Cline, Kiro, Copilot) and installs for each. Flags: `--list`,
   `--only`, `--dry-run`, `--force`, `--uninstall`, `--config-dir`, `--help`. Claude path
@@ -34,7 +35,7 @@ Format loosely follows [Keep a Changelog](https://keepachangelog.com/).
   dedicated prose compressor wins — stated plainly, not cherry-picked.
 - Chart generator (`scripts/build-chart.js`, reliability worst-case from real cells) + promptfoo config.
 - npm trusted publishing (OIDC, provenance) + GitHub Release workflow on `v*` tags.
-- Test suite: 36 tests across flag safety, tracker, settings merge, installer integration. CI on Node 18/20/22.
+- Test suite: 34 tests across flag safety, tracker, settings merge, installer integration. CI on Node 18/20/22.
 
 ### Fixed
 - Deactivation no longer triggers on unrelated sentences that merely mention "rdx"
@@ -42,5 +43,5 @@ Format loosely follows [Keep a Changelog](https://keepachangelog.com/).
   off-verb to target rdx directly. Regression-tested.
 
 ### Notes
-- Token-savings counter is an estimate (`~350 tok/turn`), not a transcript measurement.
+- Statusline reads live rate-limit/cost from Claude's JSON; no per-session "savings" figure is invented.
 - Example outputs are representative/illustrative; the *measurement* over them is reproducible.
