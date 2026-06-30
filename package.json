@@ -2,7 +2,13 @@
   "name": "rdxmin",
   "version": "0.1.0",
   "description": "Maximum-efficiency dev mode for Claude Code. Zero-fluff prose + YAGNI-first code decisions. One plugin that does both.",
-  "keywords": ["claude-code", "claude-code-plugin", "productivity", "yagni", "minimal"],
+  "keywords": [
+    "claude-code",
+    "claude-code-plugin",
+    "productivity",
+    "yagni",
+    "minimal"
+  ],
   "license": "MIT",
   "author": {
     "name": "Jay Pokale",
@@ -17,7 +23,7 @@
     "url": "https://github.com/JayPokale/RDXmin/issues"
   },
   "bin": {
-    "rdxmin": "./bin/install.js"
+    "rdxmin": "bin/install.js"
   },
   "engines": {
     "node": ">=18"
