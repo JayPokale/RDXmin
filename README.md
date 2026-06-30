@@ -18,14 +18,14 @@
 </p>
 
 <p align="center">
-  <strong>The only AI efficiency tool that never makes things worse &middot; prose AND code &middot; one command</strong>
+  <strong>Compresses prose AND code &middot; didn't backfire once across 14 measured tasks &middot; one command</strong>
 </p>
 
 ---
 
 🧨 You asked your AI agent to "add a cache." A bare agent answered with a **150-line** cache class — config object, TTL logic, stats counters, the works. RDXmin's answer to the same prompt: **7 lines.** Same model, same question, measured, receipts committed in [`benchmarks/`](benchmarks/results/).
 
-RDXmin enforces **zero-fluff prose** and **YAGNI-first code** simultaneously — no filler, no speculative abstractions, no `// TODO: maybe later`. Other tools do one axis. RDXmin does both and — across 14 measured tasks — never once made things worse. It's the Toyota Corolla of efficiency skills: not the flashiest, just the one that always starts. [Why not caveman or ponytail? →](docs/comparison.md)
+RDXmin enforces **zero-fluff prose** and **YAGNI-first code** simultaneously — no filler, no speculative abstractions, no `// TODO: maybe later`. Other tools compress either prose or code. RDXmin does both at once and — across 14 measured tasks — didn't once make the answer worse than using no tool. It's the Toyota Corolla of efficiency skills: not the flashiest, just the one that always starts. [Why not caveman or ponytail? →](docs/comparison.md)
 
 ---
 
