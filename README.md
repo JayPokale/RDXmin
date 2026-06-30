@@ -87,6 +87,19 @@ Small sample, two models, temperature wobble. Directional, not gospel — but it
 
 ---
 
+## What the output sounds like
+
+**"Why React component re-render?"** (full)
+> New object ref each render. Inline object prop = new ref = re-render. `useMemo`.
+
+**"Why React component re-render?"** (ultra)
+> Inline obj prop → new ref → re-render. `useMemo`. Why inline object at all?
+
+**"Add a cache for API responses."** (ultra)
+> No cache until profiler says so. When it does: `@lru_cache`. Hand-rolled TTL cache = bug farm with hit rate.
+
+---
+
 ## Usage
 
 | Command | Effect |
@@ -124,19 +137,6 @@ Mark deliberate simplifications so "later" doesn't quietly become "never":
 // rdx: global lock, per-account locks if throughput matters
 // rdx: O(n) scan, index this when table exceeds ~10k rows
 ```
-
----
-
-## What the output sounds like
-
-**"Why React component re-render?"** (full)
-> New object ref each render. Inline object prop = new ref = re-render. `useMemo`.
-
-**"Why React component re-render?"** (ultra)
-> Inline obj prop → new ref → re-render. `useMemo`. Why inline object at all?
-
-**"Add a cache for API responses."** (ultra)
-> No cache until profiler says so. When it does: `@lru_cache`. Hand-rolled TTL cache = bug farm with hit rate.
 
 ---
 
