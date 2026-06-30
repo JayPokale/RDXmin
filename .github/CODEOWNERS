@@ -1,0 +1,5 @@
+# Default owner for everything in this repo.
+* @JayPokale
+
+# Security-sensitive paths — review with extra care.
+/hooks/rdx-config.js @JayPokale
