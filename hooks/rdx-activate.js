@@ -30,7 +30,7 @@ const modeLabel = mode;
 let skillContent = '';
 try {
   skillContent = fs.readFileSync(
-    path.join(__dirname, '..', 'skills', 'rdxmin', 'SKILL.md'), 'utf8'
+    path.join(__dirname, '..', 'skills', 'rdx', 'SKILL.md'), 'utf8'
   );
 } catch (e) {}
 

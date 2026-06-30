@@ -20,7 +20,7 @@ providers:
     label: rdxmin
     config:
       temperature: 1
-      systemPromptFile: ../skills/rdxmin/SKILL.md
+      systemPromptFile: ../skills/rdx/SKILL.md
 
 tests:
   - vars:

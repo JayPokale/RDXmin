@@ -391,7 +391,7 @@ run `npx rdxmin --dry-run`, see what it'd do, and decide. No commitment, no star
 ## Contributing
 
 See [CONTRIBUTING.md](CONTRIBUTING.md). Edit the source of truth
-([`skills/rdxmin/SKILL.md`](skills/rdxmin/SKILL.md)), regenerate the rule copies
+([`skills/rdx/SKILL.md`](skills/rdx/SKILL.md)), regenerate the rule copies
 and chart, run the tests. CI enforces all three.
 
 ## License

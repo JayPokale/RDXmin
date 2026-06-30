@@ -35,7 +35,7 @@ npx promptfoo@latest eval -c benchmarks/promptfooconfig.yaml
 ```
 
 You provide the system prompt for each arm from `arms/`. The rdxmin arm uses
-the contents of `skills/rdxmin/SKILL.md` as its system prompt.
+the contents of `skills/rdx/SKILL.md` as its system prompt.
 
 ## What we measure
 

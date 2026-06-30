@@ -6,7 +6,7 @@ Small focused PRs beat big rewrites. RDXmin is a small package — keep it that 
 
 | File | Purpose |
 |------|---------|
-| `skills/rdxmin/SKILL.md` | **Source of truth.** All behavior, intensity levels, examples. Edit this. |
+| `skills/rdx/SKILL.md` | **Source of truth.** All behavior, intensity levels, examples. Edit this. |
 | `hooks/rdx-activate.js` | SessionStart: reads SKILL.md, writes flag, emits rules |
 | `hooks/rdx-mode-tracker.js` | UserPromptSubmit: commands, NL detection, per-turn reinforcement, savings counter |
 | `hooks/rdx-config.js` | Shared flag read/write, mode resolution. Security-sensitive — test changes carefully. |
@@ -14,7 +14,7 @@ Small focused PRs beat big rewrites. RDXmin is a small package — keep it that 
 
 ## What to edit
 
-**Changing behavior or intensity levels** → edit `skills/rdxmin/SKILL.md`. The activate hook reads it at runtime — no duplication.
+**Changing behavior or intensity levels** → edit `skills/rdx/SKILL.md`. The activate hook reads it at runtime — no duplication.
 
 **Adding natural language triggers** → edit the regex patterns in `hooks/rdx-mode-tracker.js`.
 
@@ -32,7 +32,7 @@ Add a test for any hook logic change. The test file is `tests/test_hooks.js`.
 
 ## PR checklist
 
-- [ ] `skills/rdxmin/SKILL.md` is the source of truth — no hardcoded rule duplication in hooks
+- [ ] `skills/rdx/SKILL.md` is the source of truth — no hardcoded rule duplication in hooks
 - [ ] Hook changes don't break the flag file security model
 - [ ] New behavior is covered by a benchmark task in `benchmarks/run-live.sh` (if measurable)
 - [ ] Tests pass

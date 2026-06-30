@@ -25,7 +25,7 @@ trap 'rm -rf "$ISO"' EXIT
 # Arm system prompts (frontmatter stripped). vanilla = none.
 CAVEMAN_SKILL="/home/jay/Desktop/caveman/skills/caveman/SKILL.md"
 PONYTAIL_SKILL="/home/jay/Desktop/ponytail/skills/ponytail/SKILL.md"
-RDX_SKILL="$HERE/../skills/rdxmin/SKILL.md"
+RDX_SKILL="$HERE/../skills/rdx/SKILL.md"
 
 strip_fm() { awk 'BEGIN{n=0} /^---[[:space:]]*$/{n++; next} n>=2{print} n<2 && !/^---/ && n==1{print}' "$1" 2>/dev/null || cat "$1"; }
 for f in "$CAVEMAN_SKILL" "$PONYTAIL_SKILL" "$RDX_SKILL"; do [ -f "$f" ] || { echo "missing skill: $f"; exit 1; }; done

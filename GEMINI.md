@@ -5,7 +5,7 @@ Maximum-efficiency dev mode. Zero-fluff prose + YAGNI-first code, always active 
 This file is the agent-agnostic instruction set (the Gemini `GEMINI.md` context convention. The agent-agnostic source uses `AGENTS.md`, used
 by Codex, Amp, and others). The same content is mirrored per-agent under
 `.cursor/`, `.windsurf/`, `.clinerules/`, `.kiro/`, and `.github/copilot-instructions.md`.
-Source of truth: [`skills/rdxmin/SKILL.md`](./skills/rdxmin/SKILL.md).
+Source of truth: [`skills/rdx/SKILL.md`](./skills/rdx/SKILL.md).
 
 ## Prose: zero fluff
 

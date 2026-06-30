@@ -5,7 +5,7 @@ to every agent that supports a rules/context file. One source, many targets.
 
 ## Source of truth
 
-`skills/rdxmin/SKILL.md` defines behavior. The short always-on rule lives in
+`skills/rdx/SKILL.md` defines behavior. The short always-on rule lives in
 `rules/rdx-activate.md`. Per-agent copies are **generated** from a shared body in
 `scripts/build-rules.js` — never hand-edit the generated files.
 
