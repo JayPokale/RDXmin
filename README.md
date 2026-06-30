@@ -5,7 +5,7 @@
 <h1 align="center">🧨 RDXmin</h1>
 
 <p align="center">
-  <em>Your AI talks less, builds less, and somehow says more. Like a senior dev who bills by the syllable.</em>
+  <em>Your AI talks less, builds less, says more. Like a senior dev who bills by the syllable.</em>
 </p>
 
 <p align="center">
@@ -23,7 +23,7 @@
 
 ---
 
-🧨 You asked your AI agent to "add a cache." A bare agent answered with a **150-line** cache class — config object, TTL logic, stats counters, the works. RDXmin's answer to the same prompt: **7 lines.** Same model, same question, measured, receipts committed in [`benchmarks/`](benchmarks/results/).
+You asked your AI agent to "add a cache." A bare agent answered with a **150-line** cache class — config object, TTL logic, stats counters, the works. RDXmin's answer to the same prompt: **7 lines.** Same model, same question, measured, receipts committed in [`benchmarks/`](benchmarks/results/).
 
 RDXmin enforces **zero-fluff prose** and **YAGNI-first code** simultaneously — no filler, no speculative abstractions, no `// TODO: maybe later`. Other tools compress either prose or code. RDXmin does both at once and — across 14 measured tasks — didn't once make the answer worse than using no tool. It's the Toyota Corolla of efficiency skills: not the flashiest, just the one that always starts. [Why not caveman or ponytail? →](docs/comparison.md)
 
@@ -73,7 +73,7 @@ Statusline badge — add to `~/.claude/settings.json`:
 
 ---
 
-## 🧨 Numbers
+## Numbers
 
 **59 live model runs** — not a tidy 14×4×2 grid, but two suites with different coverage: a clean **6-task × 4-arm** matrix on Haiku (24 runs) plus a wider **Sonnet sweep** (35 runs, including a 5th "both-tools-stacked" arm and one partial probe). The **14 tasks** charted below are those run across all four arms (6 on Haiku + 8 on Sonnet). They span coding, prose, and vague "judgment" requests — *add a cache*, *explain this error*, *refactor for clarity*; the [full task list and every raw answer are committed](benchmarks/results/raw/). Arms (no tool, caveman, ponytail, RDXmin) differ only in the injected system prompt. Each tool's **worst case** across those 14 tasks:
 
@@ -83,7 +83,7 @@ Statusline badge — add to `~/.claude/settings.json`:
 
 ponytail, a tool whose entire job is *writing less*, has a worst case of **227%** — more than double the no-tool baseline. caveman creeps over once. RDXmin's worst day is still a 17% discount.
 
-Small sample, two models, temperature wobble. Directional, not gospel — but it's *measured*, which already puts it ahead of most READMEs.
+Small sample, two models, temperature wobble. Directional, not gospel — but it's *measured*.
 
 → [Full comparison, per-segment tables, and detailed competitor breakdown](docs/comparison.md)
 
