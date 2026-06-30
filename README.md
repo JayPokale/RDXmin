@@ -11,7 +11,7 @@
 <p align="center">
   <img src="https://img.shields.io/badge/status-pre--release-d78a3c?style=flat-square" alt="Pre-release">
   <img src="https://img.shields.io/badge/works%20with-8%20agents-d78a3c?style=flat-square" alt="Works with 8 agents">
-  <img src="https://img.shields.io/badge/tests-34%20passing-2da44e?style=flat-square" alt="34 tests">
+  <a href="https://github.com/JayPokale/RDXmin/actions/workflows/test.yml"><img src="https://img.shields.io/github/actions/workflow/status/JayPokale/RDXmin/test.yml?style=flat-square&label=CI" alt="CI"></a>
   <img src="https://img.shields.io/badge/deps-0-2da44e?style=flat-square" alt="Zero deps">
   <img src="https://img.shields.io/badge/backfires-0%2F14-2da44e?style=flat-square" alt="0 backfires">
   <img src="https://img.shields.io/badge/license-MIT-d78a3c?style=flat-square" alt="MIT">
