@@ -73,7 +73,7 @@ Statusline badge — add to `~/.claude/settings.json`:
 
 ## 🧨 Numbers
 
-**59 live model runs** across 14 tasks — coding, prose, and vague "judgment" requests (e.g., "add a cache", "explain this error", "refactor for clarity") — 4 arms (no tool, caveman, ponytail, RDXmin) on Haiku and Sonnet, each differing only in the injected system prompt. The full task list and every raw answer are [committed for audit](benchmarks/results/raw/). Here's the chart that matters — each tool's **worst case** across all 14 tasks:
+**59 live model runs** — not a tidy 14×4×2 grid, but two suites with different coverage: a clean **6-task × 4-arm** matrix on Haiku (24 runs) plus a wider **Sonnet sweep** (35 runs, including a 5th "both-tools-stacked" arm and one partial probe). The **14 tasks** charted below are those run across all four arms (6 on Haiku + 8 on Sonnet). They span coding, prose, and vague "judgment" requests — *add a cache*, *explain this error*, *refactor for clarity*; the [full task list and every raw answer are committed](benchmarks/results/raw/). Arms (no tool, caveman, ponytail, RDXmin) differ only in the injected system prompt. Each tool's **worst case** across those 14 tasks:
 
 <p align="center">
   <img src="assets/benchmark.svg" width="820" alt="Worst-case output size across 14 tasks as percent of the no-tool baseline. ponytail 227% (backfired on 4 tasks), caveman 130% (1 task), RDXmin 83% (never backfires).">
