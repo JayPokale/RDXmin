@@ -188,6 +188,9 @@ Primarily a Claude Code plugin, but ships to every agent with a rules/context fi
 
 ## FAQ
 
+**Doesn't injecting a persona every turn cost tokens?**
+Yes — a one-time ruleset at session start (~1.5k tokens) plus a ~40-token reminder per turn. Output is where it pays back: coding answers shrink 40–60% (benchmarks), and output bills several × higher than input, so net is positive after the first couple of turns. On a one-line throwaway prompt the overhead can exceed the saving. Honest caveat: the benchmarks measure *output* size, not the injected input.
+
 **Will it golf my code into clever one-liners?**
 No. Boring over clever. Deletion beats addition; obfuscation isn't deletion.
 
