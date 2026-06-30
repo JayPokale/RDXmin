@@ -63,6 +63,14 @@ W=$(seg Weekly seven_day)
 LIMITS="$S"
 [ -n "$W" ] && LIMITS="${LIMITS}${LIMITS:+ |}$W"
 
+# API-key users get no rate_limits in stdin — fall back to session cost.
+# Plan users pay no per-token cost, so show it only when no limits rendered.
+# LC_NUMERIC=C forces '.' decimal so printf parses the JSON float in any locale.
+if [ -z "$LIMITS" ]; then
+  COST=$(scope cost total_cost_usd)
+  [ -n "$COST" ] && LIMITS=$(LC_NUMERIC=C printf ' Session: $%.2f' "$COST")
+fi
+
 # Orange badge + loading bars trailing outside the bracket
 if [ -z "$MODE" ] || [ "$MODE" = "full" ]; then
   printf '\033[38;5;172m[RDX]\033[0m%s' "$LIMITS"

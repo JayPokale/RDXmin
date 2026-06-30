@@ -23,119 +23,15 @@
 
 ---
 
-🧨 You asked your AI agent to "add a cache." In our actual benchmark, a bare agent answered
-with a **150-line** cache class — config object, TTL logic, stats counters, the works.
-RDXmin's answer to the same prompt: **7 lines.** Same model, same question, measured, receipts
-committed in [`benchmarks/`](benchmarks/results/).
+🧨 You asked your AI agent to "add a cache." A bare agent answered with a **150-line** cache class — config object, TTL logic, stats counters, the works. RDXmin's answer to the same prompt: **7 lines.** Same model, same question, measured, receipts committed in [`benchmarks/`](benchmarks/results/).
 
-RDXmin is the tool that makes that stop.
-
-There are two excellent specialists already: **[caveman](https://github.com/JuliusBrussee/caveman)**
-compresses prose like it's being charged per vowel, and **[ponytail](https://github.com/DietrichGebert/ponytail)**
-deletes code like it has a personal vendetta against line 117. Both are great. Both also have a
-catch we measured: caveman has zero engineering judgment (ask it to "add caching" and it hands
-you *three* implementations and a shrug — 330 tokens to RDXmin's 151), and ponytail pads prose
-so enthusiastically that on one prompt it ran **227% of the no-tool baseline**. Yes — a "write
-less" tool, writing more. 🔥 Receipts: [↓](#why-not-just-use-caveman-or-ponytail).
-
-RDXmin does both axes at once and — across **14 measured tasks on two models** — is the only
-one of the three that **never once backfired**. It's not always the single tersest answer. It's
-the one that never betrays you. The Toyota Corolla of efficiency skills: not the flashiest, just
-the one that always starts.
-
-## What it does
-
-**Zero-fluff prose** — drops articles, filler, pleasantries, hedging. Fragments OK.
-Technical terms stay exact. Code blocks unchanged. Pattern: `[thing] [action] [reason].`
-
-**Efficiency-first code** — runs the YAGNI ladder before writing anything: does this need to
-exist? → stdlib? → one line? → *fine,* the minimum that works. Stdlib over deps, native over
-JS, deletion over addition, and a `// rdx:` comment whenever it takes a deliberate shortcut so
-"later" doesn't quietly become "never."
-
-## 🧨 Numbers
-
-No hand-wavy "up to 90%!" marketing math here. This is **59 live model runs** across
-14 tasks — 4 arms (no tool, [caveman](https://github.com/JuliusBrussee/caveman),
-[ponytail](https://github.com/DietrichGebert/ponytail), RDXmin) on Haiku **and** Sonnet,
-each arm differing *only* in the injected system prompt. Every raw answer is committed so
-you can call us liars with evidence. Here's the chart that matters — each tool's **worst
-case** across all 14 tasks:
-
-<p align="center">
-  <img src="assets/benchmark.svg" width="820" alt="Worst-case output size across 14 tasks as percent of the no-tool baseline. ponytail 227% (backfired on 4 tasks), caveman 130% (1 task), RDXmin 83% (never backfires).">
-</p>
-
-Read that again: ponytail, a tool whose entire job is *writing less code*, has a worst case
-of **227%** — more than double what you'd get by using nothing. caveman creeps over the line
-once. RDXmin's worst day is still a 17% discount. It is, statistically, incapable of wasting
-your tokens. (We tried. It wouldn't.)
-
-<details>
-<summary><strong>"But who wins on a good day?"</strong> — the per-segment breakdown (Haiku, 6 tasks)</summary>
-
-Visible answer size as % of the no-tool baseline, lower = leaner:
-
-| | vanilla | caveman | ponytail | **RDXmin** |
-|---|--:|--:|--:|--:|
-| **coding** (tokens) | 100% | 46% | 29% | **22%** |
-| **coding** (lines) | 100% | 40% | 19% | **14%** |
-| **non-coding** (tokens) | 100% | 79% | 121% | **71%** |
-| **all 6 tasks** | 100% | 57% | 61% | **39%** |
-
-On coding, RDXmin is leanest (the "add a cache" prompt where vanilla wrote a **150-line**
-class became **7 lines**). On pure prose, caveman is a hair leaner on a *good* day (44% vs
-52% on tiny prompts) — it's a dedicated prose compressor, and credit where due. RDXmin's
-whole pitch is that it doesn't *have* a bad day. Full tables:
-[live 4-arm](benchmarks/results/2026-06-29-live-4arm.md) ·
-[reliability](benchmarks/results/2026-06-29-reliability.md).
-
-</details>
-
-Small sample, two models, temperature wobble. Directional, not gospel — but it's *measured*,
-which already puts it ahead of most READMEs.
-
-### Why not just use caveman or ponytail?
-
-Because each has a failure mode, and RDXmin doesn't. Across **14 tasks** (code, prose,
-and vague "judgment" requests; Haiku + Sonnet), measured as % of the no-tool baseline:
-
-| | worst case | times it made the answer **worse** than no tool | code judgment |
-|---|--:|--:|:--:|
-| caveman | 130% | 1 / 14 | ❌ no ladder |
-| ponytail | **227%** | **4 / 14** | ✅ |
-| **RDXmin** | **83%** | **0 / 14** | ✅ |
-
-caveman is a superb *prose* compressor (a hair leaner than RDXmin on pure prose) but has
-**no engineering judgment** — asked to *"add caching,"* it dumped three implementations (330
-tokens) where RDXmin gave one `@cache` + an upgrade line (151). ponytail has the judgment
-but **pads prose so hard it backfires** — on a "retry logic" prompt it ran **227%** of the
-no-tool baseline.
-
-**RDXmin never backfired once** (worst case 83% = still a saving). It's rarely the single
-tersest answer and never the loser — the dependable generalist. To get its both-axes coverage
-from the specialists you'd install *both*, which conflict and double the per-session overhead;
-stacked on one task they did *worse* (605t) than RDXmin alone (595t). Full data:
-[reliability writeup](benchmarks/results/2026-06-29-reliability.md) ·
-[Sonnet cross-check](benchmarks/results/2026-06-29-sonnet-cross-check.md).
-
-### `/rdx-audit` — a thing neither specialist has
-
-One pass over a diff, file, or repo that flags **both** over-engineered code *and* bloated
-prose/docs/comments, ranked biggest-cut-first. ponytail-audit is code-only; caveman has no
-audit at all. `/rdx-audit` is the union — what a PR reviewer actually wants in one report.
-
-> ⚠️ Earlier versions of this README showed a "74% / both-axes-win" chart **modeled from
-> hand-authored examples**. That was replaced with the live measurement above. The code
-> generating it (`scripts/build-chart.js`) reads frozen real results and CI fails if it drifts.
+RDXmin enforces **zero-fluff prose** and **YAGNI-first code** simultaneously — no filler, no speculative abstractions, no `// TODO: maybe later`. Other tools do one axis. RDXmin does both and — across 14 measured tasks — never once made things worse. It's the Toyota Corolla of efficiency skills: not the flashiest, just the one that always starts. [Why not caveman or ponytail? →](docs/comparison.md)
 
 ---
 
 ## Install
 
-It's one command, it touches nothing it shouldn't, and `--uninstall` puts everything back
-if we're not friends anymore. Auto-detects your agents (Claude Code, Cursor, Windsurf, Cline,
-Kiro, Codex, Gemini, Copilot) and wires each one:
+One command. Auto-detects your agents (Claude Code, Cursor, Windsurf, Cline, Kiro, Codex, Gemini, Copilot) and wires each one. `--uninstall` puts everything back.
 
 ```bash
 npx rdxmin
@@ -151,8 +47,7 @@ curl -fsSL https://raw.githubusercontent.com/jaypokale/rdxmin/main/install.sh | 
 irm https://raw.githubusercontent.com/jaypokale/rdxmin/main/install.ps1 | iex
 ```
 
-Preview first with `npx rdxmin --dry-run`, scope with `--only claude`, see
-everything with `npx rdxmin --help`. Remove with `npx rdxmin --uninstall`.
+Preview first with `npx rdxmin --dry-run`, scope with `--only claude`, see everything with `npx rdxmin --help`. Remove with `npx rdxmin --uninstall`.
 
 <details>
 <summary>Manual install (Claude Code plugin)</summary>
@@ -169,6 +64,22 @@ Add to `~/.claude/settings.json`:
 }
 ```
 </details>
+
+---
+
+## 🧨 Numbers
+
+**59 live model runs** across 14 tasks — coding, prose, and vague "judgment" requests (e.g., "add a cache", "explain this error", "refactor for clarity") — 4 arms (no tool, caveman, ponytail, RDXmin) on Haiku and Sonnet, each differing only in the injected system prompt. The full task list and every raw answer are [committed for audit](benchmarks/results/raw/). Here's the chart that matters — each tool's **worst case** across all 14 tasks:
+
+<p align="center">
+  <img src="assets/benchmark.svg" width="820" alt="Worst-case output size across 14 tasks as percent of the no-tool baseline. ponytail 227% (backfired on 4 tasks), caveman 130% (1 task), RDXmin 83% (never backfires).">
+</p>
+
+ponytail, a tool whose entire job is *writing less*, has a worst case of **227%** — more than double the no-tool baseline. caveman creeps over once. RDXmin's worst day is still a 17% discount.
+
+Small sample, two models, temperature wobble. Directional, not gospel — but it's *measured*, which already puts it ahead of most READMEs.
+
+→ [Full comparison, per-segment tables, and detailed competitor breakdown](docs/comparison.md)
 
 ---
 
@@ -189,17 +100,11 @@ Natural language works too: "activate rdx", "rdx mode", "rdxify this".
 
 ## Levels
 
-**lite** — No filler/hedging, keeps articles and full sentences. Flags the more
-minimal code approach in one line. You decide.
+**lite** — No filler/hedging, keeps articles and full sentences. Flags the more minimal code approach in one line. You decide.
 
-**full** (default) — Drop articles, fragments OK. Ladder enforced: YAGNI →
-reuse → stdlib → native → installed dep → one line → min code. Shortest diff,
-shortest explanation.
+**full** (default) — Drop articles, fragments OK. Ladder enforced: YAGNI → reuse → stdlib → native → installed dep → one line → min code.
 
-**ultra** — Abbreviate prose words (DB/auth/config/req/res/fn). Strip
-conjunctions, use arrows for causality (X → Y). YAGNI extremist: deletion
-before addition, challenge the requirement in the same breath. Code symbols,
-function names, API names, error strings: never abbreviated.
+**ultra** — Abbreviate prose words (DB/auth/config/req/res/fn). Strip conjunctions, use arrows for causality (X → Y). YAGNI extremist: deletion before addition, challenge the requirement in the same breath. Code symbols, function names, API names: never abbreviated.
 
 ---
 
@@ -217,34 +122,18 @@ Before writing code, the agent stops at the first rung that holds:
 7. Only then: the minimum that works
 ```
 
-The ladder runs *after* it understands the problem — it reads the code the change
-touches and traces the real flow first. Lazy about the solution, never about reading.
+The ladder runs *after* reading the code — lazy about the solution, never about understanding. Lazy is not negligent: trust-boundary validation, data-loss handling, security, and accessibility are never on the chopping block.
 
-Lazy is not negligent: trust-boundary validation, data-loss handling, security, and
-accessibility are never on the chopping block. The prose compresses in parallel —
-fewer words to say the same true thing.
+Mark deliberate simplifications so "later" doesn't quietly become "never":
+
+```js
+// rdx: global lock, per-account locks if throughput matters
+// rdx: O(n) scan, index this when table exceeds ~10k rows
+```
 
 ---
 
-## Statusline
-
-Badge shows the active level:
-
-```
-[RDX]
-[RDX:ULTRA]
-```
-
-Orange. Reads the mode flag; renders nothing when rdx is off. (No "tokens saved"
-counter — a live session has no counterfactual baseline to measure savings against,
-so any such number would be invented. The real numbers live in [Numbers](#numbers).)
-
----
-
-## 🔥 What the output sounds like
-
-Illustrative of the *style* at each level (not benchmark numbers — those are
-[above](#numbers), with receipts):
+## What the output sounds like
 
 **"Why React component re-render?"** (full)
 > New object ref each render. Inline object prop = new ref = re-render. `useMemo`.
@@ -252,147 +141,69 @@ Illustrative of the *style* at each level (not benchmark numbers — those are
 **"Why React component re-render?"** (ultra)
 > Inline obj prop → new ref → re-render. `useMemo`. Why inline object at all?
 
-**"Add a cache for API responses."** (full)
-> `@lru_cache(maxsize=1000)` on fetch fn. Skipped custom cache class, add when lru_cache measurably falls short.
-
 **"Add a cache for API responses."** (ultra)
 > No cache until profiler says so. When it does: `@lru_cache`. Hand-rolled TTL cache = bug farm with hit rate.
 
 ---
 
-## Auto-Clarity
+## Statusline
 
-Compression drops automatically for:
-- Security warnings
-- Irreversible action confirmations
-- Multi-step sequences where fragment order risks misread
-- When compression itself creates technical ambiguity
+Badge shows the active level. Plan users see rate-limit usage + reset countdown:
 
-Resumes after the clear part.
-
----
-
-## When NOT to be minimal
-
-Never simplify away: input validation at trust boundaries, error handling
-preventing data loss, security measures, accessibility basics, anything
-explicitly requested. User insists on the full version → build it, no re-arguing.
-
-Never skip reading. The ladder shortens the solution, not the understanding.
-
----
-
-## Mark deliberate simplifications
-
-```js
-// rdx: global lock, per-account locks if throughput matters
-// rdx: O(n) scan, index this when table exceeds ~10k rows
+```
+[RDX:ULTRA] Session: ███████░░░ 73% ⟳2h14m | Weekly: ████░░░░░░ 41% ⟳3d4h
 ```
 
-Simple reads as intent, not ignorance.
+API-key users have no rate limits, so they see session cost instead:
+
+```
+[RDX:ULTRA] Session: $0.42
+```
+
+Orange. Pulled live from Claude's statusline JSON — no extra API calls. Renders nothing when rdx is off.
 
 ---
 
 ## Config
-
-Override default mode:
 
 ```bash
 # env var (highest priority)
 export RDX_DEFAULT_MODE=ultra
 
 # config file
-~/.config/rdxmin/config.json
-{ "defaultMode": "lite" }
+~/.config/rdxmin/config.json → { "defaultMode": "ultra" }
 ```
 
 ---
 
-## Benchmarks
+## Multi-agent
 
-Every number in this README comes from real model runs across four arms (no tool,
-caveman, ponytail, RDXmin), isolated so the only variable is the injected system
-prompt. The raw model outputs and the aggregated tables are committed for audit:
+Primarily a Claude Code plugin, but ships to every agent with a rules/context file — Cursor, Windsurf, Cline, Kiro, Codex, Gemini, Copilot. Generated from one source (`scripts/build-rules.js`), verified in CI. See [`docs/agent-portability.md`](./docs/agent-portability.md).
 
-- [`benchmarks/results/raw/`](./benchmarks/results/raw/) · [`raw-sonnet/`](./benchmarks/results/raw-sonnet/) — every individual answer, as JSON
-- [`reliability`](./benchmarks/results/2026-06-29-reliability.md) · [`live 4-arm`](./benchmarks/results/2026-06-29-live-4arm.md) · [`Sonnet cross-check`](./benchmarks/results/2026-06-29-sonnet-cross-check.md) — the writeups
+---
+
+## FAQ
+
+**Will it golf my code into clever one-liners?**
+No. Boring over clever. Deletion beats addition; obfuscation isn't deletion.
+
+**Does it cut corners on safety?**
+Never. Input validation, data-loss handling, security, and accessibility are off the table. Lazy about solutions, not about reading the problem.
+
+**0 GitHub stars. Should I be worried?**
+Everyone starts at zero. Run `npx rdxmin --dry-run`, see what it'd do, decide. No commitment, no stars required.
+
+→ [More FAQ and competitor comparison](docs/comparison.md)
+
+---
+
+## Contributing
+
+See [CONTRIBUTING.md](CONTRIBUTING.md). Edit the source of truth ([`skills/rdx/SKILL.md`](skills/rdx/SKILL.md)), regenerate rule copies and chart, run the tests. CI enforces all three.
 
 ```bash
 npm test    # 34 tests: flag safety, tracker, settings merge, installer
 ```
-
-## Multi-agent
-
-Primarily a Claude Code plugin, but the instruction set ships to every agent
-with a rules/context file — Cursor, Windsurf, Cline, Kiro, Codex, Gemini,
-Copilot. Copies are generated from one source (`scripts/build-rules.js`) and
-verified in CI. See [`docs/agent-portability.md`](./docs/agent-portability.md).
-
-## Files
-
-```
-rdxmin/
-├── .claude-plugin/                ← plugin.json + marketplace.json
-├── skills/
-│   ├── rdxmin/SKILL.md          ← persona + rules (source of truth)
-│   ├── rdx-help/SKILL.md          ← /rdx-help quick reference
-│   └── rdx-review/SKILL.md        ← /rdx-review bloat finder
-├── hooks/
-│   ├── rdx-activate.js            ← SessionStart: write flag, emit rules
-│   ├── rdx-mode-tracker.js        ← UserPromptSubmit: commands, NL, reinforcement
-│   ├── rdx-statusline.sh / .ps1   ← statusline badge (bash + PowerShell)
-│   ├── rdx-config.js              ← safeWriteFlag, readFlag, getDefaultMode
-│   └── package.json               ← {"type": "commonjs"}
-├── commands/                      ← /rdx, /rdx-help, /rdx-review, /rdx-audit
-├── benchmarks/                    ← committed results/ + raw model-output cells
-├── tests/                         ← config, settings, tracker, installer
-├── scripts/                       ← build-rules.js, build-chart.js
-├── docs/                          ← install-windows, agent-portability, releasing
-├── .cursor / .windsurf / .clinerules / .kiro / .github  ← per-agent rules
-├── AGENTS.md / GEMINI.md          ← agent-agnostic instruction sets
-└── rules/rdx-activate.md          ← always-on rules reference
-```
-
-## FAQ
-
-**Why not just use caveman or ponytail?**
-Use them! They're great, we cite them by name, and we tested *against* them honestly. But
-caveman has no engineering judgment and ponytail can backfire (227%, measured). Installing
-*both* to cover both axes gets you two plugins that fight over your prose style and double
-the overhead. RDXmin is the one that does both and never face-plants. See [Numbers](#numbers).
-
-**Will it golf my code into clever one-liners I'll hate at 3am?**
-No. The rule is *necessary*, not *fewest characters*. Boring over clever — because clever is
-what some poor soul (you, in six months) has to decode during an incident. Deletion beats
-addition; obfuscation isn't deletion.
-
-**Does it ever cut corners on safety?**
-Never. Input validation, error handling that prevents data loss, security, and accessibility
-are explicitly off the table. It's lazy about *solutions*, not about *reading the problem* —
-which, frankly, is more discipline than some humans bring to a PR.
-
-**It made my answer terse and dropped something I needed!**
-File an issue — that's a bug, not the design. The whole point is *terse ≠ incomplete*: keep
-the fix, cut the fluff. If it dropped the fix, it failed its own rules and we want to know.
-
-**Does it work outside Claude Code?**
-Yes — ships to Cursor, Windsurf, Cline, Kiro, Codex, Gemini, and Copilot. The live
-mode-switching UI (`/rdx`, statusline badge) is Claude-Code-specific; everywhere else the
-always-on ruleset still applies. See [agent portability](docs/agent-portability.md).
-
-**Why "RDXmin"?**
-RDX is a demolition charge. Your token bill is the building. Use your imagination. (Legally,
-the only thing it detonates is verbosity.)
-
-**0 GitHub stars. Should I be worried?**
-Everyone starts at zero. You could be the protagonist of this repo's origin story. Or just
-run `npx rdxmin --dry-run`, see what it'd do, and decide. No commitment, no stars required.
-
-## Contributing
-
-See [CONTRIBUTING.md](CONTRIBUTING.md). Edit the source of truth
-([`skills/rdx/SKILL.md`](skills/rdx/SKILL.md)), regenerate the rule copies
-and chart, run the tests. CI enforces all three.
 
 ## License
 
