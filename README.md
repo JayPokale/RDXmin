@@ -49,6 +49,8 @@ irm https://raw.githubusercontent.com/JayPokale/RDXmin/main/install.ps1 | iex
 
 Preview first with `npx rdxmin --dry-run`, scope with `--only claude`, see everything with `npx rdxmin --help`. Remove with `npx rdxmin --uninstall`.
 
+**Requirements:** Node ≥18 (installer / `npx`) · Claude Code for the live `/rdx` switching + statusline badge — the always-on ruleset still ships to every other agent · bash for the statusline (macOS/Linux; a PowerShell version ships for Windows).
+
 <details>
 <summary>Manual install (Claude Code plugin)</summary>
 
