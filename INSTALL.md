@@ -36,21 +36,16 @@ irm https://raw.githubusercontent.com/JayPokale/RDXmin/main/install.ps1 | iex
 
 ## Manual Claude Code plugin
 
-Add to `~/.claude/settings.json`:
-
-```json
-{
-  "plugins": [
-    "/path/to/rdxmin"
-  ]
-}
+```bash
+claude plugin marketplace add JayPokale/RDXmin   # register the marketplace
+claude plugin install rdxmin@rdxmin              # enable the plugin
 ```
 
 Restart Claude Code. RDXmin activates automatically on every session.
 
 ## Statusline badge
 
-To show `[RDX] 💥 3.5k` in your Claude Code statusline, also add:
+To show the `[RDX]` badge with rate-limit usage (or session cost on API keys) in your Claude Code statusline, also add:
 
 ```json
 {

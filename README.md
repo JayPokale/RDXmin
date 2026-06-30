@@ -52,11 +52,15 @@ Preview first with `npx rdxmin --dry-run`, scope with `--only claude`, see every
 <details>
 <summary>Manual install (Claude Code plugin)</summary>
 
-Add to `~/.claude/settings.json`:
+```bash
+claude plugin marketplace add JayPokale/RDXmin   # register the marketplace
+claude plugin install rdxmin@rdxmin              # enable the plugin
+```
+
+Statusline badge — add to `~/.claude/settings.json`:
 
 ```json
 {
-  "plugins": ["/path/to/rdxmin"],
   "statusLine": {
     "type": "command",
     "command": "bash \"/path/to/rdxmin/hooks/rdx-statusline.sh\""
