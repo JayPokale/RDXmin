@@ -106,7 +106,8 @@ Small sample, two models, temperature wobble. Directional, not gospel — but it
 
 | Command | Effect |
 |---------|--------|
-| `/rdx` | Activate at default level (full) |
+| *(nothing)* | On automatically at `full` every session after install |
+| `/rdx` | Re-activate at default level if you'd stopped it |
 | `/rdx lite` | Tighter prose, flags the minimal alternative |
 | `/rdx full` | Full compression + YAGNI ladder enforced |
 | `/rdx ultra` | Extremist — abbreviate prose, delete before add, challenge requirements |
@@ -162,13 +163,17 @@ Orange. Pulled live from Claude's statusline JSON — no extra API calls. Render
 
 ## Config
 
+**On by default.** After install, RDX activates automatically at `full` every session — no `/rdx` needed. Change the default level, or set `off` to stay dormant until you type `/rdx`:
+
 ```bash
 # env var (highest priority)
 export RDX_DEFAULT_MODE=ultra
 
-# config file
+# config file (persists across shells)
 ~/.config/rdxmin/config.json → { "defaultMode": "ultra" }
 ```
+
+Resolution: env var → config file → `full`. Valid: `off`, `lite`, `full`, `ultra`.
 
 ---
 
