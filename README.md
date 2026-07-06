@@ -100,10 +100,10 @@ Nothing here is estimated. Every figure below is recomputed from committed raw d
 RDXmin wins all four columns: it cut the total 20-task bill **nearly in half** while the specialists managed 20–32%, and it did so with the smallest worst day and a twentieth the backfire rate.
 
 <p align="center">
-  <img src="assets/benchmark.svg" width="820" alt="Worst-case billed output across 20 tasks as percent of the no-tool baseline. caveman 424% (backfired 6 tasks), ponytail 227% (backfired 8 tasks), RDXmin 173% (backfired 1 task — root-caused and fixed).">
+  <img src="assets/benchmark.svg" width="820" alt="Total billed output across 20 tasks as percent of the no-tool baseline. caveman 80% (worst day 424%, backfired 6), ponytail 68% (worst day 227%, backfired 8), RDXmin 52% (worst day 173%, backfired 1 — root-caused and fixed).">
 </p>
 
-Read that chart as an insurance policy: the bar is the worst bill each tool ever handed you. caveman's worst day cost **4.2×** a bare model; ponytail's — a tool whose entire job is writing less — **2.3×**. RDXmin's worst day was 1.7×, it happened once, and the fix is measured and merged.
+The bar is the whole 20-task bill; the badge is each tool's worst single day. caveman's worst day cost **4.2×** a bare model; ponytail's — a tool whose entire job is writing less — **2.3×**. RDXmin's worst day was 1.7×, it happened once, and the fix is measured and merged.
 
 On coding tasks RDXmin is leanest (June: 22% of baseline vs caveman 46%, ponytail 29%; July: 64% vs 84% and 160%). On pure prose caveman is a hair leaner on a good day — credit where due. And in the July run all 24 answers, every arm, **graded correct**: nobody here buys token savings with wrong answers.
 

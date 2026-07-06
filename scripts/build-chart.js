@@ -1,12 +1,12 @@
 #!/usr/bin/env node
-// Generates assets/benchmark.svg from REAL measured results — the "reliability"
-// chart: each tool's WORST case across every task, as % of the no-tool baseline.
-// Anything past 100% means the tool made the answer LONGER than using no tool at
-// all (it backfired). That's the metric that actually matters for mixed work.
+// Generates assets/benchmark.svg from REAL measured results — the headline
+// chart: each tool's TOTAL billed output across every 4-arm task, as % of the
+// no-tool baseline (what the combined bill actually was), with each tool's
+// worst single day and backfire count as a badge. Lower bar = cheaper.
 //
-// Source: the committed raw model outputs under benchmarks/results/raw/ and
-// benchmarks/results/raw-sonnet/ (produced by run-live.sh / the Sonnet runs).
-// Data-driven + CI-checkable: same cells in → same chart out.
+// Source: the committed raw model outputs under benchmarks/results/raw*/
+// (produced by run-live.sh). Data-driven + CI-checkable: same cells in →
+// same chart out.
 //
 // Run:  node scripts/build-chart.js          (write svg)
 //       node scripts/build-chart.js --check   (fail if stale; for CI)
@@ -52,7 +52,7 @@ function collect() {
     if (arm === 'vanilla' && cells[k]) tasks.add(`${dir}|${task}`);
   }
   const stat = {};
-  for (const a of ARMS) stat[a.key] = { worst: 0, over: 0, n: 0 };
+  for (const a of ARMS) stat[a.key] = { worst: 0, over: 0, n: 0, sum: 0, base: 0 };
   for (const dt of tasks) {
     const [dir, task] = dt.split('|');
     const base = cells[`${dir}|${task}|vanilla`];
@@ -61,9 +61,15 @@ function collect() {
       if (!v) continue;
       const pct = Math.round((v / base) * 100);
       stat[a.key].n++;
+      stat[a.key].sum += v;
+      stat[a.key].base += base;
       if (pct > stat[a.key].worst) stat[a.key].worst = pct;
       if (pct > 100) stat[a.key].over++;
     }
+  }
+  for (const a of ARMS) {
+    const s = stat[a.key];
+    s.total = s.base ? Math.round((s.sum / s.base) * 100) : 0;
   }
   return { stat, taskCount: tasks.size };
 }
@@ -71,27 +77,24 @@ function collect() {
 function buildSvg(stat, taskCount) {
   const W = 860, H = 340;
   const left = 150, top = 96, rowH = 64, plotW = 620;
-  // Axis scales to the data: worst bar + headroom, rounded up to a clean 50.
-  const maxWorst = Math.max(...ARMS.map(a => stat[a.key].worst), 100);
-  const maxPct = Math.ceil((maxWorst + 25) / 50) * 50;
+  const maxPct = 120;                 // total-bill bars live under 100%
   const px = plotW / maxPct;          // px per percent
   const line100 = left + 100 * px;    // the "no tool" baseline
 
-  // backfire zone (>100%) shaded faint red
-  let body = `<rect x="${line100}" y="${top - 16}" width="${left + plotW - line100}" height="${ARMS.length * rowH + 8}" fill="#cf3b3b" opacity="0.07"/>`;
-  body += `<line x1="${line100}" y1="${top - 16}" x2="${line100}" y2="${top + ARMS.length * rowH - 8}" stroke="#cf3b3b" stroke-width="1.5" stroke-dasharray="4 3"/>`;
-  body += `<text x="${line100}" y="${top - 22}" font-size="11" fill="#cf3b3b" text-anchor="middle">100% = no tool</text>`;
-  body += `<text x="${(line100 + left + plotW) / 2}" y="${top + ARMS.length * rowH + 6}" font-size="10.5" fill="#cf3b3b" text-anchor="middle" opacity="0.8">⬅ backfire zone: tool made it WORSE than no tool</text>`;
+  let body = `<line x1="${line100}" y1="${top - 16}" x2="${line100}" y2="${top + ARMS.length * rowH - 8}" stroke="#8b949e" stroke-width="1.5" stroke-dasharray="4 3"/>`;
+  body += `<text x="${line100}" y="${top - 22}" font-size="11" fill="#8b949e" text-anchor="middle">100% = no tool</text>`;
 
   ARMS.forEach((a, i) => {
     const s = stat[a.key];
     const y = top + i * rowH;
-    const w = Math.max(2, s.worst * px);
+    const w = Math.max(2, s.total * px);
     const bold = a.key === 'rdxmin' ? ' font-weight="700"' : '';
-    const badge = s.over === 0 ? 'never backfires' : `backfired ${s.over}/${taskCount} tasks`;
+    const badge = s.over === 0
+      ? `worst day ${s.worst}% · never backfired`
+      : `worst day ${s.worst}% · backfired ${s.over}/${taskCount} tasks`;
     body += `<text x="${left - 12}" y="${y + 21}" font-size="14" fill="#c9d1d9" text-anchor="end"${bold}>${a.label}</text>` +
             `<rect x="${left}" y="${y + 4}" width="${w}" height="30" rx="4" fill="${a.color}"/>` +
-            `<text x="${left + w + 9}" y="${y + 18}" font-size="14" fill="#c9d1d9"${bold}>${s.worst}%</text>` +
+            `<text x="${left + w + 9}" y="${y + 18}" font-size="14" fill="#c9d1d9"${bold}>${s.total}% of the bill</text>` +
             `<text x="${left + w + 9}" y="${y + 32}" font-size="10.5" fill="#8b949e">${badge}</text>`;
   });
 
@@ -100,13 +103,13 @@ function buildSvg(stat, taskCount) {
     ? `<text x="${W / 2}" y="${H - 14}" font-size="11" fill="#8b949e" text-anchor="middle">RDXmin's single backfire was root-caused, the rule fixed, and re-validated live at 93% — benchmarks/results/2026-07-07-verify-rerun.md</text>`
     : '';
 
-  const aria = `Worst-case billed output across ${taskCount} tasks as percent of the no-tool baseline. ` +
-    ARMS.map(a => `${a.label} ${stat[a.key].worst}% (${stat[a.key].over === 0 ? 'never backfires' : `backfired ${stat[a.key].over} tasks`})`).join(', ') + '.';
+  const aria = `Total billed output across ${taskCount} tasks as percent of the no-tool baseline. ` +
+    ARMS.map(a => `${a.label} ${stat[a.key].total}% (worst day ${stat[a.key].worst}%, backfired ${stat[a.key].over})`).join(', ') + '.';
 
   return `<svg xmlns="http://www.w3.org/2000/svg" width="${W}" height="${H}" viewBox="0 0 ${W} ${H}" role="img" aria-label="${aria}">
 <rect width="${W}" height="${H}" rx="10" fill="#0d1117"/>
-<text x="${W / 2}" y="34" font-size="17" font-weight="700" fill="#c9d1d9" text-anchor="middle">Worst case across ${taskCount} tasks — lower is better, past 100% is a betrayal</text>
-<text x="${W / 2}" y="54" font-size="11.5" fill="#8b949e" text-anchor="middle">billed output vs using no tool at all (Haiku + Sonnet, two suites; code, prose &amp; judgment prompts)</text>
+<text x="${W / 2}" y="34" font-size="17" font-weight="700" fill="#c9d1d9" text-anchor="middle">The ${taskCount}-task bill — % of a bare model (lower = cheaper)</text>
+<text x="${W / 2}" y="54" font-size="11.5" fill="#8b949e" text-anchor="middle">total billed output vs using no tool at all (Haiku + Sonnet, two suites; code, prose &amp; judgment prompts)</text>
 ${body}${fixNote}</svg>
 `;
 }
