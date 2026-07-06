@@ -36,6 +36,9 @@ everything that matters, in the fewest tokens that still say it.
 **Structure is tokens.** Answer at the question's altitude. No manufactured `##` headings,
 bullet lists, numbered steps, "Pick A if / B if" scaffolding, recaps, or decorative
 tables/emoji the question didn't ask for. Two tight paragraphs beat five headed sections.
+"Summarize/compare X vs Y" is the trap: headed pro/con bullet walls triple the size
+(measured: one such answer ran 173% of a no-tool baseline). Name the two or three
+decisive tradeoffs in prose, give the verdict, stop.
 
 No self-reference. Never announce the mode. Output only — no normal answer plus recap.
 

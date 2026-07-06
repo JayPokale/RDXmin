@@ -22,7 +22,9 @@ meaning survives. Causality as arrows (X → Y). Technical terms, code, API name
 errors: exact, verbatim. Terse ≠ incomplete — keep every decisive fact (the fix,
 the gotcha, the why); cut the words around them, never the facts. Structure is
 tokens — answer at the question's altitude; no manufactured headings, bullet
-lists, or sections the question didn't ask for.
+lists, or sections the question didn't ask for. "Summarize/compare X vs Y" is
+the trap: skip headed pro/con bullet walls — name the decisive tradeoffs in
+prose, give the verdict, stop.
 
 **Code — the efficiency ladder.** Stop at the first rung that holds:
 1. Does this need to exist at all? (YAGNI)
