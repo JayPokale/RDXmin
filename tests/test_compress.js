@@ -6,7 +6,7 @@ const { test } = require('node:test');
 const assert = require('node:assert/strict');
 
 const {
-  extractText, compress, limitsFor, toolAllowed, processPayload, THRESHOLDS,
+  extractText, scrub, compress, transform, limitsFor, toolAllowed, processPayload, THRESHOLDS,
 } = require('../hooks/rdx-compress-output');
 
 const FULL = THRESHOLDS.full;
@@ -54,6 +54,73 @@ test('compress hard-cuts a single giant line by chars', () => {
 
 test('compress returns null when no win', () => {
   assert.equal(compress('short', FULL), null);
+});
+
+// ── scrub (lossless tier) ────────────────────────────────────────────────────
+
+test('scrub strips ANSI escapes', () => {
+  const out = scrub('\x1b[31mFAIL\x1b[0m test_foo\n\x1b]0;title\x07plain');
+  assert.equal(out, 'FAIL test_foo\nplain');
+});
+
+test('scrub collapses identical consecutive lines', () => {
+  const out = scrub(Array(10).fill('WARN: retrying connection').join('\n'));
+  assert.ok(out.includes('WARN: retrying connection'));
+  assert.ok(out.includes('[rdx: line repeated 10×]'));
+  assert.equal(out.split('\n').length, 2);
+});
+
+test('scrub keeps short repeats and blank structure', () => {
+  const src = 'a\na\na\n\nb';               // 3 repeats < threshold of 4
+  assert.equal(scrub(src), src);
+  assert.equal(scrub('x\n\n\n\n\ny'), 'x\n\ny');  // blank run → one blank
+});
+
+test('transform scrubs medium outputs below the elision threshold', () => {
+  const noisy = Array(50).fill('\x1b[32m✓\x1b[0m ok').join('\n') + '\n' + 'tail '.repeat(300);
+  assert.ok(noisy.length < THRESHOLDS.full.maxChars);
+  const out = transform(noisy, THRESHOLDS.full);
+  assert.ok(out && out.length < noisy.length);
+  assert.ok(!out.includes('\x1b['));
+});
+
+test('transform returns null when the win is trivial', () => {
+  const clean = 'z'.repeat(2000);            // nothing to scrub, under maxChars
+  assert.equal(transform(clean, THRESHOLDS.full), null);
+});
+
+test('transform still elides oversized outputs after scrubbing', () => {
+  const out = transform(bigOutput(500), THRESHOLDS.full);
+  assert.ok(out.includes('[rdx: elided'));
+});
+
+// ── dedup ────────────────────────────────────────────────────────────────────
+
+test('identical consecutive tool output becomes a marker (isolated config dir)', () => {
+  const dir = require('fs').mkdtempSync(require('path').join(require('os').tmpdir(), 'rdx-dedup-'));
+  const saved = process.env.CLAUDE_CONFIG_DIR;
+  process.env.CLAUDE_CONFIG_DIR = dir;
+  try {
+    const payload = { tool_name: 'Bash', session_id: 'sess-1', tool_response: 'FAIL test_x\n' + 'ctx '.repeat(1000) };
+    const first = processPayload(payload, 'full');
+    const second = processPayload(payload, 'full');
+    assert.ok(second && second.includes('byte-identical to the previous Bash result'));
+    assert.ok(second.includes('FAIL test_x'));          // first lines kept
+    assert.notDeepEqual(first, second);                  // only the repeat is deduped
+    const third = processPayload({ tool_name: 'Bash', session_id: 'sess-1', tool_response: 'different '.repeat(300) }, 'full');
+    assert.ok(third == null || !third.includes('byte-identical'));
+    // New session must NOT dedup against the old one — the earlier copy is
+    // not in the new session's context.
+    const newSession = processPayload({ ...payload, session_id: 'sess-2' }, 'full');
+    assert.ok(newSession == null || !newSession.includes('byte-identical'));
+    // No session_id (portability unknowns) → dedup skipped entirely.
+    const noSess = processPayload({ tool_name: 'Bash', tool_response: payload.tool_response }, 'full');
+    assert.ok(noSess == null || !noSess.includes('byte-identical'));
+  } finally {
+    if (saved !== undefined) process.env.CLAUDE_CONFIG_DIR = saved;
+    else delete process.env.CLAUDE_CONFIG_DIR;
+    require('fs').rmSync(dir, { recursive: true, force: true });
+  }
 });
 
 // ── limitsFor / modes ────────────────────────────────────────────────────────

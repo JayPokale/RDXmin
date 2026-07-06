@@ -12,7 +12,8 @@
 
 const fs = require('fs');
 const path = require('path');
-const { extractText, compress, limitsFor, toolAllowed } = require('../hooks/rdx-compress-output');
+const crypto = require('crypto');
+const { extractText, transform, limitsFor, toolAllowed } = require('../hooks/rdx-compress-output');
 
 const mode = process.argv[2] || 'full';
 const limits = limitsFor(mode);
@@ -21,7 +22,8 @@ const root = process.env.CLAUDE_CONFIG_DIR
   : path.join(require('os').homedir(), '.claude', 'projects');
 
 let sessionChars = 0;                  // all message content (tool + text)
-const t = { results: 0, chars: 0, eligible: 0, before: 0, after: 0, salvaged: 0 };
+const t = { results: 0, chars: 0, eligible: 0, before: 0, after: 0, salvaged: 0,
+            dedup: 0, dedupChars: 0 };
 const skippedByTool = {};              // big outputs we refuse to touch (Read etc.)
 
 function walk(d) {
@@ -38,6 +40,7 @@ function scan(f) {
   let lines;
   try { lines = fs.readFileSync(f, 'utf8').split('\n'); } catch (e) { return; }
   const idName = {};
+  const lastHash = {};   // per-session, per-tool — mirrors the hook's dedup
   for (const l of lines) {
     if (!l) continue;
     let j; try { j = JSON.parse(l); } catch (e) { continue; }
@@ -52,10 +55,18 @@ function scan(f) {
         const text = extractText(b.content);
         const n = text ? text.length : 0;
         sessionChars += n; t.results++; t.chars += n;
-        if (!text || n <= limits.maxChars) continue;
+        if (!text) continue;
         const name = idName[b.tool_use_id] || '?';
-        if (!toolAllowed(name)) { skippedByTool[name] = (skippedByTool[name] || 0) + n; continue; }
-        const out = compress(text, limits);
+        if (!toolAllowed(name)) {
+          if (n > limits.maxChars) skippedByTool[name] = (skippedByTool[name] || 0) + n;
+          continue;
+        }
+        if (n >= 2048) {
+          const h = crypto.createHash('sha256').update(text).digest('hex');
+          if (lastHash[name] === h) { t.dedup++; t.dedupChars += n - 300; lastHash[name] = h; continue; }
+          lastHash[name] = h;
+        }
+        const out = transform(text, limits);
         if (out == null) continue;
         t.eligible++; t.before += n; t.after += out.length;
         if (out.includes('error-like line(s) below')) t.salvaged++;
@@ -66,13 +77,13 @@ function scan(f) {
 
 walk(root);
 
-const saved = t.before - t.after;
+const saved = t.before - t.after + t.dedupChars;
 const pct = (a, b) => b ? (100 * a / b).toFixed(1) + '%' : 'n/a';
 console.log(`rdx-compress replay — mode=${mode} (maxChars=${limits.maxChars}, head=${limits.headLines}, tail=${limits.tailLines})`);
 console.log(`transcript root: ${root}\n`);
 console.log(`tool_results scanned:        ${t.results.toLocaleString('en-US')}  (${t.chars.toLocaleString('en-US')} chars)`);
-console.log(`compressed (allowlisted+big): ${t.eligible.toLocaleString('en-US')}`);
-console.log(`chars before → after:        ${t.before.toLocaleString('en-US')} → ${t.after.toLocaleString('en-US')}`);
+console.log(`scrubbed/elided outputs:     ${t.eligible.toLocaleString('en-US')}  (${t.before.toLocaleString('en-US')} → ${t.after.toLocaleString('en-US')} chars)`);
+console.log(`deduped repeat outputs:      ${t.dedup.toLocaleString('en-US')}  (~${t.dedupChars.toLocaleString('en-US')} chars)`);
 console.log(`saved:                       ${saved.toLocaleString('en-US')} chars (~${Math.round(saved / 4).toLocaleString('en-US')} tokens)`);
 console.log(`  = ${pct(saved, t.chars)} of all tool output, ${pct(saved, sessionChars)} of all session content`);
 console.log(`outputs with error lines salvaged from the cut: ${t.salvaged}`);

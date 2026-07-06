@@ -374,7 +374,8 @@ function uninstall(ctx) {
   if (fs.existsSync(hooksDst)) { if (!opts.dryRun) fs.rmSync(hooksDst, { recursive: true, force: true }); note(`  removed ${hooksDst}`); touched++; }
 
   // Flag files
-  for (const f of ['.rdx-active', '.rdx-session-turns', '.rdx-statusline-suffix', '.rdx-compress-stats.json']) {
+  for (const f of ['.rdx-active', '.rdx-session-turns', '.rdx-statusline-suffix',
+                   '.rdx-compress-stats.json', '.rdx-compress-last.json']) {
     const p = path.join(cfg, f);
     if (fs.existsSync(p)) { if (!opts.dryRun) { try { fs.unlinkSync(p); } catch (_) {} } note(`  removed ${p}`); touched++; }
   }

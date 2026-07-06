@@ -15,9 +15,19 @@
 //   - If compression doesn't shrink the output, the original is kept.
 //   - Never throws: a broken hook must not break the tool pipeline.
 //
+// Two tiers, applied in order:
+//   scrub  (output > 1k)  — lossless: strip ANSI escapes, collapse blank-line
+//                           runs, collapse ≥4 identical consecutive lines to
+//                           one + "[repeated N×]". No information lost.
+//   elide  (output > mode threshold) — head + tail + error salvage, as above.
+// Plus dedup: a tool output byte-identical to that tool's immediately previous
+// output is replaced by a short marker — the content is already in context.
+//
 // Compression tracks the /rdx mode flag (off → untouched). Tunables via env:
 //   RDX_COMPRESS=0                 — kill switch
-//   RDX_COMPRESS_MAX_CHARS         — outputs at/under this size pass through
+//   RDX_COMPRESS_SCRUB=0           — disable the lossless scrub tier
+//   RDX_COMPRESS_DEDUP=0           — disable duplicate-output markers
+//   RDX_COMPRESS_MAX_CHARS         — outputs at/under this size are not elided
 //   RDX_COMPRESS_HEAD_LINES        — lines kept from the top
 //   RDX_COMPRESS_TAIL_LINES        — lines kept from the bottom
 //   RDX_COMPRESS_TOOLS=Bash,Grep   — override the tool allowlist
@@ -26,6 +36,7 @@
 
 const fs = require('fs');
 const path = require('path');
+const crypto = require('crypto');
 const { getClaudeDir, readFlag } = require('./rdx-config');
 
 // Mode → thresholds. Tighter mode, tighter budget. Env overrides all.
@@ -85,6 +96,70 @@ function extractText(response) {
   return String(response);
 }
 
+// ── Tier 1: lossless scrub ───────────────────────────────────────────────────
+// ANSI/OSC escapes are invisible to the model; blank runs and identical
+// consecutive lines carry their information in one copy.
+const ANSI_RE = /\x1b\[[0-9;?]*[ -/]*[@-~]|\x1b\][^\x07\x1b]*(?:\x07|\x1b\\)/g;
+const SCRUB_MIN = 1024;      // below this, not worth a hook round-trip
+const REPEAT_MIN = 4;        // identical consecutive lines before collapsing
+const MIN_WIN = 64;          // emit updated output only if it saves this much
+
+function scrub(text) {
+  let t = text.replace(ANSI_RE, '');
+  t = t.replace(/[ \t]+$/gm, '');            // trailing whitespace
+  t = t.replace(/\n{3,}/g, '\n\n');          // blank-line runs → one blank
+  // Collapse runs of identical non-empty lines.
+  const lines = t.split('\n');
+  const out = [];
+  for (let i = 0; i < lines.length; ) {
+    let j = i;
+    while (j < lines.length && lines[j] === lines[i]) j++;
+    const n = j - i;
+    if (n >= REPEAT_MIN && lines[i].trim()) {
+      out.push(lines[i], `... [rdx: line repeated ${n}×] ...`);
+    } else {
+      for (let k = 0; k < n; k++) out.push(lines[i]);
+    }
+    i = j;
+  }
+  return out.join('\n');
+}
+
+// ── Dedup: identical to this tool's previous output ─────────────────────────
+// The identical content is already in context verbatim, so a marker loses
+// nothing — but ONLY within the same session: a fresh session's context does
+// not contain the earlier copy, so state is keyed by session_id and dedup is
+// skipped when the payload carries none.
+const DEDUP_MIN = 2048;
+
+function dedupCheck(toolName, text, sessionId) {
+  if (process.env.RDX_COMPRESS_DEDUP === '0') return null;
+  if (!sessionId || typeof sessionId !== 'string') return null;
+  if (text.length < DEDUP_MIN) return null;
+  try {
+    const p = path.join(getClaudeDir(), '.rdx-compress-last.json');
+    try { if (fs.lstatSync(p).isSymbolicLink()) return null; } catch (e) { if (e.code !== 'ENOENT') return null; }
+    let state = {};
+    try { state = JSON.parse(fs.readFileSync(p, 'utf8')) || {}; } catch (e) {}
+    if (state.session !== sessionId) state = { session: sessionId, tools: {} };
+    if (!state.tools || typeof state.tools !== 'object') state.tools = {};
+    const hash = crypto.createHash('sha256').update(text).digest('hex');
+    const dup = state.tools[toolName] === hash;
+    state.tools[toolName] = hash;
+    const tmp = p + '.' + process.pid + '.tmp';
+    fs.writeFileSync(tmp, JSON.stringify(state), { mode: 0o600 });
+    fs.renameSync(tmp, p);
+    if (!dup) return null;
+    const lines = text.split('\n');
+    const preview = lines.slice(0, 5)
+      .map(l => l.length > MAX_SALVAGE_LINE ? l.slice(0, MAX_SALVAGE_LINE) + '…' : l);
+    return '[rdx: output byte-identical to the previous ' + toolName + ' result — ' +
+      text.length.toLocaleString('en-US') + ' chars / ' + lines.length +
+      ' lines, unchanged. First lines:]\n' + preview.join('\n');
+  } catch (e) { return null; }
+}
+
+// ── Tier 2: elision ──────────────────────────────────────────────────────────
 // Keep head + tail; salvage error-looking lines from the elided middle so the
 // one line that mattered in a 3000-line build log survives the cut.
 function compress(text, limits) {
@@ -138,8 +213,20 @@ function recordSavings(saved) {
   } catch (e) {}
 }
 
+// Scrub + elide on plain text → transformed text, or null if no meaningful
+// win. Stateless — this is what the replay benchmark measures.
+function transform(text, limits) {
+  if (!text || text.length <= SCRUB_MIN) return null;
+  let t = process.env.RDX_COMPRESS_SCRUB === '0' ? text : scrub(text);
+  if (t.length > limits.maxChars) {
+    const elided = compress(t, limits);
+    if (elided != null) t = elided;
+  }
+  return text.length - t.length >= MIN_WIN ? t : null;
+}
+
 // Full pipeline on one hook payload → updated output string, or null to keep
-// the original. Pure given (payload, mode, env) — this is what the tests hit.
+// the original. Pure given (payload, mode, env) except dedup state.
 function processPayload(payload, mode) {
   if (!payload || typeof payload !== 'object') return null;
   if (!mode || mode === 'off') return null;
@@ -147,9 +234,10 @@ function processPayload(payload, mode) {
   if (!toolAllowed(payload.tool_name)) return null;
 
   const text = extractText(payload.tool_response != null ? payload.tool_response : payload.tool_output);
-  const limits = limitsFor(mode);
-  if (!text || text.length <= limits.maxChars) return null;
-  return compress(text, limits);
+  if (!text) return null;
+  const dup = dedupCheck(payload.tool_name, text, payload.session_id);
+  if (dup != null && dup.length < text.length) return dup;
+  return transform(text, limitsFor(mode));
 }
 
 function main() {
@@ -175,4 +263,4 @@ function main() {
 
 if (require.main === module) main();
 
-module.exports = { extractText, compress, limitsFor, toolAllowed, processPayload, THRESHOLDS, SAFE_TOOLS };
+module.exports = { extractText, scrub, compress, transform, limitsFor, toolAllowed, processPayload, THRESHOLDS, SAFE_TOOLS };
