@@ -116,7 +116,9 @@ function addCommandHook(settings, event, opts) {
   const hook = { type: 'command', command: opts.command };
   if (typeof opts.timeout === 'number') hook.timeout = opts.timeout;
   if (typeof opts.statusMessage === 'string') hook.statusMessage = opts.statusMessage;
-  settings.hooks[event].push({ hooks: [hook] });
+  const entry = { hooks: [hook] };
+  if (typeof opts.matcher === 'string') entry.matcher = opts.matcher;
+  settings.hooks[event].push(entry);
   return true;
 }
 

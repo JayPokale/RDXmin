@@ -24,8 +24,22 @@ $esc = [char]27
 $orange = "$esc[38;5;172m"
 $reset = "$esc[0m"
 
+# Input-side savings from the tool-output compressor ledger (mirrors the sh version).
+$suffix = ''
+$stats = Join-Path $configDir '.rdx-compress-stats.json'
+if (Test-Path -LiteralPath $stats -PathType Leaf) {
+  $raw = Get-Content -LiteralPath $stats -Raw
+  if ($raw -match '"savedChars":(\d+)') {
+    $tok = [long]$Matches[1] / 4
+    if ($tok -ge 1000000)   { $suffix = " $([math]::Floor($tok / 1000000))M tok" }
+    elseif ($tok -ge 1000)  { $suffix = " $([math]::Floor($tok / 1000))k tok" }
+    elseif ($tok -gt 0)     { $suffix = " $([math]::Floor($tok)) tok" }
+    if ($suffix) { $suffix = " $([char]0x21E3)$($suffix.Trim())" }
+  }
+}
+
 if ([string]::IsNullOrEmpty($mode) -or $mode -eq 'full') {
-  Write-Host -NoNewline "$orange[RDX]$reset"
+  Write-Host -NoNewline "$orange[RDX]$reset$suffix"
 } else {
-  Write-Host -NoNewline ("{0}[RDX:{1}]{2}" -f $orange, $mode.ToUpper(), $reset)
+  Write-Host -NoNewline ("{0}[RDX:{1}]{2}{3}" -f $orange, $mode.ToUpper(), $reset, $suffix)
 }

@@ -195,7 +195,7 @@ function installClaude(ctx) {
     else if (r === 'skip') results.skipped.push(['claude-hooks', 'already wired']);
     else results.failed.push(['claude-hooks', r]);
   } else {
-    note('  hooks: plugin manifest handles SessionStart + UserPromptSubmit');
+    note('  hooks: plugin manifest handles SessionStart + UserPromptSubmit + PostToolUse');
   }
   process.stdout.write('\n');
 }
@@ -209,11 +209,12 @@ function installClaudeHooks(ctx) {
   const hooksDst = path.join(cfg, 'rdxmin-hooks');
   const settingsPath = path.join(cfg, 'settings.json');
   const HOOK_FILES = ['package.json', 'rdx-config.js', 'rdx-activate.js',
-                      'rdx-mode-tracker.js', 'rdx-statusline.sh', 'rdx-statusline.ps1'];
+                      'rdx-mode-tracker.js', 'rdx-compress-output.js',
+                      'rdx-statusline.sh', 'rdx-statusline.ps1'];
 
   if (opts.dryRun) {
     note(`  would copy ${HOOK_FILES.length} hook files → ${hooksDst}`);
-    note(`  would merge SessionStart + UserPromptSubmit + statusline → ${settingsPath}`);
+    note(`  would merge SessionStart + UserPromptSubmit + PostToolUse + statusline → ${settingsPath}`);
     return 'ok';
   }
 
@@ -233,11 +234,15 @@ function installClaudeHooks(ctx) {
   const node = process.execPath;
   const activate = path.join(hooksDst, 'rdx-activate.js');
   const tracker = path.join(hooksDst, 'rdx-mode-tracker.js');
+  const compress = path.join(hooksDst, 'rdx-compress-output.js');
 
   SETTINGS.addCommandHook(settings, 'SessionStart',
     { command: `"${node}" "${activate}"`, marker: 'rdx-activate', timeout: 5, statusMessage: 'Loading rdxmin mode...' });
   SETTINGS.addCommandHook(settings, 'UserPromptSubmit',
     { command: `"${node}" "${tracker}"`, marker: 'rdx-mode-tracker', timeout: 5, statusMessage: 'Tracking rdx mode...' });
+  SETTINGS.addCommandHook(settings, 'PostToolUse',
+    { command: `"${node}" "${compress}"`, marker: 'rdx-compress-output', timeout: 10,
+      matcher: 'Bash|Agent|WebFetch|WebSearch|Grep|Glob|mcp__.*', statusMessage: 'Compressing tool output...' });
 
   const psHost = IS_WIN && hasCmd('pwsh') ? 'pwsh' : (IS_WIN ? 'powershell' : null);
   const slCmd = IS_WIN
@@ -369,7 +374,7 @@ function uninstall(ctx) {
   if (fs.existsSync(hooksDst)) { if (!opts.dryRun) fs.rmSync(hooksDst, { recursive: true, force: true }); note(`  removed ${hooksDst}`); touched++; }
 
   // Flag files
-  for (const f of ['.rdx-active', '.rdx-session-turns', '.rdx-statusline-suffix']) {
+  for (const f of ['.rdx-active', '.rdx-session-turns', '.rdx-statusline-suffix', '.rdx-compress-stats.json']) {
     const p = path.join(cfg, f);
     if (fs.existsSync(p)) { if (!opts.dryRun) { try { fs.unlinkSync(p); } catch (_) {} } note(`  removed ${p}`); touched++; }
   }

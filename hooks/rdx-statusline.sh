@@ -71,6 +71,20 @@ if [ -z "$LIMITS" ]; then
   [ -n "$COST" ] && LIMITS=$(LC_NUMERIC=C printf ' Session: $%.2f' "$COST")
 fi
 
+# Input-side savings from the tool-output compressor ledger. Measured (chars
+# actually elided), not estimated — unlike an output-side counter, this one has
+# a real baseline. Digits-only extract; symlink-refused like the mode flag.
+STATS="${CLAUDE_CONFIG_DIR:-$HOME/.claude}/.rdx-compress-stats.json"
+if [ -f "$STATS" ] && [ ! -L "$STATS" ]; then
+  SAVED=$(head -c 256 "$STATS" 2>/dev/null | grep -oE '"savedChars":[0-9]+' | grep -oE '[0-9]+' | head -1)
+  if [ -n "$SAVED" ] && [ "$SAVED" -gt 0 ] 2>/dev/null; then
+    TOK=$(( SAVED / 4 ))
+    if   [ "$TOK" -ge 1000000 ]; then LIMITS="$LIMITS ⇣$(( TOK / 1000000 ))M tok"
+    elif [ "$TOK" -ge 1000 ];    then LIMITS="$LIMITS ⇣$(( TOK / 1000 ))k tok"
+    elif [ "$TOK" -gt 0 ];       then LIMITS="$LIMITS ⇣${TOK} tok"; fi
+  fi
+fi
+
 # Orange badge + loading bars trailing outside the bracket
 if [ -z "$MODE" ] || [ "$MODE" = "full" ]; then
   printf '\033[38;5;172m[RDX]\033[0m%s' "$LIMITS"
