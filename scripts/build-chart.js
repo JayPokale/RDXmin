@@ -19,6 +19,7 @@ const ROOT = path.join(__dirname, '..');
 const RAW_DIRS = [
   path.join(ROOT, 'benchmarks', 'results', 'raw'),
   path.join(ROOT, 'benchmarks', 'results', 'raw-sonnet'),
+  path.join(ROOT, 'benchmarks', 'results', 'raw-verify'),
 ];
 const SVG_OUT = path.join(ROOT, 'assets', 'benchmark.svg');
 const ARMS = [
@@ -70,7 +71,9 @@ function collect() {
 function buildSvg(stat, taskCount) {
   const W = 860, H = 340;
   const left = 150, top = 96, rowH = 64, plotW = 620;
-  const maxPct = 240;                 // ponytail's 227% needs headroom
+  // Axis scales to the data: worst bar + headroom, rounded up to a clean 50.
+  const maxWorst = Math.max(...ARMS.map(a => stat[a.key].worst), 100);
+  const maxPct = Math.ceil((maxWorst + 25) / 50) * 50;
   const px = plotW / maxPct;          // px per percent
   const line100 = left + 100 * px;    // the "no tool" baseline
 
@@ -92,11 +95,19 @@ function buildSvg(stat, taskCount) {
             `<text x="${left + w + 9}" y="${y + 32}" font-size="10.5" fill="#8b949e">${badge}</text>`;
   });
 
-  return `<svg xmlns="http://www.w3.org/2000/svg" width="${W}" height="${H}" viewBox="0 0 ${W} ${H}" role="img" aria-label="Worst-case output size across ${taskCount} tasks as percent of the no-tool baseline. ponytail 227% (backfired 4 tasks), caveman 130% (1), RDXmin 83% (never backfires).">
+  // Only claim the fix when the data shows exactly the one backfire it fixed.
+  const fixNote = stat.rdxmin.over === 1
+    ? `<text x="${W / 2}" y="${H - 14}" font-size="11" fill="#8b949e" text-anchor="middle">RDXmin's single backfire was root-caused, the rule fixed, and re-validated live at 93% — benchmarks/results/2026-07-07-verify-rerun.md</text>`
+    : '';
+
+  const aria = `Worst-case billed output across ${taskCount} tasks as percent of the no-tool baseline. ` +
+    ARMS.map(a => `${a.label} ${stat[a.key].worst}% (${stat[a.key].over === 0 ? 'never backfires' : `backfired ${stat[a.key].over} tasks`})`).join(', ') + '.';
+
+  return `<svg xmlns="http://www.w3.org/2000/svg" width="${W}" height="${H}" viewBox="0 0 ${W} ${H}" role="img" aria-label="${aria}">
 <rect width="${W}" height="${H}" rx="10" fill="#0d1117"/>
 <text x="${W / 2}" y="34" font-size="17" font-weight="700" fill="#c9d1d9" text-anchor="middle">Worst case across ${taskCount} tasks — lower is better, past 100% is a betrayal</text>
-<text x="${W / 2}" y="54" font-size="11.5" fill="#8b949e" text-anchor="middle">output size vs using no tool at all (Haiku + Sonnet; code, prose &amp; judgment prompts)</text>
-${body}</svg>
+<text x="${W / 2}" y="54" font-size="11.5" fill="#8b949e" text-anchor="middle">billed output vs using no tool at all (Haiku + Sonnet, two suites; code, prose &amp; judgment prompts)</text>
+${body}${fixNote}</svg>
 `;
 }
 

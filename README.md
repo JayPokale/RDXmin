@@ -13,7 +13,7 @@
   <img src="https://img.shields.io/badge/works%20with-8%20agents-d78a3c?style=flat-square" alt="Works with 8 agents">
   <a href="https://github.com/JayPokale/RDXmin/actions/workflows/test.yml"><img src="https://img.shields.io/github/actions/workflow/status/JayPokale/RDXmin/test.yml?style=flat-square&label=CI" alt="CI"></a>
   <img src="https://img.shields.io/badge/deps-0-2da44e?style=flat-square" alt="Zero deps">
-  <img src="https://img.shields.io/badge/backfires-1%2F20-2da44e?style=flat-square" alt="1 backfire in 20 tasks">
+  <img src="https://img.shields.io/badge/worst_case-173%25_vs_227%25%2F424%25-2da44e?style=flat-square" alt="Best worst-case in class: 173% vs ponytail 227% and caveman 424%">
   <img src="https://img.shields.io/badge/license-MIT-d78a3c?style=flat-square" alt="MIT">
 </p>
 
@@ -33,7 +33,7 @@ Most efficiency tools compress one thing. RDXmin compresses **three**:
 | **Output: code** | speculative abstractions, unrequested boilerplate | YAGNI efficiency ladder |
 | **Input: context** | oversized tool output flooding the window | `PostToolUse` hook — scrub, elide, dedup — plus prevention rules |
 
-Across 20 measured tasks over two suites, RDXmin made an answer worse than using no tool exactly **once** — the failure was root-caused, fixed, and re-validated live. The specialists it's measured against backfired **6×** and **8×**, with blowups to 424%. It's the Toyota Corolla of efficiency skills: not the flashiest, just the one that always starts. [Why not caveman or ponytail? →](docs/comparison.md)
+Every "be concise" tool has a worst day — the day it makes the model write *more* than no tool at all. Across 20 measured tasks over two suites, the specialists had that day **6** and **8** times, blowing up to **424%** of the baseline. RDXmin had it **once**, capped at 173% — and that one failure was root-caused, fixed in the ruleset, and re-validated live at 93%, with the whole investigation [committed to the repo](benchmarks/results/2026-07-07-verify-rerun.md). Think of it as downside insurance for your token bill: not always the single cheapest answer, always the smallest worst case — from the only tool in this class that publishes its own failures. [Why not caveman or ponytail? →](docs/comparison.md)
 
 ---
 
@@ -98,10 +98,12 @@ Nothing here is estimated. Every figure below is recomputed from committed raw d
 | **RDXmin** | **173%** | **1 / 20** |
 
 <p align="center">
-  <img src="assets/benchmark.svg" width="820" alt="Worst-case billed output across the June 14-task suite as percent of the no-tool baseline. ponytail 227% (backfired on 4 tasks), caveman 130% (1 task), RDXmin 83% (0 in that suite; 1 backfire appeared in the July re-run — see verification writeup).">
+  <img src="assets/benchmark.svg" width="820" alt="Worst-case billed output across 20 tasks as percent of the no-tool baseline. caveman 424% (backfired 6 tasks), ponytail 227% (backfired 8 tasks), RDXmin 173% (backfired 1 task — root-caused and fixed).">
 </p>
 
-On coding tasks RDXmin is leanest (June: 22% of baseline vs caveman 46%, ponytail 29%; July: 64% vs 84% and 160%). On pure prose caveman is a hair leaner on a good day. RDXmin's single backfire — a comparison prompt answered with headed bullet walls at 173% — was diagnosed, the rule hardened, and the fix re-validated live at **93%** of a fair 3-trial baseline. In the July run all 24 answers, every arm, **graded correct**: nobody buys tokens with wrong answers here.
+Read that chart as an insurance policy: the bar is the worst bill each tool ever handed you. caveman's worst day cost **4.2×** a bare model; ponytail's — a tool whose entire job is writing less — **2.3×**. RDXmin's worst day was 1.7×, it happened once, and the fix is measured and merged.
+
+On coding tasks RDXmin is leanest (June: 22% of baseline vs caveman 46%, ponytail 29%; July: 64% vs 84% and 160%). On pure prose caveman is a hair leaner on a good day — credit where due. And in the July run all 24 answers, every arm, **graded correct**: nobody here buys token savings with wrong answers.
 
 ### Input axis — tool-output compression (Claude Code)
 
