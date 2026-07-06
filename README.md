@@ -147,6 +147,20 @@ Mark deliberate simplifications so "later" doesn't quietly become "never":
 
 ---
 
+## Input-side compression (the second axis)
+
+Prose rules shrink what the agent *writes*. Since v0.2.0 a `PostToolUse` hook also shrinks what it *reads*: oversized tool output (Bash dumps, subagent reports, web fetches) gets its middle elided before the model sees it — head kept, tail kept, error-looking lines salvaged from the cut. Deterministic, zero LLM, zero network.
+
+Why it matters, measured over 171 real sessions: tool output is **67.5%** of context content, and every byte of it is re-billed on *every subsequent request* in the session (median: 171 requests). Receipts: [`benchmarks/results/2026-07-07-input-axis.md`](benchmarks/results/2026-07-07-input-axis.md). Replay it on your own transcripts:
+
+```bash
+node benchmarks/replay-compress.js        # what it would have saved you
+```
+
+Correctness rules: allowlist only (`Bash`, `Agent`, `WebFetch`, `WebSearch`, `Grep`, `Glob`, `mcp__*`) — never `Read`/`Edit`, whose exact bytes feed later edits. Thresholds track the `/rdx` level (lite 16k / full 8k / ultra 5k chars). `stop rdx` or `RDX_COMPRESS=0` disables it. Savings show in the statusline: `⇣9k tok`. Claude Code only — no other agent has a post-tool output rewrite hook yet; everywhere else the ruleset's Context Diet section (Grep before Read, filter at the source) covers the same axis by prevention.
+
+---
+
 ## Statusline
 
 Badge shows the active level. Plan users see rate-limit usage + reset countdown:

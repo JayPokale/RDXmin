@@ -3,6 +3,31 @@
 All notable changes to RDXmin are documented here.
 Format loosely follows [Keep a Changelog](https://keepachangelog.com/).
 
+## [0.2.0] — 2026-07-07
+
+### Added
+- **Tool-output compression (input axis)** — `PostToolUse` hook
+  (`hooks/rdx-compress-output.js`) elides the middle of oversized tool results
+  before the model reads them: head + tail kept, up to 12 error-like lines
+  salvaged from the cut. Deterministic, zero LLM, zero network, zero deps.
+  Allowlist-only for correctness (Bash/Agent/WebFetch/WebSearch/Grep/Glob/
+  `mcp__*` — never Read/Edit/Write, whose exact bytes feed later edits).
+  Thresholds track the `/rdx` level (lite 16k / full 8k / ultra 5k chars);
+  env-tunable; `RDX_COMPRESS=0` kill switch. Wired via plugin manifest and the
+  standalone installer (settings merge grew `matcher` support).
+- **Measured, not estimated:** across 171 real transcripts, tool output is
+  67.5% of context content; the shipped compressor replayed over that corpus
+  shrinks eligible outputs ~46% (receipts + reproducible replay script:
+  `benchmarks/replay-compress.js`, `benchmarks/results/2026-07-07-input-axis.md`).
+- Savings ledger (`.rdx-compress-stats.json`, measured chars elided) rendered
+  by both statuslines as `⇣9k tok` — this one has a real baseline, unlike the
+  fabricated output-side counter removed in 0.1.0.
+- **Context Diet** ruleset section (all 8 agents): fetch the slice, not the
+  file — Grep before Read, offset/limit reads, filter long output at the
+  source. Prevention for the `Read` whale the compressor must not touch.
+- 15 new tests (compressor correctness guardrails, allowlist, kill switch,
+  never-throws). Suite: 49.
+
 ## [0.1.0] — 2026-06-29
 
 ### Added

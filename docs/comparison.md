@@ -20,6 +20,10 @@ Across **14 tasks** (code, prose, and vague "judgment" requests; Haiku + Sonnet)
 
 Installing *both* specialists to cover both axes gets you two plugins that fight over prose style and double per-session overhead — and on one task they did *worse* stacked (605t) than RDXmin alone (595t). Full data: [reliability](../benchmarks/results/2026-06-29-reliability.md) · [Sonnet cross-check](../benchmarks/results/2026-06-29-sonnet-cross-check.md).
 
+## The input axis — a thing neither specialist touches
+
+caveman and ponytail both compress one direction: what the model *writes*. Neither does anything about what it *reads* — tool output, which is **67.5% of session context** on a real corpus ([measured](../benchmarks/results/2026-07-07-input-axis.md)). RDXmin 0.2.0 ships a `PostToolUse` compressor for that axis (Claude Code only): oversized Bash/Agent/web output gets its middle elided, error lines salvaged, ~46% smaller per eligible output — and every saved byte stops being re-billed on each later request in the session.
+
 ## `/rdx-audit` — a thing neither specialist has
 
 One pass over a diff, file, or repo that flags **both** over-engineered code *and* bloated prose/docs/comments, ranked biggest-cut-first. ponytail-audit is code-only; caveman has no audit mode. `/rdx-audit` is the union — what a PR reviewer actually wants in one report.
