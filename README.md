@@ -15,6 +15,7 @@
   <img src="https://img.shields.io/badge/deps-0-2da44e?style=flat-square" alt="Zero deps">
   <img src="https://img.shields.io/badge/worst_case-173%25_vs_227%25%2F424%25-2da44e?style=flat-square" alt="Best worst-case in class: 173% vs ponytail 227% and caveman 424%">
   <img src="https://img.shields.io/badge/license-MIT-d78a3c?style=flat-square" alt="MIT">
+  <a href="https://github.com/JayPokale/RDXmin/stargazers"><img src="https://img.shields.io/github/stars/JayPokale/RDXmin?style=social" alt="Star RDXmin on GitHub"></a>
 </p>
 
 <p align="center">
@@ -251,8 +252,8 @@ Never. Input validation, data-loss handling, security, and accessibility are off
 **Can the output compressor eat a line I needed?**
 Designed not to: allowlist keeps `Read`/`Edit` exact, error-looking lines are salvaged from any elided region, dedup only fires on byte-identical same-session repeats, and every tier has a kill switch. If it still bites you, file an issue — that's a bug, not the design.
 
-**0 GitHub stars. Should I be worried?**
-Everyone starts at zero. Run `npx rdxmin --dry-run`, see what it'd do, decide. No commitment, no stars required.
+**Should the star count worry me?**
+Everyone starts at zero. Run `npx rdxmin --dry-run`, see what it'd do, decide. And if the receipts convinced you, [a star](https://github.com/JayPokale/RDXmin/stargazers) is how the next person finds them — it's also the only payment a zero-dep MIT tool will ever ask for.
 
 → [More FAQ and competitor comparison](docs/comparison.md)
 
@@ -262,6 +263,8 @@ Everyone starts at zero. Run `npx rdxmin --dry-run`, see what it'd do, decide. N
 
 See [CONTRIBUTING.md](CONTRIBUTING.md). Edit the skill (`skills/rdx/SKILL.md`) **and** the condensed rule body in `scripts/build-rules.js`, regenerate copies and chart, run the tests. CI enforces all three.
 
+Built by [Jay Pokale](https://github.com/JayPokale) with [Claude](https://claude.com/claude-code) as co-engineer — the input-compression hook, the benchmark verification, and several of the bug hunts documented in the changelog were pair-work.
+
 ```bash
 npm test    # 56 tests: flag safety, tracker, settings merge, installer, compressor
 ```
@@ -269,3 +272,9 @@ npm test    # 56 tests: flag safety, tracker, settings merge, installer, compres
 ## License
 
 [MIT](LICENSE). The shortest license that works.
+
+---
+
+<p align="center">
+  Saved you tokens? <a href="https://github.com/JayPokale/RDXmin">⭐ Star the repo</a> — it costs zero tokens and keeps the benchmarks running.
+</p>

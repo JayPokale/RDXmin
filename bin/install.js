@@ -477,6 +477,7 @@ function main() {
   say('');
   if (!opts.dryRun && results.installed.length) {
     say(c.orange('Done.') + ' Restart your agent. Type ' + c.orange('/rdx') + ' (Claude Code) or just start coding.');
+    note('If RDXmin earns its keep, a star helps others find it: https://github.com/JayPokale/RDXmin');
   }
   process.exit(results.failed.length ? 1 : 0);
 }

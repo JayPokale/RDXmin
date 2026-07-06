@@ -1,6 +1,6 @@
 {
   "name": "rdxmin",
-  "version": "1.1.0",
+  "version": "1.1.1",
   "description": "Maximum-efficiency dev mode for Claude Code. Zero-fluff prose + YAGNI-first code decisions. One plugin that does both.",
   "keywords": [
     "claude-code",
@@ -14,6 +14,12 @@
     "name": "Jay Pokale",
     "url": "https://github.com/JayPokale"
   },
+  "contributors": [
+    {
+      "name": "Claude (Anthropic)",
+      "url": "https://claude.com/claude-code"
+    }
+  ],
   "homepage": "https://github.com/JayPokale/RDXmin",
   "repository": {
     "type": "git",
