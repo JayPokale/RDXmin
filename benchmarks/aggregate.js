@@ -9,11 +9,12 @@
 //
 // Run:  node benchmarks/aggregate.js           (markdown table to stdout)
 //       node benchmarks/aggregate.js --json
+//       RAW_DIR=path node benchmarks/aggregate.js   (aggregate a fresh run)
 
 const fs = require('fs');
 const path = require('path');
 
-const RAW = path.join(__dirname, 'results', 'raw');
+const RAW = process.env.RAW_DIR ? path.resolve(process.env.RAW_DIR) : path.join(__dirname, 'results', 'raw');
 const ARMS = ['vanilla', 'caveman', 'ponytail', 'rdxmin'];
 const KIND = {
   debounce: 'coding', cache: 'coding', 'auth-bug': 'coding',

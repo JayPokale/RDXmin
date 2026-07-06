@@ -9,12 +9,14 @@
 # Measures real usage.output_tokens + visible answer size per (arm, task).
 # Resumable: skips a cell whose raw JSON already exists.
 #
-# Usage: bash benchmarks/run-live.sh [model]
+# Usage: bash benchmarks/run-live.sh [model] [raw-dir]
+#   raw-dir defaults to results/raw; pass a fresh dir to re-measure from scratch
+#   instead of reusing cached cells.
 set -uo pipefail
 
 MODEL="${1:-claude-haiku-4-5-20251001}"
 HERE="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-RAW="$HERE/results/raw"
+RAW="${2:-$HERE/results/raw}"
 mkdir -p "$RAW"
 
 # Isolated config: credentials only, no settings/CLAUDE.md/plugins.
@@ -23,8 +25,15 @@ cp "$HOME/.claude/.credentials.json" "$ISO/" 2>/dev/null || { echo "no credentia
 trap 'rm -rf "$ISO"' EXIT
 
 # Arm system prompts (frontmatter stripped). vanilla = none.
-CAVEMAN_SKILL="/home/jay/Desktop/caveman/skills/caveman/SKILL.md"
-PONYTAIL_SKILL="/home/jay/Desktop/ponytail/skills/ponytail/SKILL.md"
+# Competitor skills: local clone if present, else the installed plugin cache
+# (any version dir) — `claude plugin install caveman@caveman ponytail@ponytail`.
+find_skill() {  # $1 = tool name → path to its SKILL.md, or empty
+  local clone="/home/jay/Desktop/$1/skills/$1/SKILL.md"
+  [ -f "$clone" ] && { echo "$clone"; return; }
+  ls "${CLAUDE_CONFIG_DIR:-$HOME/.claude}/plugins/cache/$1/$1"/*/skills/"$1"/SKILL.md 2>/dev/null | head -1
+}
+CAVEMAN_SKILL="$(find_skill caveman)"
+PONYTAIL_SKILL="$(find_skill ponytail)"
 RDX_SKILL="$HERE/../skills/rdx/SKILL.md"
 
 strip_fm() { awk 'BEGIN{n=0} /^---[[:space:]]*$/{n++; next} n>=2{print} n<2 && !/^---/ && n==1{print}' "$1" 2>/dev/null || cat "$1"; }
@@ -58,12 +67,16 @@ run_cell() {
 }
 
 echo "model: $MODEL"
+echo "raw:   $RAW"
 while IFS=$'\t' read -r id kind prompt; do
   [ -z "$id" ] && continue
   echo "task: $id ($kind)"
+  # Arms are independent → run the 4 concurrently; wait per task keeps
+  # rate-limit pressure bounded and output readable.
   for arm in vanilla caveman ponytail rdxmin; do
-    run_cell "$arm" "$id" "$prompt"
+    run_cell "$arm" "$id" "$prompt" &
   done
+  wait
 done <<< "$TASKS"
 
 echo "done. raw JSON in $RAW/"
