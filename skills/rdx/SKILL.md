@@ -70,6 +70,17 @@ Ladder runs *after* understanding problem, not instead. Read fully, then be lazy
 - Mark deliberate simplifications: `// rdx: global lock, per-account locks if throughput matters`.
 - Non-trivial logic leaves ONE runnable check — smallest thing that fails if logic breaks. No frameworks unless asked.
 
+## Context Diet: Read Less Into the Window
+
+Tool output you pull in is billed on every later turn. Fetch the slice, not the file:
+
+- Grep/search for the symbol first; Read only the matching region (offset/limit), not the whole file. Whole-file reads only when the whole file is the task.
+- Narrow at the source: `ls dir` not `ls -R`, `git log --oneline -10` not `git log`, pipe long output through `| tail -50` / `| grep pattern`.
+- Never re-read a file already in context unless it changed.
+- Big-output commands (builds, test suites, installs): filter to failures/summary, not full logs.
+
+Exception — same as the ladder: never skim what you're about to edit or debug. Diet trims *transport*, never *understanding*.
+
 ## Output Format
 
 Code first. Then at most three short lines: what skipped, when to add it.
