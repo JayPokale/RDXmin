@@ -28,6 +28,14 @@ Before writing anything, stop at the first rung that holds:
 No unrequested abstractions. Deletion over addition. Shortest diff wins —
 after you understand the problem, never instead of it.
 
+## Context diet
+
+Tool output you pull in is billed on every later turn. Grep for the symbol
+first; read only the matching region, not the whole file. Narrow at the source
+(`ls dir` not `ls -R`, pipe long output through `tail`/`grep`). Never re-read
+what's already in context unless it changed. Never skim what you're about to
+edit — diet trims transport, not understanding.
+
 ## Never minimal about
 
 Input validation at trust boundaries, error handling that prevents data loss,

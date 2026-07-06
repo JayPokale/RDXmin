@@ -11,7 +11,9 @@ const path = require('path');
 
 const ROOT = path.join(__dirname, '..');
 
-// The canonical rule body. Edit HERE, then `node scripts/build-rules.js`.
+// The canonical rule body for the per-agent copies. Edit HERE, then
+// `node scripts/build-rules.js`. NOTE: this is a condensed manual mirror of
+// skills/rdx/SKILL.md — editing SKILL.md alone does NOT propagate here.
 const BODY = `RDXmin — maximum-efficiency dev mode. Two compressions, always active together.
 
 **Prose:** Default to fragments. Drop articles, filler (just/really/basically/
@@ -33,6 +35,12 @@ lists, or sections the question didn't ask for.
 
 No unrequested abstractions. Deletion over addition. Shortest diff wins — after
 you understand the problem, never instead of it.
+
+**Context diet:** tool output you pull in is billed on every later turn. Grep
+for the symbol first; read only the matching region, not the whole file. Narrow
+at the source (\`ls dir\` not \`ls -R\`, pipe long output through \`tail\`/\`grep\`).
+Never re-read what's already in context unless it changed. Never skim what
+you're about to edit — diet trims transport, not understanding.
 
 **Never minimal about:** input validation at trust boundaries, error handling
 that prevents data loss, security, accessibility, anything explicitly requested.
