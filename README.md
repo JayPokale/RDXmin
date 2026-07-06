@@ -5,7 +5,7 @@
 <h1 align="center">🧨 RDXmin</h1>
 
 <p align="center">
-  <em>Your AI talks less, builds less, says more. Like a senior dev who bills by the syllable.</em>
+  <em>Your AI talks less, builds less, reads less — and says more. Like a senior dev who bills by the syllable.</em>
 </p>
 
 <p align="center">
@@ -18,14 +18,22 @@
 </p>
 
 <p align="center">
-  <strong>Compresses prose AND code &middot; 1 backfire across 20 measured tasks (competitors: 6 and 8) &middot; one command</strong>
+  <strong>Compresses what the model writes AND what it reads &middot; every claim re-measured from raw data &middot; one command</strong>
 </p>
 
 ---
 
 You asked your AI agent to "add a cache." A bare agent answered with a **150-line** cache class — config object, TTL logic, stats counters, the works. RDXmin's answer to the same prompt: **7 lines.** Same model, same question, measured, receipts committed in [`benchmarks/`](benchmarks/results/).
 
-RDXmin enforces **zero-fluff prose** and **YAGNI-first code** simultaneously — no filler, no speculative abstractions, no `// TODO: maybe later`. Other tools compress either prose or code. RDXmin does both at once and — across 20 measured tasks over two suites — made the answer worse than no tool exactly once (competitors: 6× and 8×, with blowups to 424%); that one failure was diagnosed, the rule hardened, and the fix re-validated live. It's the Toyota Corolla of efficiency skills: not the flashiest, just the one that always starts. [Why not caveman or ponytail? →](docs/comparison.md)
+Most efficiency tools compress one thing. RDXmin compresses **three**:
+
+| axis | what | how |
+|---|---|---|
+| **Output: prose** | filler, hedging, manufactured structure | zero-fluff ruleset, injected per session |
+| **Output: code** | speculative abstractions, unrequested boilerplate | YAGNI efficiency ladder |
+| **Input: context** | oversized tool output flooding the window | `PostToolUse` hook — scrub, elide, dedup — plus prevention rules |
+
+Across 20 measured tasks over two suites, RDXmin made an answer worse than using no tool exactly **once** — the failure was root-caused, fixed, and re-validated live. The specialists it's measured against backfired **6×** and **8×**, with blowups to 424%. It's the Toyota Corolla of efficiency skills: not the flashiest, just the one that always starts. [Why not caveman or ponytail? →](docs/comparison.md)
 
 ---
 
@@ -49,11 +57,9 @@ irm https://raw.githubusercontent.com/JayPokale/RDXmin/main/install.ps1 | iex
 
 Preview first with `npx rdxmin --dry-run`, scope with `--only claude`, see everything with `npx rdxmin --help`. Remove with `npx rdxmin --uninstall`.
 
-**Requirements:** Node ≥18 (installer / `npx`) · Claude Code for the live `/rdx` switching + statusline badge — the always-on ruleset still ships to every other agent · bash for the statusline (macOS/Linux; a PowerShell version ships for Windows).
+**Requirements:** Node ≥18 (installer / `npx`) · Claude Code for live `/rdx` switching, the statusline badge, and input-side compression — the always-on ruleset still ships to every other agent · bash for the statusline (macOS/Linux; a PowerShell version ships for Windows).
 
 ### Claude Code plugin (marketplace)
-
-Prefer Claude's own plugin manager? Skip the installer and add the marketplace directly:
 
 ```bash
 claude plugin marketplace add JayPokale/RDXmin   # register the marketplace
@@ -79,19 +85,45 @@ Add to `~/.claude/settings.json`:
 
 ## Numbers
 
-**59 live model runs** — not a tidy 14×4×2 grid, but two suites with different coverage: a clean **6-task × 4-arm** matrix on Haiku (24 runs) plus a wider **Sonnet sweep** (35 runs, including a 5th "both-tools-stacked" arm and one partial probe). The **14 tasks** charted below are those run across all four arms (6 on Haiku + 8 on Sonnet). They span coding, prose, and vague "judgment" requests — *add a cache*, *explain this error*, *refactor for clarity*; the [full task list and every raw answer are committed](benchmarks/results/raw/). Arms (no tool, caveman, ponytail, RDXmin) differ only in the injected system prompt. Each tool's **worst case** across those 14 tasks:
+Nothing here is estimated. Every figure below is recomputed from committed raw data; the 2026-07-07 [verification writeup](benchmarks/results/2026-07-07-verify-rerun.md) re-derived the old claims from scratch, re-ran the whole suite against the competitors' **installed plugins**, and retired the one claim that didn't survive.
+
+### Output axis — vs caveman & ponytail, 20 live tasks
+
+**59+ live model runs** across two suites (June 4-arm matrix on Haiku + Sonnet sweep; July re-verification run). Arms differ only in the injected system prompt. Billed output tokens vs the no-tool baseline:
+
+| | worst case | times worse than no tool |
+|---|--:|--:|
+| caveman | **424%** | 6 / 20 |
+| ponytail | 227% | 8 / 20 |
+| **RDXmin** | **173%** | **1 / 20** |
 
 <p align="center">
   <img src="assets/benchmark.svg" width="820" alt="Worst-case billed output across the June 14-task suite as percent of the no-tool baseline. ponytail 227% (backfired on 4 tasks), caveman 130% (1 task), RDXmin 83% (0 in that suite; 1 backfire appeared in the July re-run — see verification writeup).">
 </p>
 
-ponytail, a tool whose entire job is *writing less*, has a worst case of **227%** — more than double the no-tool baseline. RDXmin's worst day in that suite was still a 17% discount.
+On coding tasks RDXmin is leanest (June: 22% of baseline vs caveman 46%, ponytail 29%; July: 64% vs 84% and 160%). On pure prose caveman is a hair leaner on a good day. RDXmin's single backfire — a comparison prompt answered with headed bullet walls at 173% — was diagnosed, the rule hardened, and the fix re-validated live at **93%** of a fair 3-trial baseline. In the July run all 24 answers, every arm, **graded correct**: nobody buys tokens with wrong answers here.
 
-A fresh July re-run ([verification writeup](benchmarks/results/2026-07-07-verify-rerun.md)) reproduced the June numbers from raw data, then re-measured with the competitors' **installed plugins**: caveman blew up to **424%** on one task (5/6 over baseline), ponytail went over on 4/6, RDXmin over on 1/6 — a 173% comparison-prompt answer whose root cause was diagnosed, fixed in the ruleset, and re-validated live at 93%. Combined ledger across both suites: **caveman 6/20 over, ponytail 8/20, RDXmin 1/20.**
+### Input axis — tool-output compression (Claude Code)
 
-Small sample, two models, temperature wobble. Directional, not gospel — but it's *measured*, and re-measured.
+Measured over 171 real sessions ([receipts](benchmarks/results/2026-07-07-input-axis.md)): tool output is **67.5%** of context content, and every byte of it is re-billed on *every subsequent request* in the session (median: 171 requests). A `PostToolUse` hook shrinks it before the model reads it — deterministic, zero LLM, zero network:
 
-→ [Full comparison, per-segment tables, and detailed competitor breakdown](docs/comparison.md)
+| tier | what it does | loss |
+|---|---|---|
+| **scrub** | strips ANSI escapes, collapses blank runs and `line repeated N×` | none |
+| **elide** | oversized output → head + tail, error-like lines salvaged from the cut | bounded, guarded |
+| **dedup** | byte-identical repeat of a tool's previous output (same session) → one-line marker | none — the copy is already in context |
+
+Replayed over the same 171 sessions: **~61k tokens** (full) / **~103k** (ultra) saved one-shot, ~46% off every eligible output — floor, not estimate, since each saved byte also stops being re-sent on every later request. Correctness rules: allowlist only (`Bash`, `Agent`, `WebFetch`, `WebSearch`, `Grep`, `Glob`, `mcp__*`) — never `Read`/`Edit`, whose exact bytes feed later edits. Honest ledger: dedup scored **0 hits** on this corpus (rtk-filtered at source); it's kept for the test-rerun case, kill-switchable, and labeled speculative until it earns a number. Replay it on your own transcripts:
+
+```bash
+node benchmarks/replay-compress.js        # what it would have saved you
+```
+
+Thresholds track the `/rdx` level (lite 16k / full 8k / ultra 5k chars). `stop rdx`, `RDX_COMPRESS=0`, `RDX_COMPRESS_SCRUB=0`, `RDX_COMPRESS_DEDUP=0` — every tier has an off switch.
+
+### Prevention — the context diet
+
+The biggest context whale (whole-file `Read`s — 5.6M chars in the measured corpus) can't be compressed without breaking later edits. So the ruleset attacks it upstream, in every agent: grep for the symbol first, read only the matching region, narrow at the source (`ls dir` not `ls -R`, pipe long output through `tail`/`grep`), never re-read what's already in context.
 
 ---
 
@@ -117,10 +149,10 @@ Small sample, two models, temperature wobble. Directional, not gospel — but it
 | `/rdx lite` | Tighter prose, flags the minimal alternative |
 | `/rdx full` | Full compression + YAGNI ladder enforced |
 | `/rdx ultra` | Extremist — abbreviate prose, delete before add, challenge requirements |
-| `stop rdx` | Deactivate |
+| `stop rdx` | Deactivate (ruleset *and* input-side compression) |
 | `normal mode` | Deactivate |
 
-Natural language works too: "activate rdx", "rdx mode", "rdxify this". Across every level, code symbols, function/API names, and error strings stay verbatim — only the prose around them compresses.
+Natural language works too: "activate rdx", "rdx mode", "rdxify this". Across every level, code symbols, function/API names, and error strings stay verbatim — only the noise around them compresses.
 
 ---
 
@@ -149,35 +181,21 @@ Mark deliberate simplifications so "later" doesn't quietly become "never":
 
 ---
 
-## Input-side compression (the second axis)
-
-Prose rules shrink what the agent *writes*. Since v0.2.0 a `PostToolUse` hook also shrinks what it *reads*: oversized tool output (Bash dumps, subagent reports, web fetches) gets its middle elided before the model sees it — head kept, tail kept, error-looking lines salvaged from the cut. Deterministic, zero LLM, zero network.
-
-Why it matters, measured over 171 real sessions: tool output is **67.5%** of context content, and every byte of it is re-billed on *every subsequent request* in the session (median: 171 requests). Receipts: [`benchmarks/results/2026-07-07-input-axis.md`](benchmarks/results/2026-07-07-input-axis.md). Replay it on your own transcripts:
-
-```bash
-node benchmarks/replay-compress.js        # what it would have saved you
-```
-
-Correctness rules: allowlist only (`Bash`, `Agent`, `WebFetch`, `WebSearch`, `Grep`, `Glob`, `mcp__*`) — never `Read`/`Edit`, whose exact bytes feed later edits. Thresholds track the `/rdx` level (lite 16k / full 8k / ultra 5k chars). `stop rdx` or `RDX_COMPRESS=0` disables it. Savings show in the statusline: `⇣9k tok`. Claude Code only — no other agent has a post-tool output rewrite hook yet; everywhere else the ruleset's Context Diet section (Grep before Read, filter at the source) covers the same axis by prevention.
-
----
-
 ## Statusline
 
-Badge shows the active level. Plan users see rate-limit usage + reset countdown:
+Badge shows the active level plus measured input-side savings. Plan users see rate-limit usage + reset countdown:
 
 ```
-[RDX:ULTRA] Session: ███████░░░ 73% ⟳2h14m | Weekly: ████░░░░░░ 41% ⟳3d4h
+[RDX:ULTRA] Session: ███████░░░ 73% ⟳2h14m | Weekly: ████░░░░░░ 41% ⟳3d4h ⇣9k tok
 ```
 
 API-key users have no rate limits, so they see session cost instead:
 
 ```
-[RDX:ULTRA] Session: $0.42
+[RDX:ULTRA] Session: $0.42 ⇣9k tok
 ```
 
-Orange. Pulled live from Claude's statusline JSON — no extra API calls. Renders nothing when rdx is off.
+Orange. Rate limits pulled live from Claude's statusline JSON; the `⇣` figure is chars actually elided by the compressor (a real baseline — no fabricated counters). Renders nothing when rdx is off.
 
 ---
 
@@ -197,22 +215,37 @@ Resolution: env var → config file → `full`. Valid: `off`, `lite`, `full`, `u
 
 ---
 
+## Prior art & what stacks with it
+
+RDXmin borrows the best published token-saving techniques and implements the ones that fit a zero-dep hook; the rest stack cleanly alongside it:
+
+| technique | source | in RDXmin? |
+|---|---|---|
+| Prose compression persona | [caveman](https://github.com/JuliusBrussee/caveman) | ✅ + code judgment it lacks |
+| YAGNI/lazy-code ruleset | [ponytail](https://github.com/dietrichgebert/ponytail) | ✅ + prose discipline it lacks |
+| Tool-output elision (head/tail) | [headroom](https://github.com/headroomlabs-ai/headroom)-style, proxy-free | ✅ hook, no proxy — works on subscription OAuth |
+| ANSI strip / log crush / dedup | headroom transforms | ✅ scrub + dedup tiers |
+| Command rewriting at the source | RTK-style `PreToolUse` ([writeup](https://andrewpatterson.dev/posts/token-savings-rtk-headroom/)) | ❌ stacks — RTK shrinks at source, RDXmin catches what it can't reach (subagents, MCP, web) |
+| MCP/codebase-graph indexing | context-mode, [token-optimizer-mcp](https://github.com/ooples/token-optimizer-mcp) | ❌ stacks — orthogonal layer |
+| CLAUDE.md dieting | [community guides](https://www.firecrawl.dev/blog/claude-code-token-efficiency) | ✅ `/rdx-audit` flags bloated docs/config prose |
+
 ## Multi-agent
 
-Primarily a Claude Code plugin, but ships to every agent with a rules/context file — Cursor, Windsurf, Cline, Kiro, Codex, Gemini, Copilot. Generated from one source (`scripts/build-rules.js`), verified in CI. See [`docs/agent-portability.md`](./docs/agent-portability.md).
-
----
+Primarily a Claude Code plugin, but ships to every agent with a rules/context file — Cursor, Windsurf, Cline, Kiro, Codex, Gemini, Copilot. Per-agent copies generated by `scripts/build-rules.js` (a condensed mirror of the skill — edit both, CI checks sync). See [`docs/agent-portability.md`](./docs/agent-portability.md). Input-side compression is Claude Code-only for now: no other agent exposes a post-tool output rewrite hook.
 
 ## FAQ
 
 **Doesn't injecting a persona every turn cost tokens?**
-Yes — a one-time ruleset at session start (~1.5k tokens) plus a ~40-token reminder per turn. Output is where it pays back: coding answers shrink 40–60% (benchmarks), and output bills several × higher than input, so net is positive after the first couple of turns. On a one-line throwaway prompt the overhead can exceed the saving. Honest caveat: the benchmarks measure *output* size, not the injected input.
+Yes — a one-time ruleset at session start (~1.8k tokens) plus a ~40-token reminder per turn. Output is where it pays back: coding answers shrink 40–60% (benchmarks), and output bills several × higher than input, so net is positive after the first couple of turns. On a one-line throwaway prompt the overhead can exceed the saving. The input-side hook has no such tradeoff — it only ever removes tokens.
 
 **Will it golf my code into clever one-liners?**
 No. Boring over clever. Deletion beats addition; obfuscation isn't deletion.
 
 **Does it cut corners on safety?**
 Never. Input validation, data-loss handling, security, and accessibility are off the table. Lazy about solutions, not about reading the problem.
+
+**Can the output compressor eat a line I needed?**
+Designed not to: allowlist keeps `Read`/`Edit` exact, error-looking lines are salvaged from any elided region, dedup only fires on byte-identical same-session repeats, and every tier has a kill switch. If it still bites you, file an issue — that's a bug, not the design.
 
 **0 GitHub stars. Should I be worried?**
 Everyone starts at zero. Run `npx rdxmin --dry-run`, see what it'd do, decide. No commitment, no stars required.
@@ -223,10 +256,10 @@ Everyone starts at zero. Run `npx rdxmin --dry-run`, see what it'd do, decide. N
 
 ## Contributing
 
-See [CONTRIBUTING.md](CONTRIBUTING.md). Edit the source of truth ([`skills/rdx/SKILL.md`](skills/rdx/SKILL.md)), regenerate rule copies and chart, run the tests. CI enforces all three.
+See [CONTRIBUTING.md](CONTRIBUTING.md). Edit the skill (`skills/rdx/SKILL.md`) **and** the condensed rule body in `scripts/build-rules.js`, regenerate copies and chart, run the tests. CI enforces all three.
 
 ```bash
-npm test    # 34 tests: flag safety, tracker, settings merge, installer
+npm test    # 56 tests: flag safety, tracker, settings merge, installer, compressor
 ```
 
 ## License

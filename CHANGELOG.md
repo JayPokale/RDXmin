@@ -28,6 +28,22 @@ Format loosely follows [Keep a Changelog](https://keepachangelog.com/).
 - 15 new tests (compressor correctness guardrails, allowlist, kill switch,
   never-throws). Suite: 49.
 
+### Added (2026-07-07, second pass)
+- **Scrub tier** (lossless) in the output compressor: ANSI/OSC escape strip,
+  blank-run collapse, `line repeated N×` collapse — applies to medium outputs
+  below the elision threshold. Techniques adapted from headroom's transform
+  set, implemented zero-dep. Replay: 53 outputs touched in full mode (was 39),
+  ~61k tokens one-shot on the measured corpus.
+- **Dedup tier**: a tool output byte-identical to that tool's previous output
+  in the *same session* becomes a one-line marker (the copy is already in
+  context). Session-scoped by hook `session_id` — never fires across sessions,
+  where the earlier copy wouldn't be in context; skipped when no session id.
+  0 hits in the replay corpus — labeled speculative, `RDX_COMPRESS_DEDUP=0`.
+- README rebuilt around the three-axis story with verified numbers and a
+  prior-art table (real repo links); CONTRIBUTING corrected (wrong test glob
+  that matched zero files, missing compressor row, stale savings-counter
+  mention, checklist aligned with the deliberate build-rules mirror).
+
 ### Verified / Fixed (2026-07-07 re-verification)
 - June benchmark numbers reproduced exactly from committed raw cells (billed
   `usage.output_tokens`); metric now stated explicitly — on the alternative

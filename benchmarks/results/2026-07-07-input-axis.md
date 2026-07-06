@@ -45,14 +45,24 @@ section (Grep before Read, offset/limit, filter at the source).
 
 ## Finding 3 — replay results
 
-| mode | outputs compressed | chars before → after | saved | % of session content |
-|---|--:|--:|--:|--:|
-| full | 39 | 519,910 → 280,826 | 239,084 (~60k tok) | 1.2% |
-| ultra | 92 | 844,038 → 447,563 | 396,475 (~99k tok) | 2.1% |
+With the v0.2.0 scrub tier (lossless: ANSI strip, blank-run and repeated-line
+collapse — applies to medium outputs the elision threshold ignores):
 
-Per eligible output: **~46–47% smaller**. Error-looking lines were salvaged
+| mode | outputs touched | chars before → after | saved | % of session content |
+|---|--:|--:|--:|--:|
+| full | 53 | 549,432 → 304,182 | 245,250 (~61k tok) | 1.3% |
+| ultra | 106 | 876,738 → 465,068 | 411,670 (~103k tok) | 2.1% |
+
+Per eligible output: **~45–47% smaller**. Error-looking lines were salvaged
 from the elided middle in 10 (full) / 19 (ultra) outputs — the failure mode
 that makes naive head+tail eliding dangerous.
+
+The dedup tier (byte-identical same-session repeat of a tool's previous
+output → one-line marker) scored **0 hits on this corpus** — outputs here were
+already source-filtered by rtk, and real reruns usually differ by timestamps.
+It stays because the test-rerun case is real and its cost is zero, but per
+house rules it's labeled speculative until it earns a number
+(`RDX_COMPRESS_DEDUP=0` to disable).
 
 ## Finding 4 — the resend multiplier (why 1.2% understates it)
 
