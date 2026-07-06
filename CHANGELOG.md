@@ -3,6 +3,14 @@
 All notable changes to RDXmin are documented here.
 Format loosely follows [Keep a Changelog](https://keepachangelog.com/).
 
+## [1.1.0] — 2026-07-07
+
+Same content as 0.2.0 plus the total-bill chart redesign. The version jumps
+past 1.0.0 because the repo's very first commit shipped `"version": "1.0.0"`
+before being re-numbered to 0.1.0 — plugin resolvers with that payload cached
+treat every 0.x release as a downgrade and silently keep serving the ancient
+code. 1.0.0 is skipped forever; nothing may ever claim it again.
+
 ## [0.2.0] — 2026-07-07
 
 ### Added
