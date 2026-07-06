@@ -28,6 +28,27 @@ Format loosely follows [Keep a Changelog](https://keepachangelog.com/).
 - 15 new tests (compressor correctness guardrails, allowlist, kill switch,
   never-throws). Suite: 49.
 
+### Verified / Fixed (2026-07-07 re-verification)
+- June benchmark numbers reproduced exactly from committed raw cells (billed
+  `usage.output_tokens`); metric now stated explicitly — on the alternative
+  visible-answer metric the June data held one RDXmin over-baseline cell.
+- **Retired the "0 backfires" claim.** A fresh 24-cell run against the
+  *installed* caveman/ponytail plugins produced one RDXmin backfire
+  (rest-graphql, 173% billed) vs caveman 5/6 (worst 424%) and ponytail 4/6.
+  Combined 20-task ledger: RDXmin 1, caveman 6, ponytail 8. All 24 fresh
+  answers graded correct — no accuracy loss in any arm.
+- Root-caused the backfire (comparison prompts → headed pro/con bullet walls,
+  structure the ruleset already banned but too weakly) and hardened the rule;
+  re-validated live at 93% of a fair 3-trial vanilla baseline (was 145%).
+  Writeup: `benchmarks/results/2026-07-07-verify-rerun.md`.
+- Fixed two-sources-of-truth bug: `scripts/build-rules.js` carried its own
+  rule BODY, so SKILL.md edits never reached the per-agent copies (CI checked
+  the copies against the same stale BODY — green while wrong). BODY updated +
+  labeled as a manual mirror.
+- Benchmark harness: competitor skills resolve from installed plugin cache,
+  arms run in parallel per task, fresh-run dir override (`run-live.sh [model]
+  [raw-dir]`, `RAW_DIR=` for `aggregate.js`).
+
 ## [0.1.0] — 2026-06-29
 
 ### Added

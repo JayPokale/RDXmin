@@ -1,4 +1,9 @@
-# Reliability: the only tool that never backfires — 2026-06-29
+# Reliability: the tool that (almost) never backfires — 2026-06-29
+
+> **2026-07-07 update:** a fresh re-run produced one RDXmin backfire
+> (rest-graphql, 173% billed — root-caused and fixed). The claims below are
+> scoped to the June suite; combined 20-task ledger and the fix live in
+> [`2026-07-07-verify-rerun.md`](./2026-07-07-verify-rerun.md).
 
 The headline number people chase is "fewest tokens on one answer." It's the wrong
 metric. caveman wins that race on prose; ponytail wins it on some code. RDXmin
@@ -14,6 +19,13 @@ useless — it's a tax you can't predict.
 14 tasks, two models (Haiku 4.5 + Sonnet 4.6), spanning code, prose, and
 over-engineering-trap "judgment" prompts. Raw cells: [`raw/`](./raw/) +
 [`raw-sonnet/`](./raw-sonnet/).
+
+**Metric: billed `usage.output_tokens`** (what you pay — includes model
+reasoning), verified reproducible from the committed raw cells 2026-07-07.
+On the alternative *visible-answer-size* metric the picture is one notch less
+clean: RDXmin's `rest-graphql` (Haiku) answer ran 107% of vanilla's — the lone
+visible-size backfire; caveman 101% ×1, ponytail 160% ×4. "0 backfires" is a
+billed-tokens claim, stated here so nobody has to diff the metrics themselves.
 
 | task | caveman | ponytail | RDXmin |
 |------|--------:|---------:|---------:|

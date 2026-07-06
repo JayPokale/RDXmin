@@ -70,5 +70,5 @@ one-shot figure (60k) is the floor, not the estimate.
   workflow would see several × more (its whales are Bash).
 - Chars/4 is a rough token proxy for code-heavy text.
 - Correctness of eliding is guarded (allowlist + error salvage + head/tail),
-  not yet adversarially benchmarked like the output axis's 0/14. Kill switch:
-  `RDX_COMPRESS=0`.
+  not yet adversarially benchmarked like the output axis's backfire ledger.
+  Kill switch: `RDX_COMPRESS=0`.

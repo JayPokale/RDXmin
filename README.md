@@ -13,19 +13,19 @@
   <img src="https://img.shields.io/badge/works%20with-8%20agents-d78a3c?style=flat-square" alt="Works with 8 agents">
   <a href="https://github.com/JayPokale/RDXmin/actions/workflows/test.yml"><img src="https://img.shields.io/github/actions/workflow/status/JayPokale/RDXmin/test.yml?style=flat-square&label=CI" alt="CI"></a>
   <img src="https://img.shields.io/badge/deps-0-2da44e?style=flat-square" alt="Zero deps">
-  <img src="https://img.shields.io/badge/backfires-0%2F14-2da44e?style=flat-square" alt="0 backfires">
+  <img src="https://img.shields.io/badge/backfires-1%2F20-2da44e?style=flat-square" alt="1 backfire in 20 tasks">
   <img src="https://img.shields.io/badge/license-MIT-d78a3c?style=flat-square" alt="MIT">
 </p>
 
 <p align="center">
-  <strong>Compresses prose AND code &middot; didn't backfire once across 14 measured tasks &middot; one command</strong>
+  <strong>Compresses prose AND code &middot; 1 backfire across 20 measured tasks (competitors: 6 and 8) &middot; one command</strong>
 </p>
 
 ---
 
 You asked your AI agent to "add a cache." A bare agent answered with a **150-line** cache class — config object, TTL logic, stats counters, the works. RDXmin's answer to the same prompt: **7 lines.** Same model, same question, measured, receipts committed in [`benchmarks/`](benchmarks/results/).
 
-RDXmin enforces **zero-fluff prose** and **YAGNI-first code** simultaneously — no filler, no speculative abstractions, no `// TODO: maybe later`. Other tools compress either prose or code. RDXmin does both at once and — across 14 measured tasks — didn't once make the answer worse than using no tool. It's the Toyota Corolla of efficiency skills: not the flashiest, just the one that always starts. [Why not caveman or ponytail? →](docs/comparison.md)
+RDXmin enforces **zero-fluff prose** and **YAGNI-first code** simultaneously — no filler, no speculative abstractions, no `// TODO: maybe later`. Other tools compress either prose or code. RDXmin does both at once and — across 20 measured tasks over two suites — made the answer worse than no tool exactly once (competitors: 6× and 8×, with blowups to 424%); that one failure was diagnosed, the rule hardened, and the fix re-validated live. It's the Toyota Corolla of efficiency skills: not the flashiest, just the one that always starts. [Why not caveman or ponytail? →](docs/comparison.md)
 
 ---
 
@@ -82,12 +82,14 @@ Add to `~/.claude/settings.json`:
 **59 live model runs** — not a tidy 14×4×2 grid, but two suites with different coverage: a clean **6-task × 4-arm** matrix on Haiku (24 runs) plus a wider **Sonnet sweep** (35 runs, including a 5th "both-tools-stacked" arm and one partial probe). The **14 tasks** charted below are those run across all four arms (6 on Haiku + 8 on Sonnet). They span coding, prose, and vague "judgment" requests — *add a cache*, *explain this error*, *refactor for clarity*; the [full task list and every raw answer are committed](benchmarks/results/raw/). Arms (no tool, caveman, ponytail, RDXmin) differ only in the injected system prompt. Each tool's **worst case** across those 14 tasks:
 
 <p align="center">
-  <img src="assets/benchmark.svg" width="820" alt="Worst-case output size across 14 tasks as percent of the no-tool baseline. ponytail 227% (backfired on 4 tasks), caveman 130% (1 task), RDXmin 83% (never backfires).">
+  <img src="assets/benchmark.svg" width="820" alt="Worst-case billed output across the June 14-task suite as percent of the no-tool baseline. ponytail 227% (backfired on 4 tasks), caveman 130% (1 task), RDXmin 83% (0 in that suite; 1 backfire appeared in the July re-run — see verification writeup).">
 </p>
 
-ponytail, a tool whose entire job is *writing less*, has a worst case of **227%** — more than double the no-tool baseline. caveman creeps over once. RDXmin's worst day is still a 17% discount.
+ponytail, a tool whose entire job is *writing less*, has a worst case of **227%** — more than double the no-tool baseline. RDXmin's worst day in that suite was still a 17% discount.
 
-Small sample, two models, temperature wobble. Directional, not gospel — but it's *measured*.
+A fresh July re-run ([verification writeup](benchmarks/results/2026-07-07-verify-rerun.md)) reproduced the June numbers from raw data, then re-measured with the competitors' **installed plugins**: caveman blew up to **424%** on one task (5/6 over baseline), ponytail went over on 4/6, RDXmin over on 1/6 — a 173% comparison-prompt answer whose root cause was diagnosed, fixed in the ruleset, and re-validated live at 93%. Combined ledger across both suites: **caveman 6/20 over, ponytail 8/20, RDXmin 1/20.**
+
+Small sample, two models, temperature wobble. Directional, not gospel — but it's *measured*, and re-measured.
 
 → [Full comparison, per-segment tables, and detailed competitor breakdown](docs/comparison.md)
 

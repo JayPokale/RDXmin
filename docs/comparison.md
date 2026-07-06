@@ -4,19 +4,21 @@
 
 Use them — they're great, and we tested against them honestly. But each has a failure mode, and RDXmin doesn't.
 
-Across **14 tasks** (code, prose, and vague "judgment" requests; Haiku + Sonnet), measured as % of the no-tool baseline:
+Across **20 tasks** in two suites (June 14-task matrix + July re-verification run; code, prose, and vague "judgment" requests; Haiku + Sonnet), billed output tokens as % of the no-tool baseline:
 
 | | worst case | times worse than no tool | code judgment |
 |---|--:|--:|:--:|
-| caveman | 130% | 1 / 14 | ❌ no ladder |
-| ponytail | **227%** | **4 / 14** | ✅ |
-| **RDXmin** | **83%** | **0 / 14** | ✅ |
+| caveman | **424%** | 6 / 20 | ❌ no ladder |
+| ponytail | 227% | **8 / 20** | ✅ |
+| **RDXmin** | **173%** | **1 / 20** | ✅ |
+
+RDXmin's single backfire (a comparison prompt answered with headed bullet walls) was root-caused, fixed in the ruleset, and re-validated live at 93% of baseline — receipts in the [verification writeup](../benchmarks/results/2026-07-07-verify-rerun.md).
 
 **caveman** is a superb prose compressor — a hair leaner than RDXmin on pure-prose prompts — but has no engineering judgment. Asked to *"add caching,"* it dumped three implementations (330 tokens) where RDXmin gave one `@cache` + an upgrade line (151).
 
 **ponytail** has the engineering judgment but pads prose so hard it backfires. On a "retry logic" prompt it ran **227%** of the no-tool baseline. Yes — a "write less" tool, writing more than twice as much. Receipts: [`reliability writeup`](../benchmarks/results/2026-06-29-reliability.md).
 
-**RDXmin never backfired once** (worst case 83% = still a saving). It's not always the single tersest answer; it's the one that never betrays you.
+**RDXmin backfired once in 20 tasks** — and that once got root-caused and fixed. It's not always the single tersest answer; it's the one with the smallest, rarest downside.
 
 Installing *both* specialists to cover both axes gets you two plugins that fight over prose style and double per-session overhead — and on one task they did *worse* stacked (605t) than RDXmin alone (595t). Full data: [reliability](../benchmarks/results/2026-06-29-reliability.md) · [Sonnet cross-check](../benchmarks/results/2026-06-29-sonnet-cross-check.md).
 
