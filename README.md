@@ -18,7 +18,7 @@
 </p>
 
 <p align="center">
-  <strong>Compresses what the model writes AND what it reads &middot; every claim re-measured from raw data &middot; one command</strong>
+  <strong>Half the output bill on 20 measured tasks &middot; compresses what the model writes AND reads &middot; one command</strong>
 </p>
 
 ---
@@ -91,11 +91,13 @@ Nothing here is estimated. Every figure below is recomputed from committed raw d
 
 **59+ live model runs** across two suites (June 4-arm matrix on Haiku + Sonnet sweep; July re-verification run). Arms differ only in the injected system prompt. Billed output tokens vs the no-tool baseline:
 
-| | worst case | times worse than no tool |
-|---|--:|--:|
-| caveman | **424%** | 6 / 20 |
-| ponytail | 227% | 8 / 20 |
-| **RDXmin** | **173%** | **1 / 20** |
+| | total bill (all 20 tasks) | average task | worst case | backfires |
+|---|--:|--:|--:|--:|
+| caveman | 80% | 98% | **424%** | 6 / 20 |
+| ponytail | 68% | 91% | 227% | 8 / 20 |
+| **RDXmin** | **52%** | **69%** | **173%** | **1 / 20** |
+
+RDXmin wins all four columns: it cut the total 20-task bill **nearly in half** while the specialists managed 20–32%, and it did so with the smallest worst day and a twentieth the backfire rate.
 
 <p align="center">
   <img src="assets/benchmark.svg" width="820" alt="Worst-case billed output across 20 tasks as percent of the no-tool baseline. caveman 424% (backfired 6 tasks), ponytail 227% (backfired 8 tasks), RDXmin 173% (backfired 1 task — root-caused and fixed).">

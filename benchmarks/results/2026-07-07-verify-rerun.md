@@ -45,11 +45,15 @@ dumping code — caveman's 424% is exactly the no-code-judgment failure mode.
 
 ### Combined ledger, June + July (20 tasks, billed tokens)
 
-| | worst case | times > vanilla |
-|---|--:|--:|
-| caveman | **424%** | 6 / 20 |
-| ponytail | 227% | 8 / 20 |
-| **RDXmin** | **173%** | **1 / 20** |
+| | total bill¹ | mean task | median task | worst case | times > vanilla |
+|---|--:|--:|--:|--:|--:|
+| caveman | 80% | 98% | 81% | **424%** | 6 / 20 |
+| ponytail | 68% | 91% | 97% | 227% | 8 / 20 |
+| **RDXmin** | **52%** | **69%** | **74%** | **173%** | **1 / 20** |
+
+¹ sum of the arm's billed tokens across all 20 tasks ÷ sum of vanilla's —
+what the combined bill actually was. RDXmin leads every aggregate: average,
+median, total, worst case, and backfire count.
 
 The June "never backfires (0/14)" claim did not survive the re-run and is
 retired. The honest replacement: RDXmin backfired once in 20 tasks;

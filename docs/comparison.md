@@ -6,11 +6,11 @@ Use them — they're great, and we tested against them honestly. But each has a 
 
 Across **20 tasks** in two suites (June 14-task matrix + July re-verification run; code, prose, and vague "judgment" requests; Haiku + Sonnet), billed output tokens as % of the no-tool baseline:
 
-| | worst case | times worse than no tool | code judgment |
-|---|--:|--:|:--:|
-| caveman | **424%** | 6 / 20 | ❌ no ladder |
-| ponytail | 227% | **8 / 20** | ✅ |
-| **RDXmin** | **173%** | **1 / 20** | ✅ |
+| | total bill | average task | worst case | times worse than no tool | code judgment |
+|---|--:|--:|--:|--:|:--:|
+| caveman | 80% | 98% | **424%** | 6 / 20 | ❌ no ladder |
+| ponytail | 68% | 91% | 227% | **8 / 20** | ✅ |
+| **RDXmin** | **52%** | **69%** | **173%** | **1 / 20** | ✅ |
 
 RDXmin's single backfire (a comparison prompt answered with headed bullet walls) was root-caused, fixed in the ruleset, and re-validated live at 93% of baseline — receipts in the [verification writeup](../benchmarks/results/2026-07-07-verify-rerun.md).
 

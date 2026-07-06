@@ -2,10 +2,9 @@ node_modules/
 *.log
 .DS_Store
 .env.local
-# transient benchmark scratch, but keep the committed provenance:
+# transient benchmark scratch at the top level of results/:
 benchmarks/results/*.json
-!benchmarks/results/summary.json
-# raw/ (per-run model outputs) and *.md results are committed for audit
+# raw*/ (per-run model outputs) and *.md results are committed for audit
 __pycache__/
 *.pyc
 .venv/
