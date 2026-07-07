@@ -9,11 +9,10 @@
 </p>
 
 <p align="center">
-  <img src="https://img.shields.io/badge/status-pre--release-d78a3c?style=flat-square" alt="Pre-release">
+  <a href="https://www.npmjs.com/package/rdxmin"><img src="https://img.shields.io/npm/v/rdxmin?style=flat-square&color=d78a3c" alt="npm version"></a>
   <img src="https://img.shields.io/badge/works%20with-8%20agents-d78a3c?style=flat-square" alt="Works with 8 agents">
   <a href="https://github.com/JayPokale/RDXmin/actions/workflows/test.yml"><img src="https://img.shields.io/github/actions/workflow/status/JayPokale/RDXmin/test.yml?style=flat-square&label=CI" alt="CI"></a>
   <img src="https://img.shields.io/badge/deps-0-2da44e?style=flat-square" alt="Zero deps">
-  <img src="https://img.shields.io/badge/worst_case-173%25_vs_227%25%2F424%25-2da44e?style=flat-square" alt="Best worst-case in class: 173% vs ponytail 227% and caveman 424%">
   <img src="https://img.shields.io/badge/license-MIT-d78a3c?style=flat-square" alt="MIT">
   <a href="https://github.com/JayPokale/RDXmin/stargazers"><img src="https://img.shields.io/github/stars/JayPokale/RDXmin?style=social" alt="Star RDXmin on GitHub"></a>
 </p>
@@ -263,7 +262,7 @@ Everyone starts at zero. Run `npx rdxmin --dry-run`, see what it'd do, decide. A
 
 See [CONTRIBUTING.md](CONTRIBUTING.md). Edit the skill (`skills/rdx/SKILL.md`) **and** the condensed rule body in `scripts/build-rules.js`, regenerate copies and chart, run the tests. CI enforces all three.
 
-Built by [Jay Pokale](https://github.com/JayPokale) with [Claude](https://claude.com/claude-code) as co-engineer — the input-compression hook, the benchmark verification, and several of the bug hunts documented in the changelog were pair-work.
+Built by [Jay Pokale](https://github.com/JayPokale) with [Claude](https://claude.com/claude-code), [Antigravity](https://antigravity.google), and [Codex](https://openai.com/blog/openai-codex/) as co-engineers — the input-compression hook, the benchmark verification, and several of the bug hunts documented in the changelog were pair-work.
 
 ```bash
 npm test    # 56 tests: flag safety, tracker, settings merge, installer, compressor
@@ -272,6 +271,20 @@ npm test    # 56 tests: flag safety, tracker, settings merge, installer, compres
 ## License
 
 [MIT](LICENSE). The shortest license that works.
+
+## Contributors
+
+<a href="https://github.com/JayPokale/RDXmin/graphs/contributors">
+  <img src="https://contrib.rocks/image?repo=JayPokale/RDXmin" alt="GitHub contributors">
+</a>
+
+**AI co-engineers** (pair-work credited in commit trailers and the changelog):
+
+<p>
+  <a href="https://claude.com/claude-code"><img src="https://img.shields.io/badge/🤖_Claude-input_axis_·_benchmarks_·_bug_hunts-d97757?style=flat-square" alt="Claude (Anthropic)"></a>
+  <a href="https://openai.com/codex/"><img src="https://img.shields.io/badge/🤖_Codex-early_iterations-10a37f?style=flat-square" alt="Codex (OpenAI)"></a>
+  <a href="https://antigravity.google/"><img src="https://img.shields.io/badge/🤖_Antigravity-early_iterations-4285f4?style=flat-square" alt="Antigravity (Google)"></a>
+</p>
 
 ---
 

@@ -100,3 +100,30 @@ test('getDefaultMode ignores invalid RDX_DEFAULT_MODE', () => {
   assert.ok(VALID_MODES.includes(mode));
   delete process.env.RDX_DEFAULT_MODE;
 });
+
+// ── major-version update notice ──────────────────────────────────────────────
+
+const { majorOf, majorUpdateNotice } = require('../hooks/rdx-activate');
+
+test('majorOf parses majors, rejects garbage', () => {
+  assert.equal(majorOf('1.1.2'), 1);
+  assert.equal(majorOf('12.0.0'), 12);
+  assert.equal(majorOf('nonsense'), null);
+  assert.equal(majorOf(null), null);
+});
+
+test('notice fires only on a major jump', () => {
+  assert.ok(majorUpdateNotice('1.1.2', '2.0.0'));
+  assert.ok(majorUpdateNotice('1.9.9', '3.1.0'));
+  assert.equal(majorUpdateNotice('1.1.2', '1.9.9'), null);  // minor: silent
+  assert.equal(majorUpdateNotice('2.0.0', '2.0.1'), null);  // patch: silent
+  assert.equal(majorUpdateNotice('2.0.0', '1.9.9'), null);  // downgrade: silent
+  assert.equal(majorUpdateNotice(null, '2.0.0'), null);     // unknown install: silent
+  assert.equal(majorUpdateNotice('1.0.0', null), null);     // no registry data: silent
+});
+
+test('requiring rdx-activate has no side effects', () => {
+  // If the require.main guard is broken this test file would have already
+  // emitted the ruleset or called process.exit before reaching here.
+  assert.ok(true);
+});

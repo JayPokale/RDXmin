@@ -375,7 +375,7 @@ function uninstall(ctx) {
 
   // Flag files
   for (const f of ['.rdx-active', '.rdx-session-turns', '.rdx-statusline-suffix',
-                   '.rdx-compress-stats.json', '.rdx-compress-last.json']) {
+                   '.rdx-compress-stats.json', '.rdx-compress-last.json', '.rdx-update-check.json']) {
     const p = path.join(cfg, f);
     if (fs.existsSync(p)) { if (!opts.dryRun) { try { fs.unlinkSync(p); } catch (_) {} } note(`  removed ${p}`); touched++; }
   }
