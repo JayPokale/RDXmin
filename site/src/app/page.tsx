@@ -1,6 +1,6 @@
 import Nav from "@/components/Nav";
 import Hero from "@/components/Hero";
-import Ticker from "@/components/Ticker";
+import Stats from "@/components/Stats";
 import Axes from "@/components/Axes";
 import Terminal from "@/components/Terminal";
 import Benchmarks from "@/components/Benchmarks";
@@ -13,7 +13,7 @@ export default function Page() {
     <main>
       <Nav />
       <Hero />
-      <Ticker />
+      <Stats />
       <Axes />
       <Terminal />
       <Benchmarks />

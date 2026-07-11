@@ -1,65 +1,61 @@
-"use client";
-
-import { motion } from "motion/react";
+import Reveal from "./Reveal";
 
 const AXES = [
   {
-    n: "01",
-    name: "The persona",
+    name: "Terse persona",
     what: "How the model writes",
-    body: "Terse senior-dev voice: fragments over sentences, YAGNI-first code, the efficiency ladder — reuse, stdlib, platform, one-liner — before new code. Three levels: /rdx lite · full · ultra. Commits and security warnings stay fully verbose, on purpose.",
-    tag: "the axis caveman & ponytail pioneered",
+    body: "Senior-dev voice: fragments over sentences, YAGNI-first code, reuse before new code. Three levels — /rdx lite, full, ultra. Commits and security warnings stay verbose on purpose.",
   },
   {
-    n: "02",
-    name: "The compressor",
+    name: "Output compressor",
     what: "What survives into context",
-    body: "A PostToolUse hook squeezes tool results before the model reads them: ANSI scrub, head + tail elide that salvages error lines, same-session dedup. Tool output is 67.5% of a session and re-bills every later turn — this evicts it once. Behind a correctness allowlist: never touches Read, Edit, or Write.",
-    tag: "the axis nobody else has",
+    body: "A PostToolUse hook shrinks tool results before the model reads them: ANSI scrub, head + tail elide with error-line salvage, same-session dedup. Never touches Read, Edit, or Write.",
   },
   {
-    n: "03",
-    name: "The context diet",
+    name: "Context diet",
     what: "What gets read at all",
-    body: "Rules that teach the model to fetch the slice, not the file: grep first, Read with offset/limit, filter long output at the source, never re-read what's already in context. Prevention for the whale the compressor must not touch.",
-    tag: "prevention over cleanup",
+    body: "Rules that teach the model to fetch the slice, not the file: grep first, sliced reads, filter at the source, never re-read what's already in context.",
   },
+];
+
+const EXTRAS = [
+  { name: "Live savings statusline", body: "A ⇣9k tok badge showing measured chars elided — real baseline, not an estimate." },
+  { name: "Works beyond Claude Code", body: "Generated rulesets for Cursor, Windsurf, Cline, Kiro, and Copilot ship in the same install." },
+  { name: "Tested where it matters", body: "The compressor is where a bug corrupts files — it's covered by the test suite, with a hard allowlist." },
+  { name: "Easy off-switch", body: "\"stop rdx\" for the persona, RDX_COMPRESS=0 for the hook, npx rdxmin --uninstall for everything." },
 ];
 
 export default function Axes() {
   return (
-    <section id="axes" className="mx-auto max-w-6xl px-5 py-28">
-      <p className="text-xs tracking-[0.3em] text-amber uppercase">the three axes</p>
-      <h2
-        className="mt-4 max-w-2xl text-3xl font-bold tracking-tight sm:text-5xl"
-        style={{ fontFamily: "var(--font-display)" }}
-      >
-        Other token savers push on one lever. There are three.
-      </h2>
-      <div className="mt-14 grid gap-5 md:grid-cols-3">
+    <section id="features" className="mx-auto max-w-5xl px-5 py-24">
+      <Reveal>
+        <h2 className="text-2xl font-semibold tracking-tight sm:text-4xl">
+          One plugin, three levers
+        </h2>
+        <p className="mt-3 max-w-xl text-sm text-dim">
+          Other token savers only make the model write less. Tool output is the bigger bill —
+          67.5% of a session — and it re-bills every turn.
+        </p>
+      </Reveal>
+      <div className="mt-12 grid gap-px overflow-hidden rounded-xl border border-line bg-line sm:grid-cols-3">
         {AXES.map((a, i) => (
-          <motion.article
-            key={a.n}
-            initial={{ opacity: 0, y: 32 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, margin: "-60px" }}
-            transition={{ duration: 0.6, delay: i * 0.12, ease: [0.16, 1, 0.3, 1] }}
-            whileHover={{ y: -6 }}
-            className="group relative rounded-xl border border-line bg-panel p-6 transition-colors hover:border-amber-deep/60"
-          >
-            <div className="pointer-events-none absolute inset-0 rounded-xl opacity-0 transition-opacity group-hover:opacity-100 bg-[radial-gradient(ellipse_at_top,rgba(255,160,40,0.06),transparent_65%)]" />
-            <div className="flex items-baseline justify-between">
-              <span className="text-4xl text-line transition-colors group-hover:text-amber-deep" style={{ fontFamily: "var(--font-display)" }}>
-                {a.n}
-              </span>
-              <span className="text-[10px] tracking-widest text-dim uppercase">{a.what}</span>
+          <Reveal key={a.name} delay={i * 0.08}>
+            <div className="h-full bg-paper p-6">
+              <p className="text-xs text-amber">{a.what}</p>
+              <h3 className="mt-2 text-lg font-semibold">{a.name}</h3>
+              <p className="mt-2.5 text-sm leading-relaxed text-dim">{a.body}</p>
             </div>
-            <h3 className="mt-5 text-xl font-bold" style={{ fontFamily: "var(--font-display)" }}>
-              {a.name}
-            </h3>
-            <p className="mt-3 text-xs leading-relaxed text-dim">{a.body}</p>
-            <p className="mt-5 text-[10px] tracking-widest text-amber/70 uppercase">→ {a.tag}</p>
-          </motion.article>
+          </Reveal>
+        ))}
+      </div>
+      <div className="mt-5 grid gap-px overflow-hidden rounded-xl border border-line bg-line sm:grid-cols-2 lg:grid-cols-4">
+        {EXTRAS.map((e, i) => (
+          <Reveal key={e.name} delay={i * 0.06}>
+            <div className="h-full bg-paper p-5">
+              <h3 className="text-sm font-semibold">{e.name}</h3>
+              <p className="mt-2 text-xs leading-relaxed text-dim">{e.body}</p>
+            </div>
+          </Reveal>
         ))}
       </div>
     </section>

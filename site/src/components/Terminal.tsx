@@ -2,26 +2,25 @@
 
 import { useEffect, useRef, useState } from "react";
 import { useInView } from "motion/react";
+import Reveal from "./Reveal";
 
-// The product, live: a wall of test output gets elided to head + tail + the
-// error lines that matter, then the statusline ticks up.
+// The one dark element on the page: the product doing its job.
 const HEAD = [
   "$ npm test",
-  "> jest --runInBand",
-  "PASS  src/auth/session.test.ts (1.2s)",
-  "PASS  src/auth/token.test.ts (0.8s)",
+  "PASS  src/auth/session.test.ts",
+  "PASS  src/auth/token.test.ts",
 ];
 const NOISE_COUNT = 412;
 const SALVAGED = [
   "FAIL  src/billing/invoice.test.ts",
   "  ● rounds line items — expected 1042, received 1041",
 ];
-const TAIL = ["Tests: 1 failed, 96 passed, 97 total", "Time: 41.7s"];
+const TAIL = ["Tests: 1 failed, 96 passed, 97 total"];
 
 export default function Terminal() {
   const ref = useRef<HTMLDivElement>(null);
   const inView = useInView(ref, { once: true, margin: "-120px" });
-  const [phase, setPhase] = useState<"idle" | "flood" | "squeeze" | "done">("idle");
+  const [phase, setPhase] = useState<"idle" | "flood" | "done">("idle");
   const [flood, setFlood] = useState(0);
 
   useEffect(() => {
@@ -29,97 +28,79 @@ export default function Terminal() {
     setPhase("flood");
     let n = 0;
     const t = setInterval(() => {
-      n += 37;
+      n += 41;
       if (n >= NOISE_COUNT) {
         clearInterval(t);
         setFlood(NOISE_COUNT);
-        setTimeout(() => setPhase("squeeze"), 500);
-        setTimeout(() => setPhase("done"), 1300);
+        setTimeout(() => setPhase("done"), 700);
       } else {
         setFlood(n);
       }
-    }, 90);
+    }, 100);
     return () => clearInterval(t);
   }, [inView]);
 
   return (
-    <section className="mx-auto max-w-6xl px-5 py-28">
-      <p className="text-xs tracking-[0.3em] text-amber uppercase">watch it work</p>
-      <h2
-        className="mt-4 max-w-2xl text-3xl font-bold tracking-tight sm:text-5xl"
-        style={{ fontFamily: "var(--font-display)" }}
-      >
-        400 lines of test output. Two of them matter.
-      </h2>
-      <p className="mt-4 max-w-xl text-sm text-dim">
-        Every tool result you pull in is re-billed on every later turn. The compressor keeps the
-        head, the tail, and the error lines — and evicts the rest before the model ever reads it.
-      </p>
+    <section className="mx-auto max-w-5xl px-5 py-24">
+      <Reveal>
+        <h2 className="text-2xl font-semibold tracking-tight sm:text-4xl">
+          400 lines of output. Two matter.
+        </h2>
+        <p className="mt-3 max-w-xl text-sm text-dim">
+          Tool results re-bill on every later turn. The compressor keeps the head, the tail, and
+          the error lines — the rest never reaches the model.
+        </p>
+      </Reveal>
 
-      <div
-        ref={ref}
-        className="mt-12 overflow-hidden rounded-xl border border-line bg-[#0d0c0a] shadow-[0_24px_80px_rgba(0,0,0,0.5)]"
-      >
-        <div className="flex items-center gap-2 border-b border-line px-4 py-2.5">
-          <span className="h-2.5 w-2.5 rounded-full bg-waste/70" />
-          <span className="h-2.5 w-2.5 rounded-full bg-amber/70" />
-          <span className="h-2.5 w-2.5 rounded-full bg-save/70" />
-          <span className="ml-3 text-[10px] text-dim">claude code — PostToolUse: Bash</span>
-          <span className="ml-auto rounded bg-amber-deep/20 px-1.5 py-0.5 text-[10px] text-amber">
-            [RDX]{phase === "done" ? " ⇣9k tok" : ""}
-          </span>
-        </div>
-        <div className="h-72 overflow-hidden p-4 text-xs leading-relaxed">
-          {HEAD.map((l) => (
-            <div key={l} className="text-dim">{l}</div>
-          ))}
-
-          {phase === "flood" && (
-            <div className="text-dim/50">
-              {Array.from({ length: Math.min(9, Math.ceil(flood / 45)) }).map((_, i) => (
-                <div key={i}>
-                  PASS  src/{["api", "core", "db", "ui", "jobs"][i % 5]}/spec-{i * 45}.test.ts …
+      <Reveal delay={0.1}>
+        <div
+          ref={ref}
+          className="mt-10 overflow-hidden rounded-xl border border-term-line bg-term"
+          style={{ fontFamily: "var(--font-mono)" }}
+        >
+          <div className="flex items-center border-b border-term-line px-4 py-2.5">
+            <span className="text-xs text-term-dim">PostToolUse · Bash</span>
+            <span className="ml-auto rounded bg-term-amber/15 px-1.5 py-0.5 text-xs text-term-amber">
+              [RDX]{phase === "done" ? " ⇣9k tok" : ""}
+            </span>
+          </div>
+          <div className="h-64 overflow-hidden p-4 text-xs leading-relaxed">
+            {HEAD.map((l) => (
+              <div key={l} className="text-term-dim">{l}</div>
+            ))}
+            {phase === "flood" && (
+              <div className="text-term-dim/50">
+                {Array.from({ length: Math.min(7, Math.ceil(flood / 60)) }).map((_, i) => (
+                  <div key={i}>PASS  src/{["api", "core", "db", "ui", "jobs"][i % 5]}/spec-{i * 60}.test.ts</div>
+                ))}
+                <div>… {flood} lines and counting …</div>
+              </div>
+            )}
+            {phase === "done" && (
+              <>
+                <div className="my-2 w-fit rounded border border-dashed border-term-amber/50 px-3 py-1.5 text-term-amber">
+                  ⋯ 412 lines elided — kept head, tail, 2 error lines ⋯
                 </div>
-              ))}
-              <div className="text-dim/40">… {flood} lines and counting …</div>
-            </div>
-          )}
-
-          {(phase === "squeeze" || phase === "done") && (
-            <div
-              className={`my-2 rounded border border-dashed px-3 py-2 transition-all duration-700 ${
-                phase === "done" ? "border-amber-deep/50 text-amber" : "border-line text-dim/60"
-              }`}
-            >
-              ⋯ {NOISE_COUNT} lines elided — kept head, tail, 2 error lines ⋯
-            </div>
-          )}
-
-          {(phase === "squeeze" || phase === "done") && (
-            <>
-              {SALVAGED.map((l) => (
-                <div key={l} className="text-waste">{l}</div>
-              ))}
-              {TAIL.map((l) => (
-                <div key={l} className="text-paper">{l}</div>
-              ))}
-              {phase === "done" && (
-                <div className="mt-3 text-save">
-                  ✓ 34,120 chars → 612 chars · billed once, saved every turn after
-                </div>
-              )}
-            </>
-          )}
-          {phase !== "done" && <span className="caret" />}
+                {SALVAGED.map((l) => (
+                  <div key={l} className="text-[#e5484d]">{l}</div>
+                ))}
+                {TAIL.map((l) => (
+                  <div key={l} className="text-term-paper">{l}</div>
+                ))}
+                <div className="mt-2 text-[#86c06c]">✓ 34,120 chars → 612 · billed once, saved every turn after</div>
+              </>
+            )}
+            {phase !== "done" && <span className="caret" />}
+          </div>
         </div>
-      </div>
+      </Reveal>
 
-      <p className="mt-5 text-xs text-dim/70">
-        Deterministic. Zero LLM calls, zero network, zero deps. Kill switch:{" "}
-        <code>RDX_COMPRESS=0</code>. Correctness allowlist: Bash, Agent, WebFetch, WebSearch,
-        Grep, Glob, <code>mcp__*</code> — never Read/Edit/Write, whose exact bytes feed later
-        edits.
-      </p>
+      <Reveal delay={0.15}>
+        <p className="mt-4 text-xs text-dim">
+          Deterministic — no LLM calls, no network, no dependencies. Allowlist: Bash, Agent,
+          WebFetch, WebSearch, Grep, Glob, mcp__* — never Read/Edit/Write.
+        </p>
+      </Reveal>
     </section>
   );
 }

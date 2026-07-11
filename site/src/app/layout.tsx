@@ -1,17 +1,15 @@
 import type { Metadata } from "next";
-import { Syne, Fragment_Mono } from "next/font/google";
+import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 
-const syne = Syne({
+const geist = Geist({
   subsets: ["latin"],
-  variable: "--font-syne",
-  weight: ["600", "700", "800"],
+  variable: "--font-geist",
 });
 
-const fragment = Fragment_Mono({
+const geistMono = Geist_Mono({
   subsets: ["latin"],
-  variable: "--font-fragment",
-  weight: "400",
+  variable: "--font-geist-mono",
 });
 
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? "https://rdxmin.vercel.app";
@@ -77,8 +75,14 @@ const jsonLd = {
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en" className={`${syne.variable} ${fragment.variable}`}>
-      <body className="grain antialiased">
+    <html lang="en" className={`${geist.variable} ${geistMono.variable}`}>
+      <body className="antialiased">
+        {/* set theme before paint — no flash; default light, honors saved choice or OS dark */}
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `try{var t=localStorage.getItem("rdx-theme")||(matchMedia("(prefers-color-scheme: dark)").matches?"dark":"light");document.documentElement.dataset.theme=t}catch(e){}`,
+          }}
+        />
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
