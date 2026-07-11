@@ -8,8 +8,16 @@ $flag = Join-Path $configDir '.rdx-active'
 
 if (-not (Test-Path -LiteralPath $flag -PathType Leaf)) { exit 0 }
 
-# Hard-cap read, lowercase, strip anything outside [a-z0-9-]
-$mode = (Get-Content -LiteralPath $flag -Raw -TotalCount 1).ToLower()
+# Refuse symlinks/reparse points — mirrors the .sh guard against pointing the
+# flag at an arbitrary file and rendering its bytes every keystroke.
+$item = Get-Item -LiteralPath $flag -Force
+if ($item.Attributes -band [IO.FileAttributes]::ReparsePoint) { exit 0 }
+
+# Hard-cap at 64 chars, lowercase, strip anything outside [a-z0-9-].
+# NB: -Raw and -TotalCount are mutually exclusive — cap the string instead.
+$raw = Get-Content -LiteralPath $flag -Raw
+if (-not $raw) { exit 0 }
+$mode = $raw.Substring(0, [Math]::Min(64, $raw.Length)).ToLower()
 $mode = ($mode -replace '[^a-z0-9-]', '')
 
 switch ($mode) {
@@ -27,7 +35,8 @@ $reset = "$esc[0m"
 # Input-side savings from the tool-output compressor ledger (mirrors the sh version).
 $suffix = ''
 $stats = Join-Path $configDir '.rdx-compress-stats.json'
-if (Test-Path -LiteralPath $stats -PathType Leaf) {
+$sitem = if (Test-Path -LiteralPath $stats -PathType Leaf) { Get-Item -LiteralPath $stats -Force } else { $null }
+if ($sitem -and -not ($sitem.Attributes -band [IO.FileAttributes]::ReparsePoint)) {
   $raw = Get-Content -LiteralPath $stats -Raw
   if ($raw -match '"savedChars":(\d+)') {
     $tok = [long]$Matches[1] / 4

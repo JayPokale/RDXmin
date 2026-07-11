@@ -3,6 +3,30 @@
 All notable changes to RDXmin are documented here.
 Format loosely follows [Keep a Changelog](https://keepachangelog.com/).
 
+## [1.2.1] — 2026-07-11
+
+### Fixed
+- **Windows statusline never rendered** — `rdx-statusline.ps1` combined
+  `Get-Content -Raw -TotalCount`, which are mutually exclusive in every
+  PowerShell; the throw was swallowed by `SilentlyContinue`, the empty mode
+  hit the whitelist default, and the badge silently exited. Cap the string
+  after a plain `-Raw` read instead. Reported by
+  [@TDimovski](https://github.com/TDimovski) (#1).
+- `rdx-statusline.ps1` now refuses symlinked/reparse-point flag and stats
+  files, matching the `.sh` guard.
+
+## [1.2.0] — 2026-07-09
+
+### Added
+- Major-version update notice on session start (registry check cached 3 days,
+  `RDX_UPDATE_CHECK=0` kill switch).
+- Contributor credits: `package.json` contributors, README contributors
+  section with auto-updating contrib.rocks image.
+
+### Changed
+- CI: actions bumped to v5; publish step idempotent (skips versions already
+  on npm).
+
 ## [1.1.0] — 2026-07-07
 
 Same content as 0.2.0 plus the total-bill chart redesign. The version jumps
