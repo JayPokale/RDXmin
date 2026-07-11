@@ -12,7 +12,7 @@ const geistMono = Geist_Mono({
   variable: "--font-geist-mono",
 });
 
-const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? "https://rdxmin.vercel.app";
+const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? "https://rdx.jaypokale.me";
 
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),

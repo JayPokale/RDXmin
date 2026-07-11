@@ -3,6 +3,13 @@
 All notable changes to RDXmin are documented here.
 Format loosely follows [Keep a Changelog](https://keepachangelog.com/).
 
+## [1.2.2] — 2026-07-11
+
+### Added
+- Website: [rdx.jaypokale.me](https://rdx.jaypokale.me) — npm/README homepage
+  now points there. Site lives in `site/`, ships in neither the npm package
+  nor the plugin install.
+
 ## [1.2.1] — 2026-07-11
 
 ### Fixed

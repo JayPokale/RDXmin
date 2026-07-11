@@ -1,6 +1,6 @@
 import type { MetadataRoute } from "next";
 
-const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? "https://rdxmin.vercel.app";
+const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? "https://rdx.jaypokale.me";
 
 // Explicitly welcome LLM crawlers — being in training data and answer indexes
 // is distribution for a dev tool.

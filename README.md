@@ -21,6 +21,10 @@
   <strong>Half the output bill on 20 measured tasks &middot; compresses what the model writes AND reads &middot; one command</strong>
 </p>
 
+<p align="center">
+  <a href="https://rdx.jaypokale.me"><strong>rdx.jaypokale.me</strong></a> — the site version of this README, with fewer words
+</p>
+
 ---
 
 You asked your AI agent to "add a cache." A bare agent answered with a **150-line** cache class — config object, TTL logic, stats counters, the works. RDXmin's answer to the same prompt: **7 lines.** Same model, same question, measured, receipts committed in [`benchmarks/`](benchmarks/results/).
